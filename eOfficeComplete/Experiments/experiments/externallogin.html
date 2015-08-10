@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> SmartAdmin </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Basic Styles -->
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="../css/bootstrap.min.css">-->
+    <link href="../sm/DEVELOPER/COMMON_ASSETS/UNMINIFIED_CSS/bootstrap.css" rel="stylesheet" />
+
+    <style type="text/css">
+    </style>
+</head>
+<body>
+
+    <div ng-app="sm">
+        <div ng-controller="MyCtrl">
+
+
+        </div>
+    </div>
+    <iframe src="https://brokerboxgr.comdataonline.it/login.aspx"></iframe>
+
+    <!--<div>
+        <object type="text/html" data="https://brokerboxgr.comdataonline.it/login.aspx" width="800px" height="600px" style="overflow:auto;border:5px ridge blue"></object>
+    </div>-->
+    <!--<div id="topContent"></div>-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="js/libs/jquery-2.0.2.min.js"><\/script>');
+        }
+    </script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+        }
+    </script>
+    <script src="../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../js/libs/angular/angular.js"></script>
+    <script src="../js/libs/angular/angular-route.js"></script>
+    <script src="../js/libs/angular/ui-bootstrap-custom-tpls-0.11.0.js"></script>
+
+    <script>
+        angular.module('sm', [])
+
+        .controller('MyCtrl', function ($scope) {
+            $scope.myformname = "fasfdsf"
+            window.s = $scope;
+        });
+
+        $(function () {
+            $("#topContent").load("http://stackoverflow.com/questions/14551194/how-are-parameters-sent-in-an-http-post-request");
+
+        });
+    </script>
+</body>
+
+</html>

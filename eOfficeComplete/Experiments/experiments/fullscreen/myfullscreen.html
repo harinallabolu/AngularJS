@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> SmartAdmin </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Basic Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../../css/bootstrap.min.css">
+
+
+    <style type="text/css">
+        .myfullscreen {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99999;
+            background-color: white;
+              overflow-y: scroll;
+        }
+
+
+        .mydivs {
+             width: 200px;
+            height: 100px;
+            background-color:cornsilk;
+        }
+
+   
+        body.nooverflow {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+    @-webkit-keyframes zoomIn {
+            0% {
+                opacity: 0;
+                -webkit-transform: scale3d(.3, .3, .3);
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+   
+        .zoomIn {
+            -webkit-animation-name: zoomIn;
+            -moz-animation-name: zoomIn;
+            -o-animation-name: zoomIn;
+            animation-name: zoomIn;
+        }
+
+        .animated {
+            -webkit-animation-duration: 5s;
+        }
+
+
+    </style>
+</head>
+<body>
+
+   
+
+
+    <div id="mydiv1" class="mydivs animated zoomIn">
+
+
+    </div>
+    <div id="mydiv2" class="mydivs"></div>
+    <div class="mydivs" id="mydiv3"></div>
+
+
+
+    <div id="mydiv5" style="width:100%;height:200px;background-color:darkkhaki" class="asize collapse mydivs"></div>
+
+
+    <div ng-app="sm">
+        <script type="text/ng-template" id="mytemplate.html">
+            <div ng-controller="MyCtrl">
+                <div>
+                    {{myformname}}
+                </div>
+                ok1
+                <div id="mycontent" my-fullscreen="isFullscreen">
+                    <button type="button" ng-click="fullscreen()">fullscreen</button>
+                    <div style="width:100px;height:200px;background-color:aliceblue"></div>
+                    <div style="width:100%;height:700px;background-color:darkkhaki"></div>
+                    <div style="width:100%;height:50px;background-color:red"></div>
+                </div>
+                ok
+            </div>
+        </script>
+
+        <div>
+            <div class="animated zoomIn">
+                <div>
+                    <div id="content" ng-view="" class="view-animate"></div>
+                </div>
+                <!--<div class="animated zoomIn">
+            {{myformname}}
+        </div>
+
+        <div id="mycontent" my-fullscreen="isFullscreen">
+            <button type="button" ng-click="fullscreen()">fullscreen</button>
+            <div style="width:100px;height:200px;background-color:aliceblue"></div>
+            <div style="width:100%;height:700px;background-color:darkkhaki"></div>
+            <div style="width:100%;height:50px;background-color:red"></div>
+        </div>-->
+            </div>
+        </div>
+    </div>
+    <div class="mydivs" id="mydiv3"></div>
+    <div class="mydivs" id=""></div>
+    <div class="mydivs" id=""></div><div class="mydivs" id=""></div>
+    <div class="mydivs" id=""></div>
+    <div class="mydivs" id=""></div>
+    <div class="mydivs" id=""></div>
+   
+    <div id="mydiv7">
+        <div class="mydiv6" id="mydiv6">
+            <div style="width:50%;height:200px;background-color:aliceblue"></div>
+
+        </div>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="js/libs/jquery-2.0.2.min.js"><\/script>');
+        }
+    </script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+        }
+    </script>
+    
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../js/libs/angular/angular.js"></script>
+    <script src="../../js/libs/angular/angular-route.js"></script>
+    <script src="../../js/libs/angular/ui-bootstrap-custom-tpls-0.11.0.js"></script>
+    <script src="myfullscreen.js"></script>
+    <script>
+        
+    </script>
+
+</body>
+
+</html>

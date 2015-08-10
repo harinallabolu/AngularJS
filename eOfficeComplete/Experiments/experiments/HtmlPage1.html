@@ -1,0 +1,39 @@
+﻿<s:envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <validateinsurable xmlns="http://v1.soap.ws.api.gbox.generali.gr/">
+            <insurable xmlns="">
+                <driverbirthdate>1983-12-23T22:00:00Z</driverbirthdate>
+                <drivermaritalstatuscode>1</drivermaritalstatuscode>
+                <driverpostalcode>50001</driverpostalcode>
+                <manufactureryear>0</manufactureryear>
+                <marketvalue>16650</marketvalue>
+                <motorcode>35603</motorcode>
+                <ownergendercode>1</ownergendercode>
+
+                <plateno>IBZ1213</plateno>
+            </insurable>
+        </validateinsurable>
+    </s:body>
+</s:envelope>
+
+<soapenv:envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://v1.soap.ws.api.gbox.generali.gr/">
+    <soapenv:header />
+    <soapenv:body>
+        <v1:validateinsurable>
+            <insurable>
+                <driverbirthdate>1983-12-24</driverbirthdate>
+                <drivermaritalstatuscode>1</drivermaritalstatuscode>
+                <driverpostalcode>50001</driverpostalcode>
+                <manufactureryear>2010</manufactureryear>
+                <marketvalue>16650</marketvalue>
+                <motorcode>35603</motorcode>
+                <noofclaims>0</noofclaims>
+                <ownerafm>123456789</ownerafm>
+                <ownergendercode>1</ownergendercode>
+                <plateno>IBZ1213</plateno>
+                <protectionmeasures></protectionmeasures>
+                <purchaseddate>2011-11-20</purchaseddate>
+            </insurable>
+        </v1:validateinsurable>
+    </soapenv:body>
+</soapenv:envelope>

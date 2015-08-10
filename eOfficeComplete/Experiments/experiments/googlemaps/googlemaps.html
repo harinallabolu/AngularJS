@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> SmartAdmin </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Basic Styles -->
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="../css/bootstrap.min.css">-->
+    <link href="../../sm/DEVELOPER/COMMON_ASSETS/UNMINIFIED_CSS/bootstrap.css" rel="stylesheet" />
+
+    <style type="text/css">
+
+
+         .angular-google-map-container { height: 400px; }
+    </style>
+</head>
+<body>
+
+    <div ng-app="sm">
+        <div ng-controller="MyCtrl">
+
+            <!--<google-map center="map.center" zoom="map.zoom" draggable="true"></google-map>
+            <input type="text" ng-model="map.center.latitude" />
+            <input type="text" ng-model="map.center.longitude" />-->
+            <button type="button" ng-click="openModal()">open</button>
+        </div>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="js/libs/jquery-2.0.2.min.js"><\/script>');
+        }
+    </script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+        }
+    </script>
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../js/libs/angular/angular.js"></script>
+    <script src="../../js/libs/angular/angular-route.js"></script>
+    <script src="../../js/libs/angular/ui-bootstrap-custom-tpls-0.11.0.js"></script>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language=el"></script>
+    <!--<script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.underscore.min.js"></script>
+    <script src="../../js/libs/angular-google-maps.min.js"></script>
+
+    <script>
+        angular.module('sm', ['google-maps', 'ui.bootstrap'])
+
+        .controller('MyCtrl', function ($scope, $modal) {
+            $scope.myformname = "fasfdsf"
+            window.s = $scope;
+
+            $scope.map = {
+                center: {
+                    latitude: 45,
+                    longitude: -73
+                },
+                zoom: 8
+            };
+
+            var i = 0;
+
+
+            $scope.openModal = function () {
+                i++;
+                if (i > 1)
+                {
+
+                }
+
+                $modal.open({
+                    templateUrl: 'mymodal.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: 'lg',
+                });
+            }
+        })
+        .controller('ModalInstanceCtrl', function ($scope) {
+            $scope.render = true;
+
+            $scope.map = {
+                center: {
+                    latitude: 45,
+                    longitude: -73
+                },
+                zoom: 8
+            };
+        });
+    </script>
+</body>
+
+</html>

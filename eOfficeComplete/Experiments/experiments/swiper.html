@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="en-us" data-ng-app="smartApp">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> SmartAdmin </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Basic Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/bootstrap.min.css">
+
+    <link href="../js/plugin/Swiper-master/dist/idangerous.swiper.css" rel="stylesheet" />
+
+
+    <link href="../js/plugin/Swiper-master/dist/idangerous.swiper.css" rel="stylesheet" />
+    <link href="../js/plugin/Swiper-3D-Flow-master/dist/idangerous.swiper.3dflow.css" rel="stylesheet" />
+
+
+    <style type="text/css">
+        .swiper-container, .swiper-slide {
+            width: 60%%;
+            height: 100px;
+            /*background-color: #000;
+            color: #fff;*/
+        }
+
+        * {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div ng-app="sm">
+        <div ng-controller="MyCtrl">
+            <h1>Vertical</h1>
+            <!--<div swiper="{mode:'vertical'}">
+                <slide ng-repeat="slide in slides">
+                    <h1>{{slide.name}}</h1>
+                    <div class="alert alert-info">warning!</div>
+                </slide>
+            </div>-->
+            <br>
+            <input type="text" ng-init="myfilter = 'one'" ng-model="myfilter" ng-change="filterChanged()" name="myfilter" />
+            {{myfilter}}
+            <h1>Horizontal</h1>
+            <!--<div ng-repeat="a in [1,2,3]">-->
+            a={{a}}
+            <div swiper="{mode:'horizontal'}">
+                <slide ng-repeat="slide in filteredSlides = (slides | filter: myfilter)" ng-click="select(slide)">
+                    <h1>{{slide.name}}</h1>
+                    <div class="alert alert-warning">warning! {{myNumber}}</div>
+                </slide>
+            </div>
+            <!--</div>-->
+            <pre>
+            {{slides | filter: myfilter | json}}
+</pre>
+            <ul>
+                <li ng-repeat="item in items track by $index">{{item | json}}</li>
+            </ul>
+        </div>
+    </div>
+
+
+    <!-- END SHORTCUT AREA -->
+    <!--================================================== -->
+    <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)
+    <script data-pace-options='{ "restartOnRequestAfter": true }' src="js/plugin/pace/pace.min.js"></script>-->
+    <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="js/libs/jquery-2.0.2.min.js"><\/script>');
+        }
+    </script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+        }
+    </script>
+
+
+    <script src="../js/plugin/Swiper-master/dist/idangerous.swiper.js"></script>
+    <script src="../js/plugin/Swiper-3D-Flow-master/dist/idangerous.swiper.3dflow.min.js"></script>
+
+
+
+    <!--[if IE 8]>
+        <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+    <![endif]-->
+    <!-- AngularJS -->
+    <script src="../js/libs/angular/angular.js"></script>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>-->
+    <!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>-->
+    <script src="swiper.js"></script>
+
+
+</body>
+
+</html>

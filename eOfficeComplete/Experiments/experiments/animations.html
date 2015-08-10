@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> SmartAdmin </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Basic Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/bootstrap.min.css">
+
+
+    <style type="text/css">
+        div {
+            width: 100px;
+            height: 100px;
+            background: #4cff00;
+        }
+
+        .animate {
+            -webkit-animation: myfirst 5s; /* Chrome, Safari, Opera */
+            -moz-animation: myfirst 5s;
+            animation: myfirst 5s;
+        }
+
+        /* Chrome, Safari, Opera */
+        @-webkit-keyframes myfirst {
+            from {
+                background: red;
+            }
+
+            to {
+                background: yellow;
+            }
+        }
+
+        /* Standard syntax */
+        @keyframes myfirst {
+            from {
+                background: red;
+            }
+
+            to {
+                background: yellow;
+            }
+        }
+
+
+        @-webkit-keyframes slideOutUp {
+            0% {
+                -webkit-transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                -webkit-transform: translateY(-2000px);
+            }
+        }
+
+        @-webkit-keyframes slideRight {
+            0% {
+                -webkit-transform: translateX(0);
+            }
+
+            10% {
+                opacity: 0.3;
+                -webkit-transform: translateX(400px);
+            }
+
+            50% {
+                opacity: 0.8;
+                -webkit-transform: translateX(900px);
+            }
+
+
+            100% {
+                opacity: 1;
+                -webkit-transform: translateX(800px);
+            }
+        }
+
+        .slideOutUp {
+            -webkit-animation: slideOutUp 5s;
+        }
+
+
+        .slideRight {
+            -webkit-animation: slideRight 5s;
+        }
+
+        @-webkit-keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateY(-200px);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: translateY(0);
+            }
+        }
+
+        .animated.fadeInRight {
+            -webkit-animation-name: fadeInRight;
+            -webkit-animation-duration: 5s;
+        }
+
+        @-webkit-keyframes fadeInRight {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateX(400px);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: translateX(0);
+            }
+        }
+
+        .animated.fadeInRight {
+            -webkit-animation-name: fadeInRight;
+            -webkit-animation-duration: 5s;
+        }
+
+        #mydiv3 {
+            width: 80%;
+            background-color: goldenrod;
+        }
+
+
+        @-webkit-keyframes zoomIn {
+            0% {
+                opacity: 0;
+                -webkit-transform: scale3d(.3, .3, .3);
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @-moz-keyframes zoomIn {
+            0% {
+                opacity: 0;
+                -moz-transform: scale3d(.3, .3, .3);
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @-o-keyframes zoomIn {
+            0% {
+                opacity: 0;
+                -o-transform: scale3d(.3, .3, .3);
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            0% {
+                opacity: 0;
+                transform: scale3d(.3, .3, .3);
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .zoomIn {
+            -webkit-animation-name: zoomIn;
+            -moz-animation-name: zoomIn;
+            -o-animation-name: zoomIn;
+            animation-name: zoomIn;
+        }
+
+        .animated {
+            -webkit-animation-duration: 5s;
+        }
+
+        #mydiv4 {
+            width: 100px;
+            height: 200px;
+            background-color: #ffd800;
+        }
+   
+        .asize {
+            width: 100px;
+            height: 100px;
+            background-color: #eee3a2;
+        }
+
+        .mydiv6 {
+            /*position:relative;*/
+            height:100px;
+            width:200px;
+            background-color: #eee3a2;
+        }
+
+        
+
+        .myfullscreen {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99999;
+        }
+
+
+        :-webkit-full-screen .column {
+    width: 100%;
+}
+
+:-moz-full-screen .column {
+    width: 100%;
+}
+
+
+:-ms-full-screen .column {
+    width: 100%;
+}
+
+
+:-o-full-screen .column {
+    width: 100%;
+}
+
+
+:full-screen .column {
+    width: 100%;
+}
+
+    </style>
+</head>
+<body>
+
+
+    <div id="mydiv1">
+
+
+    </div>
+    <div id="mydiv2"></div>
+    <div class="animated fadeInRight" id="mydiv3"></div>
+
+
+
+    <div id="mydiv5" class="asize collapse"></div>
+
+
+    <div ng-app="sm">
+        <div ng-controller="MyCtrl">
+            {{myformname}}
+            <div id="mydiv4" fullscreen="isFullscreen" ng-click="isFullscreen=!isFullscreen" class="animated zoomIn">click me</div>
+            <img id="img1" src="../img/logo-o.png" ng-click="goFullscreen()" />
+
+            <div id="mycontent">
+                <button type="button" ng-click="fullscreen()">fullscreen</button>
+                <div style="width:100px;height:200px;background-color:aliceblue"></div>
+                <div style="width:100%;height:200px;background-color:darkkhaki"></div>
+            </div>
+        </div>
+    </div>
+    <div class="animated fadeInRight" id="mydiv3"></div>
+
+    <div id="mydiv7">
+        <div class="mydiv6" id="mydiv6">
+            <div style="width:50%;height:50%;background-color:aliceblue"></div>
+
+        </div>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="js/libs/jquery-2.0.2.min.js"><\/script>');
+        }
+    </script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+        }
+    </script>
+    
+    <script src="../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../js/libs/angular/angular.js"></script>
+    <script src="../js/libs/angular/angular-route.js"></script>
+    <script src="../js/libs/angular/ui-bootstrap-custom-tpls-0.11.0.js"></script>
+    <script src="angular-fullscreen.js"></script>
+
+    <script>
+        angular.module('sm', ['FBAngular'])
+
+        .controller('MyCtrl', function ($scope, Fullscreen) {
+            $scope.myformname = "fasfdsf"
+            window.s = $scope;
+            $scope.isFullscreen = true;
+
+            $scope.goFullscreen = function () {
+
+                if (Fullscreen.isEnabled())
+                    Fullscreen.cancel();
+                else
+                    Fullscreen.all();
+            }
+
+            $scope.fullscreen = function () {
+
+            };
+        });
+    </script>
+
+</body>
+
+</html>

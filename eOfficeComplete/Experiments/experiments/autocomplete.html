@@ -1,0 +1,118 @@
+﻿
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> SmartAdmin </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Basic Styles -->
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="../css/bootstrap.min.css">-->
+    <link href="../sm/DEVELOPER/COMMON_ASSETS/UNMINIFIED_CSS/bootstrap.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .pac-container {
+            background-color: #FFF;
+            z-index: 2000;
+            position: fixed;
+            display: inline-block;
+            float: left;
+        }
+
+        .modal {
+            z-index: 20;
+        }
+
+        .modal-backdrop {
+            z-index: 10;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div ng-app="sm">
+        <script type="text/ng-template" id="mymodal.html">
+            <form name="myform">
+                <input ng-model="autocomplete" placeholder="Enter street and number..." type="text" name="autocomplete" id="autocomplete"
+                       google-autocomplete>
+                <br />
+                <br />
+                <textarea>fsdf</textarea>
+                <textarea>fsdf</textarea>
+                <textarea>fsdf</textarea>
+                <textarea>fsdf</textarea>
+
+            </form>
+        </script>
+
+        <div ng-controller="MyCtrl">
+
+            <!--<input ng-model="autocomplete" placeholder="Enter street and number..." type="text" name="autocomplete" id="autocomplete"
+                   google-autocomplete>-->
+            <!--<button ng-click="fire()">fire</button>-->
+            <form name="sdf" id="sadf">
+                <input ng-model="autocomplete" placeholder="Enter street and number..." type="text" name="autocomplete" id="autocomplete"
+                       google-autocomplete>
+            </form>
+        </div>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="js/libs/jquery-2.0.2.min.js"><\/script>');
+        }
+    </script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+        }
+    </script>
+    <script src="../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../js/libs/angular/angular.js"></script>
+    <script src="../js/libs/angular/angular-route.js"></script>
+    <script src="../js/libs/angular/ui-bootstrap-custom-tpls-0.11.0.js"></script>
+
+    <script>
+        angular.module('sm', ['ui.bootstrap'])
+
+        .controller('MyCtrl', function ($scope, $modal) {
+            $scope.myformname = "fasfdsf"
+            window.s = $scope;
+
+            $scope.fire = function () {
+                $modal.open({
+                    templateUrl: 'mymodal.html',
+                    //controller: 'EditAddressModalController',
+                    size: 'lg',
+                    //resolve: {
+                    //    'addresses': function () {
+                    //        return $scope.entity.Addresses;
+                    //    },
+                    //    'doorbell': function () {
+                    //        return $scope.entity.getFullname();
+                    //    }
+                    //}
+                });
+            }
+        });
+    </script>
+
+    <script src="googleautocomplete.js"></script>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language=el"></script>
+
+
+</body>
+
+</html>

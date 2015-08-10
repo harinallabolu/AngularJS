@@ -1,0 +1,405 @@
+﻿<style type="text/css">
+    .table.has-tickbox.smart-form tbody tr td:first-child .checkbox {
+        padding-left: 20px !important;
+    }
+
+    .my-modal-dialog > .modal-dialog {
+        width: auto;
+        margin: 5px auto;
+    }
+
+    table.smart-form .popover-content {
+        padding: 9px 14px;
+    }
+
+    table.table-bordered > tfoot > tr > td.no-border-right {
+        border-right: 0;
+    }
+
+     table.table-bordered > tfoot > tr > td.no-border-left {
+        border-left: 0;
+    }
+</style>
+
+<section id="widget-grid">
+    <div class="row">
+
+        <!-- NEW WIDGET START -->
+        <article class="col-sm-12">
+
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-check"></i> </span>
+                    <h2>Receipts Import</h2>
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body" ng-controller="ReceiptImportController">
+
+                        <!--<article class="col-xs-12">-->
+                        <select class="animated flash margin-bottom-10" style="width:20%;min-width:200px;" data-placeholder="Pick an Insurance Provider"
+                                ng-model="provider" id="provider" name="provider" ui-select2 ng-change="providerChanged()">
+                            <option value=""></option>
+                            <option ng-repeat="p in providers" value="{{p.ID}}">{{p.Description}}</option>
+                        </select>
+
+                        <tabset>
+                            <tab ng-repeat="v in providerViews"
+                                 active="v.active">
+                                <tab-heading>
+                                    <!--{{e.getFullname()}}&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="javascript:void(0);" ng-click="entityViews.removeIndex($index)"
+                                       title="Cancel Search" class="btn btn-default btn-xs close-tab"><i class="fa fa-times"></i></a>-->
+                                    {{v.configuration.Name}}&nbsp;&nbsp;&nbsp;&nbsp;<!--<a ng-click="entityViews.removeIndex($index)" href="javascript:void(0);" class="btn btn-default btn-circle btn-sm"><i class="fa fa-times"></i></a>-->
+                                    <!--<button ng-click="entityViews.removeIndex($index)" class="close-icon" type="button"></button>-->
+                                    <!--<a href="javascript:void(0);" ng-click="entityViews.removeIndex($index)" title="Cancel Search" class="close-tab"><i class="fa fa-times"></i></a>-->
+                                    <a href="javascript:void(0);" ng-click="providerViews.removeIndex($index)"
+                                       title="Remove View" class="btn btn-default btn-xs close-tab"><i class="fa fa-times"></i></a>
+                                </tab-heading>
+
+
+                                <ul id="myTab4" class="nav nav-tabs tabs-pull-left bordered">
+                                    <li class="">
+                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lg fa-gear"></i> <b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href="javascript:void(0);" ng-click="preview(v, fileform)">Preview</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);" ng-click="match(v, fileform)">Match</a>
+                                            </li>
+                                            <li ng-class="{'disabled':v.saving || v.serverError}">
+                                                <a href="javascript:void(0);" ng-hide="" ng-click="save(v)">Save</a>
+                                            </li>
+                                            <li class="divider"></li>
+                                            <li class="dropdown-submenu">
+                                                <a tabindex="-1" href="javascript:void(0);">Match Table Columns</a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a tabindex="-1" ng-click="v.customerCol=!v.customerCol" href="javascript:void(0);" ng-class="{'text-muted': !v.customerCol}">Customer</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.policyCol=!v.policyCol" href="javascript:void(0);" ng-class="{'text-muted': !v.policyCol}">Policy</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.receiptCol=!v.receiptCol" href="javascript:void(0);" ng-class="{'text-muted': !v.receiptCol}">Reference</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.typeCol=!v.typeCol" href="javascript:void(0);" ng-class="{'text-muted': !v.typeCol}">Type</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.netCol=!v.netCol" href="javascript:void(0);" ng-class="{'text-muted': !v.netCol}">Net Premium</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.grossCol=!v.grossCol" href="javascript:void(0);" ng-class="{'text-muted': !v.grossCol}">Gross Premium</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.issuedDateCol=!v.issuedDateCol" href="javascript:void(0);" ng-class="{'text-muted': !v.issuedDateCol}">Issued Date</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.startDateCol=!v.startDateCol" href="javascript:void(0);" ng-class="{'text-muted': !v.startDateCol}">Start Date</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.endDateCol=!v.endDateCol" href="javascript:void(0);" ng-class="{'text-muted': !v.endDateCol}">End Date</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.installmentsCol=!v.installmentsCol" href="javascript:void(0);" ng-class="{'text-muted': !v.installmentsCol}">Installments</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.commissionCol=!v.commissionCol" href="javascript:void(0);" ng-class="{'text-muted': !v.commissionCol}">Commission</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="v.diasCol=!v.diasCol" href="javascript:void(0);" ng-class="{'text-muted': !v.diasCol}">Dias Code</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li ng-show="v.activeTab === 'match'">
+                                                <a href="javascript:void(0);" ng-click="setRenewals(v)">Set All to Renewal Type</a>
+                                            </li>
+                                            <li ng-if="user.isAdmin" class="divider"></li>
+                                            <li ng-if="user.isAdmin" popover-placement="bottom" popover-trigger="mouseenter" popover="Click to {{globalOptions.sendEmails ? 'disable' : 'enable'}} emails">
+                                                <a ng-class="{'text-muted': !globalOptions.sendEmails}" href="javascript:void(0);" ng-click="globalOptions.sendEmails = !globalOptions.sendEmails"><span ng-show="!globalOptions.sendEmails">En</span><span ng-show="globalOptions.sendEmails">Dis</span>able Emails</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <!--<li class="btn-group">
+                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-lg fa-gear"></i> <b class="caret"></b>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href="javascript:void(0);">Action</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);">Another action</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);">Something else here</a>
+                                            </li>
+                                            <li class="divider"></li>
+                                            <li>
+                                                <a href="javascript:void(0);">Separated link</a>
+                                            </li>
+                                        </ul>
+                                    </li>-->
+
+                                    <li class="active">
+                                        <a ng-href="#parametersTab{{v.id}}" data-toggle="tab" ng-click="v.activeTab='parameters'" active-tab="v.activeTab === 'parameters'">Parameters</a>
+                                    </li>
+                                    <li>
+                                        <a ng-href="#previewTab{{v.id}}" ng-click="previewTabClicked(v, fileform)" active-tab="v.activeTab === 'preview'" data-toggle="tab">Preview</a>
+                                    </li>
+                                    <li>
+                                        <a ng-href="#matchesTab{{v.id}}" ng-click="matchTabClicked(v, fileform)" data-toggle="tab" active-tab="v.activeTab === 'match'">Match</a>
+                                    </li>
+                                    <li ng-show="v.activeTab === 'match'" class="pull-right" style="height: 39px;border-right:1px solid rgba(0,0,0,.09);padding-right:8px">
+                                        <div class="input-group" style="padding-top:8px;width:130px">
+                                            <input ng-model="v.search" class="form-control input-xs" type="text" placeholder="Search...">
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <div id="myTabContent43" class="tab-content padding-10">
+                                    <div class="tab-pane fade in active" dynamic-id="'parametersTab'+ v.id">
+                                        <div ng-show="v.configuration.Description" style="padding-left:15px;padding-right:15px">
+                                            <accordion>
+                                                <accordion-group heading="Instructions">
+                                                    {{v.configuration.Description}}
+                                                </accordion-group>
+                                            </accordion>
+                                        </div>
+
+                                        <form class="smart-form" ng-show="v.configuration" name="fileform" id="fileform">
+                                            <fieldset>
+                                                <div class="row">
+                                                    <div class="col col-6">
+                                                        <section class="" ng-repeat="f in v.configuration.FileMappings">
+                                                            <label class="label">{{f.Name}}</label>
+                                                            <label for="file" class="input input-file" ng-class="{'state-error': !fileform['file' + f.ID].firstTimer && fileform['file2' + f.ID].$invalid}">
+                                                                <div class="button">
+                                                                    <input type="file" ng-file-select="onFileSelect(v, $files, f, $index)" dynamic-name="'file' + f.ID"
+                                                                           ng-model="f.file1" first-timer>Browse
+                                                                </div><input type="text" ng-model="f.file2" placeholder="Include some files" readonly=""
+                                                                             required dynamic-name="'file2' + f.ID">
+                                                            </label>
+                                                            <em ng-show="!fileform['file' + f.ID].firstTimer && fileform['file2' + f.ID].$invalid" class="invalid"><i class="fa fa-warning"></i> Please select a file</em>
+                                                        </section>
+                                                    </div>
+
+                                                    <div class="col col-xs-6 col-lg-4">
+                                                        <section>
+                                                            <label class="label" for="startdatediff">Start Date Difference</label>
+                                                            <label class="input" ng-class="{'state-error': fileform.startdatediff.$invalid}">
+                                                                <input ng-model="v.startDateDiff" placeholder="days" type="number"
+                                                                       name="startdatediff" ng-pattern="/^[1-9][0-9]*$/" required>
+                                                            </label>
+                                                            <em ng-show="fileform.startdatediff.$invalid" class="invalid"><i class="fa fa-warning"></i> Please type a positive number</em>
+                                                        </section>
+
+                                                        <section class="">
+                                                            <label class="label" for="grosspremiumdiff">Gross Premium Difference</label>
+                                                            <label class="input" ng-class="{'state-error': fileform.grosspremiumdiff.$invalid}">
+                                                                <i class="icon-prepend fa fa-money"></i>
+                                                                <input ng-model="v.grossPremiumDiff" placeholder="Gross Premium" type="number"
+                                                                       name="grosspremiumdiff" required>
+                                                            </label>
+                                                            <em ng-show="fileform.grosspremiumdiff.$invalid" class="invalid"><i class="fa fa-warning"></i> Please type a number</em>
+                                                        </section>
+
+                                                        <section class="">
+                                                            <!--<label class="label" for="yearly">Unissued Renewals</label>-->
+                                                            <label class="toggle">
+                                                                <input type="checkbox" ng-model="v.unissuedReneals" name="unissuedrenewals">
+                                                                <i data-swchon-text="YES" data-swchoff-text="NO"></i>Unissued Renewals
+                                                            </label>
+                                                        </section>
+
+                                                        <!--<section class="">
+                                                            <label class="label">Radio Toggles</label>
+                                                            <label class="toggle">
+                                                                <input type="radio" name="radio-toggle" checked="checked">
+                                                                <i data-swchon-text="ON" data-swchoff-text="OFF"></i>Alexandra
+                                                            </label>
+                                                        </section>-->
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <!--<footer>
+                                                <button type="button" class="btn btn-primary">Save</button>
+                                                <button type="button" class="btn btn-primary">Match</button>
+                                                <button type="button" class="btn btn-primary" ng-click="preview()">Preview</button>
+                                            </footer>-->
+                                        </form>
+
+
+                                    </div>
+
+                                    <div class="tab-pane fade" dynamic-id="'previewTab' + v.id">
+                                        <div ng-hide="v.loadingPreview || v.columns.length">Select a file from the parameters tab and click Preview</div>
+                                        <div ng-show="v.loadingPreview" class="txt-color-orangeDark"><i class="fa fa-cog fa-spin fa-3x"></i> Loading Preview...</div>
+                                        <table ng-hide="v.loadingPreview" class="table table-striped table-bordered table-hover table-condensed no-margin" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th ng-repeat="c in v.columns">{{c}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="r in v.rows">
+                                                    <td ng-repeat="f in r">
+                                                        {{f.Value}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="tab-pane fade table-responsive"
+                                         dynamic-id="'matchesTab' + v.id">
+                                        <!--<div ng-hide="v.loadingMatches || v.receipts">Select a file from the parameters tab and click Match</div>-->
+                                        <div ng-show="v.loadingMatches" class="txt-color-orangeDark"><i class="fa fa-cog fa-spin fa-3x"></i> Loading Matches...</div>
+                                        <!--<div class="alert alert-info no-margin fade in">
+                                            <i class="fa-fw fa fa-info"></i>
+                                            Enables hover effect <code>&lt;table&gt;</code> by adding the <code>.table-hover</code> with the base class
+                                        </div>-->
+                                        <table ng-hide="v.loadingMatches" class="table table-striped table-bordered table-hover table-condensed smart-form has-tickbox"
+                                               style="table-layout:auto">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label class="checkbox">
+                                                            <input ng-model="v.processAll" ng-change="processAll(v)" type="checkbox" name="checkbox-inline">
+                                                            <i></i>
+                                                        </label>
+                                                    </th>
+                                                    <th style="width:35px">
+                                                        Status
+                                                    </th>
+                                                    <th ng-show="v.customerCol">Customer</th>
+                                                    <th ng-show="v.policyCol">Policy</th>
+                                                    <th ng-show="v.receiptCol">Reference</th>
+                                                    <th ng-show="v.typeCol">Type</th>
+                                                    <th style="width:66px" ng-show="v.netCol">Net Premium</th>
+                                                    <th style="width:66px" ng-show="v.grossCol">Gross Premium</th>
+                                                    <th style="width:66px" ng-show="v.issuedDateCol">Issued Date</th>
+                                                    <th style="width:66px" ng-show="v.startDateCol">Start Date</th>
+                                                    <th style="width:66px" ng-show="v.endDateCol">End Date</th>
+                                                    <th ng-show="v.installmentsCol">Installments</th>
+                                                    <th style="width:66px" ng-show="v.commissionCol">Commission</th>
+                                                    <th style="width:66px" ng-show="v.diasCol">Dias Code</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="2">Totals:</td>
+                                                    <td class="no-border-right" ng-show="v.customerCol"></td>
+                                                    <td class="no-border-left no-border-right" ng-show="v.policyCol"></td>
+                                                    <td class="no-border-left no-border-right" ng-show="v.receiptCol"></td>
+                                                    <td class="no-border-left no-border-right" ng-show="v.typeCol"></td>
+                                                    <td class="my-bold" style="width:66px" ng-show="v.netCol">{{v.totalNet| number: 2}}</td>
+                                                    <td class="my-bold" style="width:66px" ng-show="v.grossCol">{{v.totalGross | number: 2}}</td>
+                                                    <td class="no-border-left no-border-right" ng-show="v.issuedDateCol"></td>
+                                                    <td class="no-border-left no-border-right" ng-show="v.startDateCol"></td>
+                                                    <td class="no-border-left no-border-right" ng-show="v.endDateCol"></td>
+                                                    <td class="no-border-left no-border-right" ng-show="v.installmentsCol"></td>
+                                                    <td class="my-bold" style="width:66px" ng-show="v.commissionCol">{{v.totalCommission | number: 2}}</td>
+                                                    <td class="no-border-left no-border-right" ng-show="v.diasCol"></td>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                <tr ng-repeat="r in v.filteredReceipts = (v.receipts | filter: v.search)" ng-dblclick="details(r)">
+                                                    <td>
+                                                        <label class="checkbox">
+                                                            <input type="checkbox" ng-model="r.process" name="checkbox-inline">
+                                                            <i></i>
+                                                        </label>
+                                                    </td>
+                                                    <td style="width:35px;white-space:nowrap">
+                                                        <i ng-show="r.hasIdenticalMatch()" class="glyphicon glyphicon-ok txt-color-greenOkSign"
+                                                           popover="This receipt has been completely matched in the system" popover-trigger="mouseenter"></i>
+                                                        <i ng-show="r.hasError()" class="fa-fw fa fa-times txt-color-red" popover="{{r.ErrorDescription}}"
+                                                           popover-trigger="mouseenter"></i>
+                                                        <i ng-show="r.notes" class="fa-fw fa fa-info" popover="{{r.notes}}"
+                                                           popover-trigger="mouseenter"></i>
+                                                        <span style="padding:3px 5px" ng-show="!r.hasError() && !r.hasIdenticalMatch()"
+                                                              popover="This receipt is ready to be processed"
+                                                              class="badge bg-color-pinkDark txt-color-white">
+                                                            {{r.matchesCount()}}
+                                                        </span>
+                                                        <i ng-show="!r.hasIdenticalMatch() && r.validate()" class="fa-fw fa fa-thumbs-up txt-color-greenOkSign"
+                                                           popover="This receipt is ready to be processed" popover-trigger="mouseenter"></i>
+                                                    </td>
+                                                    <td ng-show="v.customerCol">
+                                                        <a href="javascript:void(0);" ng-click="details(r)">{{r.getCustomerFullname()}}</a>
+                                                    </td>
+                                                    <td ng-show="v.policyCol">
+                                                        <a href="javascript:void(0);" ng-click="details(r)">{{r.PolicyReference}}</a>
+                                                    </td>
+                                                    <td ng-show="v.receiptCol">
+                                                        <a href="javascript:void(0);" ng-click="details(r)">{{r.ReceiptReference}}</a>
+                                                    </td>
+                                                    <td ng-show="v.typeCol">
+                                                        {{r.Type}}
+                                                    </td>
+                                                    <td ng-show="v.netCol">
+                                                        {{r.NetPremium}}
+                                                    </td>
+                                                    <td ng-show="v.grossCol">
+                                                        {{r.GrossPremium}}
+                                                    </td>
+                                                    <td ng-show="v.issuedDateCol">
+                                                        {{r.IssuedDate | date: 'dd/MM/yyyy'}}
+                                                    </td>
+                                                    <td ng-show="v.startDateCol">
+                                                        {{r.StartDate | date: 'dd/MM/yyyy'}}
+                                                    </td>
+                                                    <td ng-show="v.endDateCol">
+                                                        {{r.EndDate | date: 'dd/MM/yyyy'}}
+                                                    </td>
+                                                    <td ng-show="v.installmentsCol">
+                                                        {{r.Installments}}
+                                                    </td>
+                                                    <td ng-show="v.commissionCol">
+                                                        {{r.Commission}}
+                                                    </td>
+                                                    <td ng-show="v.diasCol">
+                                                        {{r.DiasCode}}
+                                                    </td>
+                                                </tr>
+                                                <!--<tr ng-show="!e.viewPolicy.claims.length && e.viewPolicy"><td colspan="9">No claims available for this policy</td></tr>
+                                                <tr ng-hide="e.viewPolicy"><td colspan="9">Select a policy to view its corresponding claims</td></tr>-->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!--</article>-->
+
+                            </tab>
+                        </tabset>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    pageSetUp();
+
+
+</script>

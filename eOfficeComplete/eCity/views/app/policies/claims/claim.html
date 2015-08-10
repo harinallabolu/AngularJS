@@ -1,0 +1,468 @@
+﻿<script type="text/ng-template" id="DeleteInvoiceModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Delete Invoice?</h3>
+    </div>
+    <div class="modal-body">
+        {{message}}
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="$close()">Yes</button>
+        <button class="btn btn-warning" ng-click="$dismiss()">No</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="CloseClaimModal.html">
+    <div class="modal-body">
+        Do you want to close the claim?
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="$close()">Yes</button>
+        <button class="btn btn-warning" ng-click="$dismiss()">No</button>
+    </div>
+</script>
+
+
+<!--<form method="POST" action="https://brokerboxgr.comdataonline.it/login.aspx">
+    <input type="hidden" name="ctl00$ContentPlaceHolder1$Login1$UserName" value="info@citybrokers.gr" />
+    <input type="hidden" name="ctl00$ContentPlaceHolder1$Login1$Password" value="city123" />
+    <button type="submit">Go</button>
+</form>-->
+
+<section id="widget-grid">
+
+
+    <div class="well no-padding">
+
+        <form class="smart-form" id="claimform" name="claimform">
+            <header>
+                <span ng-show="claim.ClaimID">ClaimID: <strong class="txt-color-blue">{{claim.ClaimID}}</strong>, </span>PolicyID: <strong>{{policy.PolicyID}}</strong>, Holder: <strong>{{policy.HolderFullname}}</strong>, Reference: <strong>{{policy.PolicyReference}}</strong>, Provider: <strong>{{policy.Provider}}</strong>
+
+            </header>
+
+            <fieldset>
+                <div class="row">
+                    <section class="col col-4">
+                        <label class="label" for="object">Object</label>
+                        <label class="select" ng-class="{'state-error':!claimform.object.firstTimer && claimform.object.$invalid, 'state-success':!claimform.object.firstTimer && claim.ObjectID}">
+                            <select ng-model="claim.ObjectID" name="object" id="object" required first-timer
+                                    ng-options="o.ID as o.Description for o in policy.objects">
+                                <option value="" selected="" disabled="">Objects</option>
+                            </select>
+                            <i></i>
+                        </label>
+                        <em ng-show="!claimform.object.firstTimer && claimform.object.$invalid" class="invalid">
+                            <i class="fa fa-warning"></i> Please select an object
+                        </em>
+                    </section>
+
+                    <section class="col col-8">
+                        <label class="label" for="description">Description</label>
+                        <label class="input" ng-class="{'state-error':!claimform.description.firstTimer && claimform.description.$invalid, 'state-success':!claimform.description.firstTimer && claimform.description.$valid}">
+                            <input ng-model="claim.Description" placeholder="Claim Description" type="text"
+                                   name="description" id="description" first-timer ng-minlength="10" required>
+                        </label>
+                        <em ng-show="!claimform.description.firstTimer && claimform.description.$invalid" class="invalid">
+                            <i class="fa fa-warning"></i> Please type a claim description (longer than 10 characters)
+                        </em>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <section class="col col-4">
+                        <label class="label" for="object">Bank Account</label>
+                        <label class="select">
+                            <select ng-model="claim.BankAccountID" name="bankaccount" id="bankaccount"
+                                    ng-options="b.ID as (b.Number + ' - ' + b.BankDescription) for b in bankAccounts">
+                                <option value="" selected="" disabled="">Bank Accounts</option>
+                            </select>
+                            <i></i>
+                        </label>
+                    </section>
+                </div>
+            </fieldset>
+
+            <footer>
+                <button type="button" ng-disabled="saving" ng-click="save()" class="btn btn-primary">
+                    <span ng-hide="saving">Save Claim Form</span>
+                    <span ng-show="saving">Saving&nbsp;<i class="fa fa-cog fa-spin"></i></span>
+                </button>
+            </footer>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col col-sm-4">
+            <div class="well padding-5">
+                <ul>
+                    <li>
+                        Status:<strong> {{claim.Status}}</strong>
+                    </li>
+                    <li>
+                        Date:<strong> {{claim.Date | date: 'dd/MM/yyyy'}}</strong>
+                    </li>
+                    <li>
+                        Announcement Date:<strong> {{claim.AnnouncementDate | date: 'dd/MM/yyyy'}}</strong>
+                    </li>
+                    <li>
+                        File Number: <strong>{{claim.FileNumber}}</strong>
+                    </li>
+                    <li>
+                        Claimed: <strong>{{(claim.Claimed | number:2) + ' ' + policy.Currency}}</strong>
+                    </li>
+                    <li>
+                        Invoice Total:<strong> {{(claim.InvoiceAmount | number:2) + ' ' + policy.Currency}}</strong>
+                    </li>
+                    <li>
+                        Paid: <strong>{{(claim.Payment | number:2) + ' ' + policy.Currency}}</strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <article class="col col-sm-8">
+            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0"
+                 data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-editbutton="false"
+                 data-widget-custombutton="false" data-widget-sortable="false" data-widget-colorbutton="false">
+                <!-- widget options:
+                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                data-widget-colorbutton="false"
+                data-widget-editbutton="false"
+                data-widget-togglebutton="false"
+                data-widget-deletebutton="false"
+                data-widget-fullscreenbutton="false"
+                data-widget-custombutton="false"
+                data-widget-collapsed="true"
+                data-widget-sortable="false"
+
+                -->
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-male"></i> </span>
+                    <h2>Invoices </h2>
+
+
+                    <!--<div class="widget-toolbar">
+                        <a href="javascript:void(0);" ng-click="newInvoice()" class="btn btn-primary">New</a>
+                    </div>-->
+
+                    <div class="widget-toolbar">
+
+                        <div class="widget-toolbar" ng-show="payMode">
+                            <a href="javascript:void(0);" ng-disabled="saving" ng-click="save()" class="btn btn-primary">Save</a>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="btn dropdown-toggle btn-xs btn-warning" data-toggle="dropdown">
+                                Actions <i class="fa fa-caret-down"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:void(0);" ng-click="newInvoice()">New</a>
+                                </li>
+                                <li ng-if="editClaim && user.isAdmin">
+                                    <a href="javascript:void(0);" ng-click="editInvoice(activeInvoiceIndex)">Edit</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" ng-click="deleteInvoice(activeInvoiceIndex)">Delete</a>
+                                </li>
+                                <li ng-if="editClaim && (user.isAdmin || user.isEmployee)">
+                                    <a href="javascript:void(0);" ng-click="payInvoice(activeInvoiceIndex)">Pay</a>
+                                </li>
+                                <li ng-if="editClaim && (user.isAdmin || user.isEmployee || user.isProducer)">
+                                    <a href="javascript:void(0);" ng-click="addInvoiceNotes(activeInvoiceIndex)">Add notes</a>
+                                </li>
+                                <!--<li>
+                                    <a href="javascript:void(0);" ng-click="payInvoice()">Pay</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" ng-click="addNotes()">Add notes</a>
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <!--<div class="jarviswidget-editbox">
+
+                    </div>-->
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body no-padding">
+
+                        <table class="footable toggle-circle-filled table table-striped table-bordered table-hover" id="claimsinvoicestable"
+                               footable="">
+                            <thead>
+                                <tr>
+                                    <th data-toggle="true">Invoice</th>
+                                    <th>Invoice Date</th>
+                                    <th>Invoice Amount</th>
+                                    <th data-hide="all">Invoice Number</th>
+                                    <th>Paid Amount</th>
+                                    <th>Deductible</th>
+                                    <th data-hide="all">Notes</th>
+                                    <th data-hide="all">Notes Edited by</th>
+                                    <th data-hide="all">Notes Edited on</th>
+                                    <th data-hide="all">Invoice Entered by</th>
+                                    <th data-hide="all">Invoice Entered on</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-class="{'active': $index === $parent.activeInvoiceIndex}" ng-repeat="c in invoices | filter: {'Action': '!Delete' }" ng-click="$parent.activeInvoiceIndex=$index" class="cursor-pointer" foo-row>
+                                    <td>
+                                        {{getInvoiceType(c.TypeID)}}
+                                    </td>
+                                    <td>
+                                        {{c.Date | date: 'dd/MM/yyyy'}}
+                                    </td>
+                                    <td class="text-right">
+                                        {{(c.Amount | number:2) + ' ' + policy.Currency}}
+                                    </td>
+                                    <td>
+                                        {{c.Reference}}
+                                    </td>
+                                    <td class="text-right">
+                                        <!--<span ng-hide="isInvoicePayable(c)">{{(c.PaidAmount | number:2) + ' ' + policy.Currency}}</span>-->
+                                        <span ng-hide="canPayInvoice(c)">{{c.PaidAmount === null ? '-' : (c.PaidAmount | number:2) + ' ' + policy.Currency}}</span>
+                                        <div class="form-group form-group-sm no-margin" ng-show="canPayInvoice(c)">
+                                            <div class="col-sm-10">
+                                                <input type="number" class="form-control input-xs" ng-change="invoiceChanged(c)" dynamic-name="'paidamount' + c.InvoiceID" ng-model="c.PaidAmount"
+                                                       min="0" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <span ng-hide="canPayInvoice(c)">{{(c.Deductible | number:2) + ' ' + policy.Currency}}</span>
+                                        <div class="form-group form-group-sm no-margin" ng-show="canPayInvoice(c)">
+                                            <div class="col-sm-10">
+                                                <input type="number" class="form-control input-xs" ng-change="invoiceChanged(c)" dynamic-name="'deductible' + c.InvoiceID" ng-model="c.Deductible"
+                                                       min="0" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{c.Notes}}
+                                    </td>
+                                    <td>
+                                        {{c.NotesUsername | date: 'dd/MM/yyyy'}}
+                                    </td>
+                                    <td>
+                                        {{c.NotesModificationTime | date: 'dd/MM/yyyy'}}
+                                    </td>
+                                    <td>
+                                        {{c.Username}}
+                                    </td>
+                                    <td>
+                                        {{c.Timestamp | date: 'dd/MM/yyyy'}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </article>
+    </div>
+
+    <div class="row" ng-if="editClaim">
+        <!--<h2 class="row-seperator-header"><i class="fa fa-plus"></i> Customized Tabs </h2>-->
+        <!-- NEW WIDGET START -->
+        <article class="col-sm-12">
+
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1"
+                 data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-editbutton="false"
+                 data-widget-custombutton="false" data-widget-sortable="false" data-widget-colorbutton="false">
+                <!-- widget options:
+                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                data-widget-colorbutton="false"
+                data-widget-editbutton="false"
+                data-widget-togglebutton="false"
+                data-widget-deletebutton="false"
+                data-widget-fullscreenbutton="false"
+                data-widget-custombutton="false"
+                data-widget-collapsed="true"
+                data-widget-sortable="false"
+
+                -->
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-male"></i> </span>
+                    <h2>Actions </h2>
+
+                    <div class="widget-toolbar">
+                        <a href="javascript:void(0);" ng-click="newAction()" class="btn btn-primary">Add Action</a>
+                    </div>
+                    <div class="widget-toolbar">
+                        <a href="javascript:void(0);" ng-click="addActions()" class="btn btn-primary">Save</a>
+                    </div>
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <!--<div class="jarviswidget-editbox">
+
+                    </div>-->
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body">
+
+                        <div class="row">
+                            <div class="col col-sm-4">
+                                <table class="footable table table-striped table-bordered table-hover" id="actionstable">
+                                    <thead>
+                                        <tr>
+                                            <th data-class="expand">Type</th>
+                                            <th>Date</th>
+                                            <th>Notes</th>
+                                            <th data-hide="phone">Username</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="a in actions | orderBy: '-Date'" foo-row>
+                                            <td>
+                                                {{getClaimActionType(a.ClaimActionTypeID)}}
+                                            </td>
+                                            <td>
+                                                {{a.Date | date: 'dd/MM/yyyy'}}
+                                            </td>
+                                            <td>
+                                                <button action-notes="a.Notes.trim()" action-time="a.Date" type="button" class="btn btn-default btn-xs">
+                                                    <span class="fa fa-info-circle txt-color-blue"></span>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                {{a.Username}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col col-xs-8">
+                                {{notes}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </article>
+    </div>
+
+    <!-- row -->
+    <div class="row" ng-if="!editClaim">
+
+        <!-- NEW WIDGET START -->
+        <article class="col-sm-12">
+
+            <!--<p class="alert alert-warning">
+                <i class="fa fa-warning fa-fw fa-lg"></i><strong>Opps!</strong>
+                You may get an error during the upload for this demo. The error will subside once the backend portion is properly configured.
+            </p>
+            <p>
+                <span class="label label-warning">
+                    NOTE
+                </span> &nbsp; This plugins works only on Latest Chrome, Firefox, Safari, Opera &amp; Internet Explorer 10.
+            </p>-->
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-2" data-widget-editbutton="false">
+                <!-- widget options:
+                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                data-widget-colorbutton="false"
+                data-widget-editbutton="false"
+                data-widget-togglebutton="false"
+                data-widget-deletebutton="false"
+                data-widget-fullscreenbutton="false"
+                data-widget-custombutton="false"
+                data-widget-collapsed="true"
+                data-widget-sortable="false"
+
+                -->
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-cloud"></i> </span>
+                    <h2>My Dropzone! </h2>
+
+                    <!--<div class="widget-toolbar">
+                        <a href="javascript:void(0);" ng-click="test()" class="btn btn-primary">Upload</a>
+                    </div>-->
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body">
+
+                        <!--<form action="upload.php" class="dropzone" id="mydropzone" my-dropzone></form>-->
+                        <div action="upload.php" class="dropzone" id="mydropzone" my-dropzone claimfiles="myclaimfiles">
+                        </div>
+
+                        <div class="table table-striped" class="files" id="previews">
+
+                            <div id="template" class="file-row">
+                                <!-- This is used as the file preview template -->
+                                <div class="dz-preview dz-file-preview">
+                                    <div class="dz-details">
+                                        <div class="dz-filename"><span data-dz-name></span></div>
+                                        <div class="dz-size" data-dz-size></div>
+                                        <img data-dz-thumbnail />
+                                    </div>
+                                    <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                                    <div class="dz-success-mark"><span>✔</span></div>
+                                    <div class="dz-error-mark"><span>✘</span></div>
+                                    <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+
+            </div>
+            <!-- end widget -->
+
+        </article>
+        <!-- WIDGET END -->
+
+    </div>
+
+</section>
+
+<!--<div id="previewTemplate" class="dz-preview dz-file-preview">
+    <div class="dz-details">
+        <div class="dz-filename"><span data-dz-name></span></div>
+        <div class="dz-size" data-dz-size></div>
+        <img data-dz-thumbnail />
+    </div>
+    <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+</div>-->
+
+
+
+<script>
+
+    pageSetUp();
+
+
+</script>

@@ -1,0 +1,1 @@
+05/01/2014: select2 has been updated to the latest version 3.5.1

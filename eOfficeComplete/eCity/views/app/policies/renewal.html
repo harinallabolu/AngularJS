@@ -1,0 +1,205 @@
+﻿<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+
+    <h3 class="modal-title">Policy Renewal</h3>
+</div>
+<div class="modal-body no-padding">
+    <form action="" id="renewalform" name="renewalform" class="smart-form">
+        <header>
+            Fill this form to create a renewal of Policy {{policy.PolicyID}}
+        </header>
+
+        <fieldset>
+
+
+            <!--<div class="alert alert-block alert-info">
+                <h4 class="alert-heading">Issue?</h4>
+
+                <div class="row">
+                    <section class="col col-12">
+                        <span class="onoffswitch-title"><i class="fa fa-question"></i> Do you want to issue the receipt?</span>
+                        <span class="onoffswitch">
+                            <input type="checkbox" name="issue" class="onoffswitch-checkbox" ng-model="issue"
+                                   id="issue">
+                            <label class="onoffswitch-label" for="issue">
+                                <span class="onoffswitch-inner" data-swchon-text="YES" data-swchoff-text="NO"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </span>
+                    </section>
+                </div>
+            </div>-->
+
+            <div class="row">
+                
+                <section class="col col-6">
+                    <label class="label" for="renewalnumber">Number of Renewals to run</label>
+                    <label class="select" ng-class="{'state-error':!renewalform.renewalnumber.firstTimer && renewalform.renewalnumber.$invalid, 'state-success':renewalform.renewalnumber.$dirty && renewalform.renewalnumber.$valid}">
+                        <select ng-model="$parent.renewalNumber" name="renewalnumber" id="renewalnumber" required first-timer
+                                ng-options="r as r for r in renewalNumberValues">
+                            <option value="" selected="" disabled="">Number of Renewals to run</option>
+                        </select>
+                        <i></i>
+                    </label>
+                    <em ng-show="!renewalform.renewalnumber.firstTimer && renewalform.renewalnumber.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please pick a number
+                    </em>
+                </section>
+
+                <!--<section class="col col-6">
+                    <label class="label" for="notification">Notification Type:</label>
+                    <label class="select" ng-class="{'state-error': cancellationform.notification.$dirty && cancellationform.notification.$invalid, 'state-success': cancellationform.notification.$valid}">
+                        <select ng-model="cancellation.notification" name="notification" id="notification" required first-timer>
+                            <option value="" selected="" disabled="">Select Notification Type</option>
+                            <option value="Telephone">Telephone</option>
+                            <option value="Ticket">Ticket</option>
+                            <option value="Signed Document">Signed Document</option>
+                        </select>
+                        <i></i>
+                    </label>
+                    <em ng-show="!cancellationform.notification.firstTimer && cancellationform.notification.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please select the cancellations' notification type
+                    </em>
+                </section>-->
+
+                <section class="col col-6">
+                    <label class="label" for="renewalnumber">Do you want to issue the receipt?</label>
+                    <span class="onoffswitch">
+                        <input ng-model="$parent.issue" type="checkbox" name="issue" id="issue" class="onoffswitch-checkbox">
+                        <label class="onoffswitch-label" for="issue">
+                            <span class="onoffswitch-inner" data-swchon-text="YES" data-swchoff-text="NO"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </span>
+                </section>
+            </div>
+        </fieldset>
+
+        <fieldset ng-show="issue">
+
+            <div class="row">
+                <section class="col col-4">
+                    <label class="label" for="policyreference">Policy Reference</label>
+                    <label class="input" ng-class="{'state-error':!renewalform.policyreference.firstTimer && renewalform.policyreference.$invalid, 'state-success':renewalform.policyreference.$dirty && renewalform.policyreference.$valid}">
+                        <input ng-model="receipt.PolicyReference" placeholder="Policy Reference" type="text"
+                               name="policyreference" id="policyreference" first-timer capitalize ng-minlength="4">
+                    </label>
+                    <em ng-show="!renewalform.policyreference.firstTimer && renewalform.policyreference.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a valid Policy Reference
+                    </em>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="renewal">Renewal Number</label>
+                    <label class="input">
+                        <input ng-model="receipt.RenewalNumber" placeholder="Renewal Number" type="text"
+                               name="renewal" id="renewal" capitalize>
+                    </label>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="receiptreference">Receipt Reference</label>
+                    <label class="input">
+                        <input ng-model="receipt.ReceiptReference" placeholder="Receipt Reference" type="text"
+                               name="receiptreference" id="receiptreference" capitalize>
+                    </label>
+                </section>
+            </div>
+
+            <div class="row">
+
+                <section class="col col-4">
+                    <label class="label" for="issueddate">Issued Date</label>
+                    <label class="input" ng-class="{'state-error': !renewalform.issueddate.firstTimer && renewalform.issueddate.$invalid, 'state-success': renewalform.issueddate.$valid && !renewalform.issueddate.firstTimer}">
+                        <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                        <input style="z-index:10" type="text" ng-model="receipt.IssuedDate"
+                               name="issueddate"
+                               id="issueddate" placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+                               data-datemindate="-100Y" data-datemaxdate="+1y" data-dateyearrange="-100:+1"
+                               data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" ng-required="issue"
+                               first-timer>
+                    </label>
+                    <em ng-show="!renewalform.issueddate.firstTimer && renewalform.issueddate.$error.required" class="invalid"><i class="fa fa-warning"></i> Please select an Issued Date</em>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="applicationnumber">Application Number</label>
+                    <label class="input" ng-class="{'state-error':!renewalform.applicationnumber.firstTimer && renewalform.applicationnumber.$invalid, 'state-success':!renewalform.applicationnumber.firstTimer && receipt.ApplicationNumber}">
+                        <input ng-model="receipt.ApplicationNumber" placeholder="Application Number" type="number"
+                               name="applicationnumber" id="applicationnumber" ng-pattern="/^[-]?[0-9]+$/" first-timer>
+                    </label>
+                    <em ng-show="!renewalform.applicationnumber.firstTimer && renewalform.applicationnumber.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> The application Number must be a number
+                    </em>
+                </section>
+            </div>
+
+            <div class="row">
+                <section class="col col-4">
+                    <label class="label" for="netpremium">Net Premium</label>
+                    <label class="input" ng-class="{'state-error':!renewalform.netpremium.firstTimer && renewalform.netpremium.$invalid, 'state-success':renewalform.netpremium.$dirty && renewalform.netpremium.$valid}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="receipt.NetPremium" placeholder="Net Premium" type="number"
+                               name="netpremium" id="netpremium" ng-required="issue" first-timer ng-blur="netChanged()">
+                    </label>
+                    <em ng-show="!renewalform.netpremium.firstTimer && renewalform.netpremium.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please a type a valid Net Premium
+                    </em>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="grosspremium">Gross Premium</label>
+                    <label class="input" ng-class="{'state-error':!renewalform.grosspremium.firstTimer && renewalform.grosspremium.$invalid, 'state-success':renewalform.grosspremium.$dirty && renewalform.grosspremium.$valid}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="receipt.GrossPremium" placeholder="Gross Premium" type="number"
+                               name="grosspremium" id="grosspremium" ng-required="issue" first-timer ng-blur="grossChanged()">
+                    </label>
+                    <em ng-show="!renewalform.grosspremium.firstTimer && renewalform.grosspremium.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a valid Gross Premium
+                    </em>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="commission">Commission</label>
+                    <label class="input" ng-class="{'state-error':!renewalform.commission.firstTimer && renewalform.commission.$invalid, 'state-success':renewalform.commission.$dirty && renewalform.commission.$valid}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="receipt.Commission" placeholder="Commission" type="number"
+                               name="commission" id="commission" first-timer>
+                    </label>
+                    <em ng-show="!renewalform.commission.firstTimer && renewalform.commission.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a valid Commission
+                    </em>
+                </section>
+            </div>
+
+        </fieldset>
+
+        <footer>
+            <button type="button" class="btn btn-default" ng-click="$dismiss('cancel')" data-dismiss="modal">
+                Cancel
+            </button>
+            <button type="button" ng-disabled="saving" ng-click="save(renewalform)" class="btn btn-primary">
+                <span ng-hide="saving">Save</span>
+                <span ng-show="saving">Saving&nbsp;<i class="fa fa-cog fa-spin"></i></span>
+            </button>
+        </footer>
+
+    </form>
+
+
+    <!--<div myformvalidate></div>-->
+
+
+    <script>
+
+        pageSetUp();
+
+
+        // Load form validation dependency
+        //loadScript("js/plugin/jquery-form/jquery-form.min.js", $objectForm);
+
+    </script>
+
+</div>

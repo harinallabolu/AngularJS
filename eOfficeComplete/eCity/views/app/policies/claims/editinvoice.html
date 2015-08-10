@@ -1,0 +1,153 @@
+﻿<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+
+    <h3 class="modal-title">Save Claim Invoice</h3>
+</div>
+<div class="modal-body no-padding">
+    <form action="" id="invoiceform" name="invoiceform" class="smart-form">
+        <header>
+            Fill this form to save a Claim Invoice
+        </header>
+
+        <fieldset ng-if="editType == 'editAll' || editType == 'new'">
+
+            <div class="row">
+                <label class="label col col-sm-5" for="invoicetype">Type</label>
+
+                <section class="col col-sm-7">
+                    <label class="select" ng-class="{'state-error':(!invoiceform.invoicetype.firstTimer || submitted) && invoiceform.invoicetype.$invalid, 'state-success':invoiceform.invoicetype.$dirty && invoiceform.invoicetype.$valid}">
+                        <select name="invoicetype" id="invoicetype" ng-model="invoice.TypeID" ng-options="t.ClaimInvoiceTypeID as t.Description for t in invoiceTypes"
+                                required first-timer></select>
+                        <option value="" selected="" disabled="">Invoice Type</option>
+                        <i></i>
+                    </label>
+                    <em ng-show="(!invoiceform.invoicetype.firstTimer || submitted) && invoiceform.invoicetype.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please select a an invoice type
+                    </em>
+                </section>
+            </div>
+
+            <div class="row">
+                <label class="label col col-sm-5" for="invoicenumber">Invoice Number</label>
+
+                <section class="col col-sm-7">
+                    <label class="input" ng-class="{'state-error':(!invoiceform.invoicenumber.firstTimer || submitted) && invoiceform.invoicenumber.$invalid, 'state-success':!invoiceform.invoicenumber.firstTimer && invoice.InvoiceNumber}">
+                        <input ng-model="invoice.Reference" placeholder="Invoice Number" type="text"
+                               name="invoicenumber" id="invoicenumber" required first-timer>
+                    </label>
+                    <em ng-show="(!invoiceform.invoicenumber.firstTimer || submitted) && invoiceform.invoicenumber.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> The invoice number is required
+                    </em>
+                </section>
+
+            </div>
+
+            <div class="row">
+                <label class="label col col-sm-5" for="invoiceamount">Invoice Amount</label>
+
+                <section class="col col-sm-7">
+                    <label class="input" ng-class="{'state-error':(!invoiceform.invoiceamount.firstTimer || submitted) && invoiceform.invoiceamount.$invalid, 'state-success':!invoiceform.invoiceamount.firstTimer && invoice.InvoiceAmount}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="invoice.Amount" placeholder="Invoice Amount" type="number" min="0"
+                               name="invoiceamount" id="invoiceamount" first-timer required>
+                    </label>
+                    <em ng-show="(!invoiceform.invoiceamount.firstTimer || submitted) && invoiceform.invoiceamount.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> The invoice amount is required
+                    </em>
+                </section>
+
+            </div>
+
+            <div class="row">
+                <label class="label col col-sm-5" for="invoicedate">Invoice Date</label>
+
+                <section class="col col-sm-7">
+                    <label class="input" ng-class="{'state-error':(!invoiceform.invoicedate.firstTimer || submitted) && invoiceform.invoicedate.$invalid, 'state-success':!invoiceform.invoicedate.firstTimer && invoiceform.invoicedate.$valid}">
+                        <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                        <input style="z-index:10" type="text" ng-model="invoice.Date" name="invoicedate"
+                               id="invoicedate" placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+                               data-datemindate="-1y" data-datemaxdate="+0d" data-dateyearrange="-1:+1"
+                               data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required
+                               first-timer less-equal-date="today" jquery-datepicker>
+                    </label>
+                    <em ng-show="(!invoiceform.invoicedate.firstTimer || submitted) && invoiceform.invoicedate.$error.required" class="invalid state-error">
+                        <i class="fa fa-warning"></i> Please select an invoice date (not greater than today)
+                    </em>
+                    <!--<em ng-show="invoiceform.invoicedate.$error.lessequaldate" class="invalid">
+                    <i class="fa fa-warning"></i> Please select an end date less than {{maxEndDate | date: 'dd/MM/yyyy'}}
+                </em>-->
+                </section>
+            </div>
+
+        </fieldset>
+
+        <fieldset ng-if="editType == 'editAll' || editType == 'editPay'">
+
+            <div class="row">
+                <label class="label col col-sm-5" for="deductible">Deductible</label>
+
+                <section class="col col-sm-7">
+                    <label class="input" ng-class="{'state-error':(!invoiceform.deductible.firstTimer || submitted) && invoiceform.deductible.$invalid, 'state-success':invoice.Deductible && invoiceform.deductible.$dirty}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="invoice.Deductible" placeholder="Deductible" type="number"
+                               name="deductible" id="deductible" first-timer>
+                    </label>
+                    <em ng-show="(!invoiceform.deductible.firstTimer || submitted) && invoiceform.deductible.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> The deductible must be a number
+                    </em>
+                </section>
+
+            </div>
+
+            <div class="row">
+                <label class="label col col-sm-5" for="amountpaid">Paid Amount</label>
+
+                <section class="col col-sm-7">
+                    <label class="input" ng-class="{'state-error':(!invoiceform.amountpaid.firstTimer || submitted) && invoiceform.amountpaid.$invalid, 'state-success':invoice.PaidAmount && invoiceform.amountpaid.$dirty}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="invoice.PaidAmount" placeholder="Paid Amount" type="number" min="0" claim-files="myclaimfiles"
+                               name="amountpaid" id="amountpaid" ng-required="editType == 'editPay'" first-timer>
+                    </label>
+                    <em ng-show="(!invoiceform.amountpaid.firstTimer || submitted) && invoiceform.amountpaid.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> The paid amount must be a number
+                    </em>
+                </section>
+
+            </div>
+        </fieldset>
+
+        <fieldset ng-if="editType == 'editAll' || editType == 'editNotes'">
+            <div class="row">
+                <section class="col col-sm-12">
+                    <label class="label">Notes</label>
+                    <label class="textarea textarea-expandable" ng-class="{'state-error':invoiceform.comments.$invalid && (!invoiceform.comments.firstTimer || submitted), 'state-success':invoice.Notes && invoiceform.comments.$dirty}">
+                        <i class="icon-append fa fa-comment"></i>
+                        <textarea class="custom-scroll" rows="4" placeholder="Type your notes here..." first-timer
+                                  ng-model="invoice.Notes" name="comments" id="comments" ng-required="editType == 'editNotes'"></textarea>
+                    </label>
+                    <em ng-show="invoiceform.comments.$invalid && (!invoiceform.comments.firstTimer || submitted)" class="invalid">
+                        <i class="fa fa-warning"></i> Please add some notes
+                    </em>
+                </section>
+            </div>
+
+        </fieldset>
+
+        <footer>
+            <button type="button" class="btn btn-warning" ng-click="$dismiss('cancel')" data-dismiss="modal">
+                Cancel
+            </button>
+            <button type="button" ng-click="save(invoiceform)" class="btn btn-primary">
+                Save
+            </button>
+        </footer>
+
+    </form>
+
+
+    <script>
+        pageSetUp();
+    </script>
+</div>

@@ -1,0 +1,63 @@
+﻿<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+
+    <h3 class="modal-title">Account Tranfers</h3>
+</div>
+<div class="modal-body">
+  
+    <div class="alert alert-block alert-success">
+        <h6 class="no-margin alert-heading">Amount Required: {{amountRequired | number:2}}</h6>
+        <h6 class="no-margin alert-heading">Total selected: {{totalSelectedAmount() | number:2}}</h6>
+    </div>
+    <table class="margin-bottom-0 footable toggle-circle-filled table table-striped table-bordered table-hover" footable="{}">
+        <thead>
+            <tr>
+                <th></th>
+                <th data-hide="">Policy</th>
+                <th data-hide="">Holder</th>
+                <th data-hide="">Object</th>
+                <th data-hide="">Available Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="p in policies" ng-click="p.transferFrom=!p.transferFrom" foo-row>
+                <td class="smart-form">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="p.transferFrom" name="checkbox-inline">
+                        <i></i>
+                    </label>
+                </td>
+                <td>
+                    {{p.PolicyID}}
+                </td>
+                <td>
+                    {{p.HolderFullname}}
+                </td>
+
+                <td>
+                    {{p.PolicyObject}}
+                </td>
+                <td>
+                    {{p.RunningTotal}}
+                </td>
+            </tr>
+            <tr ng-hide="policies.length"><td colspan="5">There are no policies.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="save()" data-dismiss="modal">
+        OK
+    </button>
+    <button type="button" class="btn btn-warning" ng-click="$dismiss('cancel')" data-dismiss="modal">
+        Cancel
+    </button>
+</div>
+
+
+<script>
+    pageSetUp();
+</script>

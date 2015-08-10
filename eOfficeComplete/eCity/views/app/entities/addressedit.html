@@ -1,0 +1,233 @@
+<style type="text/css">
+    .angular-google-map-container {
+        height: 200px;
+    }
+</style>
+
+<div class="smart-form" ng-form="addressform" novalidate="novalidate">
+
+    <fieldset>
+
+        <google-map ng-if="mapRender" center="map.center" zoom="map.zoom">
+            <marker coords="map.center" options="marker.options" events="marker.events" idkey="marker.id">
+                <window show="show">
+                    <div>{{title}}</div>
+                </window>
+            </marker>
+        </google-map>
+        <!--<input type="text" ng-model="map.center.latitude" />
+        <input type="text" ng-model="map.center.longitude" />-->
+
+        <!--<input ng-model="address.autocomplete" placeholder="Enter street and number..." type="text" name="autocomplete" id="autocomplete"
+               google-autocomplete>-->
+
+        <div ng-show="addresses.length" class="row">
+            <div class="col col-sm-12">
+                <table style="margin-bottom:15px" class="table footable table-bordered" footable="{}">
+                    <thead>
+                        <tr>
+                            <th>Actions</th>
+                            <th data-toggle="true">Address</th>
+                            <th data-hide="phone">Billing</th>
+                            <th data-hide="phone">Mailing</th>
+                            <th data-hide="phone">Collection</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="a in addresses | filter: showAddress(a)" foo-row>
+                            <td>
+                                <a href="javascript:void(0);" ng-click="editAddress(a)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
+                                <a href="javascript:void(0);" ng-click="removeAddress(a)" class="btn btn-default btn-xs"><i class="fa fa-times"></i></a>
+                            </td>
+                            <td>
+                                {{a.getDescription()}}
+                            </td>
+                            <td>
+                                <i ng-show="a.IsBilling" class="glyphicon glyphicon-ok txt-color-greenOkSign"></i>
+                            </td>
+                            <td><i ng-show="a.IsMailing" class="glyphicon glyphicon-ok txt-color-greenOkSign"></i></td>
+                            <td><i ng-show="a.IsCollection" class="glyphicon glyphicon-ok txt-color-greenOkSign"></i></td>
+                            <td>{{a.Type}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-md-6">
+
+                <div class="row">
+                    <section class="col col-xs-12">
+                        <label class="input">
+                            <i class="icon-prepend fa fa-google"></i>
+                            <input ng-model="address.autocomplete" placeholder="Enter street and number..." type="text" name="autocomplete" id="autocomplete"
+                                   google-autocomplete>
+                        </label>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <section class="col col-3 col-xs-3">
+                        <label class="label" localize="Floor">Floor</label>
+                        <label class="input">
+                            <input ng-model="address.Floor" placeholder="Floor" type="number" name="floor" id="floor">
+                        </label>
+                    </section>
+
+                    <section class="col col-9 col-xs-9">
+                        <label class="label" localize="DoorBell">Doorbell</label>
+                        <label class="input" ng-class="{'state-error': addressform.doorbell.$invalid, 'state-success': !addressform.doorbell.firstTimer && addressform.doorbell.$valid}">
+                            <i class="icon-prepend fa fa-user"></i>
+                            <input ng-model="address.Doorbell" placeholder="Doorbell name" type="text" name="doorbell" id="doorbell" required
+                                   first-timer>
+                        </label>
+                        <em ng-show="addressform.doorbell.$invalid" class="invalid">
+                            <i class="fa fa-warning"></i> Please type the name of the doorbell
+                        </em>
+                    </section>
+
+                   
+                </div>
+
+                <div class="row">
+                    <section class="col col-md-9 col-sm-12">
+                        <!--<div class="row">
+                            <label class="label col col-sm-12" ng-class="{'text-danger':!hasAddressType()}">Please select <strong>at least one</strong> of the checkboxes below</label>
+                        </div>-->
+                        <label class="label" ng-class="{'text-danger':!hasAddressType()}">Please select <strong>at least one</strong> of the checkboxes below</label>
+                        <div class="inline-group">
+                            <label class="checkbox" ng-class="{'state-error':!hasAddressType(), 'state-success': hasAddressType()}">
+                                <input type="checkbox" ng-model="address.IsBilling" name="billing" id="billing" ng-required="hasAddressType()">
+                                <i></i>Billing
+                            </label>
+                            <label class="checkbox" ng-class="{'state-error':!hasAddressType(), 'state-success': hasAddressType()}">
+                                <input type="checkbox" ng-model="address.IsMailing" name="mailing" id="mailing" ng-required="hasAddressType()">
+                                <i></i>Mailing
+                            </label>
+                            <label class="checkbox" ng-class="{'state-error':!hasAddressType(), 'state-success': hasAddressType()}">
+                                <input type="checkbox" ng-model="address.IsCollection" name="collection" id="collection" ng-required="hasAddressType()">
+                                <i></i>Collection
+                            </label>
+                        </div>
+                    </section>
+
+                    <section class="col col-md-3 col-sm-12">
+                        <label class="label" for="pobox" localize="POBox">P.O. Box</label>
+                        <label class="input">
+                            <!--<i class="icon-prepend fa fa-inbox"></i>-->
+                            <input ng-model="address.POBox" placeholder="P.O. Box" type="text" name="pobox" id="pobox">
+                        </label>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <section class="col col-sm-12">
+                        <label class="label" ng-class="{'text-danger':!address.Type && trySaveAddress}">Please select one address type</label>
+                        <div class="inline-group">
+                            <label class="radio" ng-class="{'state-error':!address.Type && trySaveAddress, 'state-success': address.Type }">
+                                <input type="radio" value="Home" ng-model="address.Type" name="addresstype" id="addresstype" ng-required="!address.Type">
+                                <i></i>Home
+                            </label>
+                            <label class="radio" ng-class="{'state-error':!address.Type && trySaveAddress, 'state-success': address.Type }">
+                                <input type="radio" value="Work" ng-model="address.Type" name="addresstype" id="addresstype" ng-required="!address.Type">
+                                <i></i>Work
+                            </label>
+                            <label class="radio" ng-class="{'state-error':!address.Type && trySaveAddress, 'state-success': address.Type }">
+                                <input type="radio" value="Cottage" ng-model="address.Type" name="addresstype" id="addresstype" ng-required="!address.Type">
+                                <i></i>Cottage
+                            </label>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <section class="col col-xs-12">
+                        <label class="label" localize="AdditionalInstructions">Additional Instructions</label>
+                        <label class="textarea textarea-expandable">
+                            <i class="icon-append fa fa-comment"></i>
+                            <textarea class="custom-scroll" rows="4"
+                                      ng-model="address.Comments" name="comments" id="comments"></textarea>
+                        </label>
+                    </section>
+                </div>
+
+            </div>
+
+            <div class="col col-md-6">
+                <div class="row" style="height:47px">
+                    <section class="col col-sm-12" style="max-width:250px">
+                        <label class="toggle">
+                            <input type="checkbox" ng-model="manualAddress" name="checkbox-toggle">
+                            <i data-swchon-text="YES" data-swchoff-text="NO"></i>Enable manual input
+                        </label>
+                    </section>
+                </div>
+
+
+                <div class="row">
+                    <section class="col col-xs-12 col-sm-6 col-md-8">
+                        <label class="label" localize="Street">Street</label>
+                        <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                            <input ng-model="address.Street" type="text" name="street" id="street" ng-disabled="!manualAddress">
+                        </label>
+                    </section>
+
+                    <section class="col col-xs-12 col-sm-6 col-md-4">
+                        <label class="label" localize="StreetNumber">Street Number</label>
+                        <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                            <input ng-model="address.StreetNumber" placeholder="Number" type="text" name="streetnumber" id="streetnumber" ng-disabled="!manualAddress">
+                        </label>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <section class="col col-xs-4 col-md-3">
+                        <label class="label" localize="PostalCode">Postal Code</label>
+                        <label class="input" ng-class="{'state-disabled': !manualAddress, 'state-error': showErrors && addressform.zip.$invalid}">
+                            <input ng-model="address.Zip" type="text" name="zip" id="zip" ng-disabled="!manualAddress" required>
+                        </label>
+                    </section>
+
+                    <section class="col col-xs-8 col-md-5">
+                        <label class="label" localize="Area">Area</label>
+                        <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                            <input ng-model="address.Area" type="text" name="area" id="area" placeholder="State, Area, Province" ng-disabled="!manualAddress">
+                        </label>
+                    </section>
+
+                    <section class="col col-xs-12 col-md-4">
+                        <label class="label" localize="City">City</label>
+                        <label class="input" ng-class="{'state-disabled': !manualAddress, 'state-error': showErrors && addressform.city.$invalid}">
+                            <input ng-model="address.City" type="text" name="city" id="city" ng-disabled="!manualAddress" required>
+                        </label>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <section class="col col-xs-4 col-sm-4 col-md-3">
+                        <label class="label" localize="CountryCode">Country Code</label>
+                        <label class="input" ng-class="{'state-disabled': !manualAddress, 'state-error': showErrors && addressform.countrycode.$invalid}">
+                            <input ng-model="address.CountryCode" type="text" name="countrycode" id="countrycode" ng-disabled="!manualAddress" required>
+                        </label>
+                    </section>
+
+                    <section class="col col-xs-8 col-sm-8 col-md-9">
+                        <label class="label" localize="Country">Country</label>
+                        <label class="input" ng-class="{'state-disabled': !manualAddress, 'state-error': showErrors && addressform.country.$invalid}">
+                            <input ng-model="address.Country" type="text" name="country" id="country" ng-disabled="!manualAddress" required>
+                        </label>
+                    </section>
+                </div>
+
+                <button type="button" name="button" class="button" ng-click="addAddress()">
+                    Save
+                </button>
+            </div>
+
+        </div>
+        
+    </fieldset>
+
+</div>

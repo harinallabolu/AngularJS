@@ -1,0 +1,126 @@
+﻿
+<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+
+    <h3 class="modal-title">Policy Endorsement</h3>
+</div>
+<div class="modal-body no-padding">
+    <form action="" id="endorsementform" name="endorsementform" class="smart-form">
+        <header>
+            Fill this form to create an endorsement for the policy {{policy.PolicyID}}
+        </header>
+
+        <fieldset>
+            <!--<pre>
+
+            {{additional |json}}
+            </pre>-->
+            <div class="row">
+                <section class="col col-6">
+                    <label class="label" for="startdate">Start Date</label>
+                    <label class="input" ng-class="{'state-error': !endorsementform.startdate.firstTimer && endorsementform.startdate.$invalid && endorsementform.startdate.$dirty, 'state-success':!endorsementform.startdate.firstTimer && endorsementform.startdate.$valid}">
+                        <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                        <input style="z-index:10" type="text" ng-model="endorsement.StartDate" name="startdate"
+                               id="startdate" placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+                               data-datemindate="-3m" data-datemaxdate="+1y" data-dateyearrange="-1:+1"
+                               data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required>
+                    </label>
+                    <em ng-show="!endorsementform.startdate.firstTimer && endorsementform.startdate.$error.required && endorsementform.startdate.$dirty" class="invalid">
+                        <i class="fa fa-warning"></i> Please select a start date
+                    </em>
+                </section>
+
+
+                <section class="col col-6">
+                    <label class="label" for="enddate">End Date</label>
+                    <label class="input" ng-class="{'state-error': !endorsementform.enddate.firstTimer && endorsementform.enddate.$invalid && endorsementform.enddate.$dirty, 'state-success':!endorsementform.enddate.firstTimer && endorsementform.enddate.$valid}">
+                        <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                        <input style="z-index:10" type="text" ng-model="endorsement.EndDate" name="enddate"
+                               id="enddate" placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+                               data-datemindate="-3m" data-datemaxdate="+1y" data-dateyearrange="-1:+1"
+                               data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required
+                               less-equal-date="maxEndDate" first-timer>
+                    </label>
+                    <em ng-show="!endorsementform.enddate.firstTimer && endorsementform.enddate.$error.required && endorsementform.enddate.$dirty && !endorsementform.$error.lessequaldate" class="invalid state-error">
+                        <i class="fa fa-warning"></i> Please select an end date
+                    </em>
+                    <em ng-show="endorsementform.enddate.$error.lessequaldate" class="invalid">
+                        <i class="fa fa-warning"></i> Please select an end date less than {{maxEndDate | date: 'dd/MM/yyyy'}}
+                    </em>
+                </section>
+            </div>
+
+            <div class="row">
+                <section class="col col-6">
+                    <label class="label" for="agreedpremium">Agreed Premium</label>
+                    <label class="input" ng-class="{'state-error':!endorsementform.agreedpremium.firstTimer && endorsementform.agreedpremium.$invalid, 'state-success':endorsement.AgreedPremium}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="endorsement.AgreedPremium" placeholder="Agreed Premium" type="number"
+                               name="agreedpremium" id="agreedpremium" first-timer>
+                    </label>
+                    <em ng-show="!endorsementform.agreedpremium.firstTimer && endorsementform.agreedpremium.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a valid Agreed Premium
+                    </em>
+                </section>
+
+                <section class="col col-6">
+                    <label class="label" for="applicationnumber">Application Number</label>
+                    <label class="input" ng-class="{'state-error':!endorsementform.applicationnumber.firstTimer && endorsementform.applicationnumber.$invalid, 'state-success':!endorsementform.applicationnumber.firstTimer && endorsement.ApplicationNumber}">
+                        <input ng-model="endorsement.ApplicationNumber" placeholder="Application Number" type="number"
+                               name="applicationnumber" id="applicationnumber" ng-pattern="/^[-]?[0-9]+$/" first-timer>
+                    </label>
+                    <em ng-show="!endorsementform.applicationnumber.firstTimer && endorsementform.applicationnumber.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> The application Number must be a number
+                    </em>
+                </section>
+            </div>
+
+            <div class="row">
+                <section class="col col-sm-12">
+                    <label class="label">Comments</label>
+                    <label class="textarea textarea-expandable">
+                        <i class="icon-append fa fa-comment"></i>
+                        <textarea class="custom-scroll" rows="4" placeholder="Type your comments here..."
+                                  ng-model="endorsement.Comments" name="comments" id="comments"></textarea>
+                    </label>
+                </section>
+            </div>
+
+        </fieldset>
+
+        <footer>
+            <button type="button" class="btn btn-default" ng-click="$dismiss('cancel')" data-dismiss="modal">
+                Cancel
+            </button>
+            <button type="button" ng-disabled="saving" ng-click="save(endorsementform)" class="btn btn-primary">
+                <span ng-hide="saving">Save</span>
+                <span ng-show="saving">Saving&nbsp;<i class="fa fa-cog fa-spin"></i></span>
+            </button>
+        </footer>
+
+    </form>
+
+
+    <!--<div myformvalidate></div>-->
+
+
+    <script>
+
+        pageSetUp();
+
+
+        // Load form validation dependency
+        //loadScript("js/plugin/jquery-form/jquery-form.min.js", $objectForm);
+
+    </script>
+
+</div>
+
+<script>
+    //!function () {
+    //    console.log('ok');
+    //    console.log($(".fieldrequired").length);
+    //}();
+</script>

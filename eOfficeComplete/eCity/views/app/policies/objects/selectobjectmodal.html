@@ -1,0 +1,135 @@
+﻿<script type="text/ng-template" id="newobjectmodal2.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add object of type {{objectType.Description}}</h3>
+    </div>
+    <div class="modal-body">
+        <!--<form class="smart-form" name="dummyformname" novalidate="novalidate">
+            <new-object object-type="objectType"></new-object>
+        </form>-->
+        <new-object object-type="objectType" success-fn="$close()" policy-id="policyId"></new-object>
+
+        <!--<my-address doorbell="{{doorbell}}" addresses="addresses"></my-address>-->
+    </div>
+    <div class="modal-footer">
+        <!--<button class="btn btn-primary" ng-click="save()">Save</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>-->
+        <button class="btn btn-primary" ng-click="$close()">Close</button>
+    </div>
+</script>
+
+<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+    <h3 class="modal-title">Locate existing objects or press "New" to create a new one</h3>
+</div>
+<div class="modal-body">
+
+    <form name="objectform">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            {{objectType.Description}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-click="selectObjectType(o)" ng-class="{'active': objectType == o}"
+                                ng-repeat="o in objectTypes | filter:{SlobID: policy.SlobID}">
+                                <a href="javascript:void(0)"><i ng-show="objectType == o" class="fa fa-check"></i> {{o.Description}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <input type="text" class="form-control" ng-model="$parent.object" placeholder="Search object or press the '+' button to add a new one..." id="search-project"
+                           typeahead="obj as obj.Description for obj in getObject($viewValue)" typeahead-loading="loadingObjects" typeahead-min-length="3" autocomplete="off"
+                           typeahead-input-formatter="$model.Description.trim()" typeahead-editable="false"
+                           typeahead-on-select="objectSelected($item, $model, $label)">
+                    <i ng-show="loadingObjects" class="glyphicon glyphicon-refresh"></i>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-warning" ng-click="addObject(objectform)">
+                            <!--&nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-plus fa-lg"></i>&nbsp;&nbsp;&nbsp;-->
+                            <!--&nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-search fa-lg"></i>&nbsp;&nbsp;&nbsp;-->
+                            <span class="glyphicon glyphicon-plus"></span> <span ng-hide="object" localize="New">New</span><span ng-show="object" localize="Add">Add</span>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="smart-form" ng-show="$parent.object">
+            <fieldset>
+                <div class="row">
+                    <section class="col-sm-4">
+                        <label class="label" for="objectdate">Object Start Date</label>
+                        <label class="input" ng-class="{'state-error': !objectform.objectdate.firstTimer && objectform.objectdate.$invalid}">
+                            <i style="z-index:11" class="icon-append fa fa-calendar"></i>
+                            <input style="z-index:10" type="text" ng-model="$parent.objectStartDate"
+                                   name="objectdate" id="objectdate"
+                                   placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+                                   data-datemindate="-1Y" data-datemaxdate="+1y" data-dateyearrange="-1:+1"
+                                   data-datechangemonth="true" data-dateformat="dd/mm/yy" ng-required="connectToPolicy"
+                                   first-timer date-formatter />
+                        </label>
+                        <em ng-show="!objectform.objectdate.firstTimer && objectform.objectdate.$invalid" class="invalid"><i class="fa fa-warning"></i> Please type the object's start date</em>
+                    </section>
+
+                    <div class="col-sm-1"></div>
+
+                    <section class="col-sm-4" ng-show="object && objectType.ObjectTypeID != 31">
+                        <label class="label" for="objectamount">Object Amount</label>
+                        <label class="input" ng-class="{'state-error': !objectform.objectamount.firstTimer && objectform.objectamount.$invalid}">
+                            <input type="number" name="objectamount" id="objectamount"
+                                   placeholder="Object Amount" ng-model="$parent.objectAmount" min="0"
+                                   ng-required="connectToPolicy" first-timer>
+                        </label>
+                        <em ng-show="!objectform.objectamount.firstTimer && objectform.objectamount.$invalid" class="invalid"><i class="fa fa-warning"></i> Please type the object's value</em>
+                    </section>
+                </div>
+            </fieldset>
+        </div>
+    </form>
+
+    <table class="animated footable table table-striped table-bordered table-hover smart-form has-tickbox" id="newobjectsFoo">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Start Date</th>
+                <th ng-if="objectType.ObjectTypeID != 31">Amount</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="o in newObjects" foo-row>
+                <td>
+                    {{o.Description}}
+                </td>
+                <td>
+                    {{o.ObjStartDate | date: 'dd/MM/yyyy' }}
+                </td>
+                <td ng-if="objectType.ObjectTypeID != 31">
+                    {{o.ObjectAmount}}
+                </td>
+                <td>
+                    <a href="javascript:void(0);" ng-click="newObjects.removeIndex($index)" class="btn btn-default btn-xs"><i class="fa fa-times"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="save()" data-dismiss="modal">
+            Save
+        </button>
+        <button type="button" class="btn btn-warning" ng-click="$dismiss('cancel')" data-dismiss="modal">
+            Cancel
+        </button>
+    </div>
+
+
+
+    <script>
+    pageSetUp();
+    </script>

@@ -1,0 +1,81 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> Dashboard <span>> My Dashboard</span></h1>
+    </div>
+
+
+
+</div>
+
+
+<div ng-if="isAdmin" class="well">
+    <h2 style="margin-top:0">Admin Panel</h2>
+
+    <!--<form class="smart-form">
+        <div class="row">
+            <section class="col col-sm-6">
+                <div class="inline-group">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="$parent.async">
+                        <i></i>Async
+                    </label>
+                </div>
+            </section>
+        </div>
+
+    </form>-->
+    <ul>
+        <li>
+            Generali
+            <ul>
+                <li>
+                    <a href="javascript:void(0)" ng-click="syncManufacturers('Generali')">Synchronize Generali Manufacturers (MotorManufacturers table)</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" ng-click="syncGeneraliMotorModels()">Synchronize Generali Motor Models (MotorModels table)</a> <strong>*</strong>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" ng-click="syncGeneraliProviderMotorModels()">Synchronize Generali Provider Motor Models (ProviderMotorModels table)</a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            Ethniki
+            <ul>
+                <li>
+                    <a href="javascript:void(0)" ng-click="syncMotorUsages('Ethniki')">Synchronize Ethniki Motor Usages (ProviderMotorUsages table)</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" ng-click="syncManufacturers('Ethniki')">Synchronize Ethniki Motor Manufacturers (ProviderManufacturers table)</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" ng-click="syncEthnikiMotorModels()">Synchronize Ethniki Motor Models (MotorModels table)</a> <strong>*</strong>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" ng-click="syncEthnikiProviderMotorModels()">Synchronize Ethniki Provider Motor Models (ProviderMotorModels table)</a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            Groupama
+            <ul>
+                <li>
+                    <a href="javascript:void(0)" ng-click="syncMotorUsages('Groupama')">Synchronize Ethniki Motor Usages (ProviderMotorUsages table)</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h6>Notes</h6>
+
+    <div class="margin-top-10">
+        <p><strong>*</strong> The models will be inserted into the database only if the manufacturer from the MotorManufacturer table they relate to has a NON NULL Factory</p>
+    </div>
+</div>
+
+<script>
+
+    pageSetUp();
+</script>

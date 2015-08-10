@@ -1,0 +1,455 @@
+﻿<style>
+    .dropdown-menu-inside-sf {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        list-style: none;
+        font-size: 13px;
+        text-align: left;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,.15);
+        border-radius: 2px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        background-clip: padding-box;
+    }
+</style>
+
+<script type="text/ng-template" id="deleteConfiguration.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Delete Configuration?</h3>
+    </div>
+    <div class="modal-body">
+        Are you sure you want to delete the configuration "{{name}}"?
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="$close()">Yes</button>
+        <button class="btn btn-warning" ng-click="$dismiss()">No</button>
+    </div>
+</script>
+
+<div class="row">
+    <div style="min-width:200px;" class="col-xs-3">
+
+        <select class="animated flash margin-bottom-10 select2" style="min-width:200px;" data-placeholder="Pick a configuration"
+                ng-model="configuration" id="configuration" name="configuration"
+                ng-options="c as c.Name for c in configurations">
+            <option value=""></option>
+        </select>
+    </div>
+
+    <div class="col-xs-3">
+        <div class="btn-group" dropdown>
+            <button type="button" class="btn btn-primary dropdown-toggle">
+                Actions <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="javascript:void(0);" ng-click="save()">Save</a></li>
+                <li><a href="javascript:void(0);" ng-click="new()">New</a></li>
+                <li><a href="javascript:void(0);" ng-click="delete()">Delete</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<form name="configurationform" class="smart-form" ng-show="configuration">
+    <fieldset>
+        <h6 class="margin-bottom-10">
+            Main Configuration Information
+        </h6>
+        <div class="row">
+            <section class="col col-3">
+                <label class="label" for="configurationname">Name</label>
+                <label class="input" ng-class="{'state-error':(configurationform.configurationname.$dirty || showErrors) && configurationform.configurationname.$invalid, 'state-success':configurationform.configurationname.$dirty && configurationform.configurationname.$valid}">
+                    <input ng-model="configuration.Name" placeholder="Configuration name" type="text"
+                           name="configurationname" id="configurationname" required />
+                </label>
+                <em ng-show="(configurationform.configurationname.$dirty || showErrors) && configurationform.configurationname.$invalid" class="invalid">
+                    <i class="fa fa-warning"></i> Please type a configuration name
+                </em>
+            </section>
+
+            <section class="col col-3">
+                <label class="label" for="myconfigurationtype">Type</label>
+                <label class="select" ng-class="{'state-error':(configurationform.myconfigurationtype.$dirty || showErrors) && configurationform.myconfigurationtype.$invalid, 'state-success':configurationform.myconfigurationtype.$dirty && configurationform.myconfigurationtype.$valid}">
+                    <select ng-model="configuration.Type" name="myconfigurationtype" id="myconfigurationtype" required
+                            ng-change="configTypeChanged()">
+                        <option disabled selected value="">Select the configuration's type</option>
+                        <option value="Receipts">Receipts</option>
+                        <option value="BankTransactions">Bank Transactions</option>
+                        <option value="Payments">Payments</option>
+                    </select>
+                    <i></i>
+                </label>
+                <em ng-show="(configurationform.myconfigurationtype.$dirty || showErrors) && configurationform.myconfigurationtype.$invalid" class="invalid">
+                    <i class="fa fa-warning"></i> Please select a configuration type
+                </em>
+            </section>
+
+            <section class="col col-3">
+                <label class="label" for="configurationentity">Entity</label>
+                <label class="input" ng-class="{'state-error':(configurationform.configurationentity.$dirty || showErrors) && configurationform.configurationentity.$invalid, 'state-success':configurationform.configurationentity.$dirty && configurationform.configurationentity.$valid}">
+                    <input ng-model="configuration.Entity" placeholder="Configuration Entity" type="number" ng-pattern="/^[1-9][0-9]*$/"
+                           name="configurationentity" id="configurationentity" required />
+                </label>
+                <em ng-show="(configurationform.configurationentity.$dirty || showErrors) && configurationform.configurationentity.$invalid" class="invalid">
+                    <i class="fa fa-warning"></i> Please select an entity
+                </em>
+            </section>
+
+            <section class="col col-3">
+                <label class="label" for="configurationadditionalentity">Additional Entity</label>
+                <label class="input">
+                    <input ng-model="configuration.AdditionalEntity" placeholder="Additional Entity" type="number" ng-pattern="/^[1-9][0-9]*$/"
+                           name="configurationadditionalentity" id="configurationadditionalentity" />
+                </label>
+            </section>
+        </div>
+
+        <div class="row">
+            <section class="col col-10">
+                <label class="label" for="instructions">Instructions</label>
+                <label class="textarea textarea-expandable">
+                    <i class="icon-append fa fa-comment"></i>
+                    <textarea class="custom-scroll" rows="4"
+                              ng-model="configuration.Description" name="instructions" id="instructions"></textarea>
+                </label>
+            </section>
+
+            <!--<div class="col col-2">
+                <section class="col col-10">
+                    <label class="label" for="instructions">&nbsp;</label>
+                    <a class="btn btn-primary btn-inside-smartform pull-left" ng-click="addFile()" href="javascript:void(0);">Add file</a>
+                </section>
+            </div>-->
+        </div>
+
+    </fieldset>
+
+    <fieldset class="no-padding"></fieldset>
+
+    <div class="margin-top-10" ng-repeat="m in configuration.FileMappings">
+
+        <fieldset>
+            <h3 class="margin-bottom-10 txt-color-blue">
+                File <strong>{{m.Description}}</strong> <a ng-click="removeFile($index)" class="btn btn-primary btn-xs" href="javascript:void(0);">Remove File</a> <!--<a class="btn btn-primary btn-xs" href="javascript:void(0);">Primary</a>-->
+            </h3>
+
+            <div class="row">
+                <section class="col col-4">
+                    <label class="label">File</label>
+                    <label class="input" ng-class="{'state-error':(!configurationform['filedescription' + $index].firstTimer || showErrors) && configurationform['filedescription' + $index].$invalid, 'state-success':configurationform['filedescription' + $index].$dirty && configurationform['filedescription' + $index].$valid}">
+                        <input ng-model="m.Description" placeholder="File description" type="text"
+                               dynamic-name="'filedescription' + $index" required first-timer>
+                    </label>
+                    <em ng-show="(!configurationform['filedescription' + $index].firstTimer || showErrors) && configurationform['filedescription' + $index].$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a file name
+                    </em>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label">Filename pattern</label>
+                    <label class="input">
+                        <i class="icon-append fa fa-question-circle"></i>
+                        <input ng-model="m.FilenamePattern" placeholder="Filename pattern" type="text"
+                               dynamic-name="'filepattern' + $index">
+                        <b class="tooltip tooltip-top-right">
+                            <i class="fa fa-info txt-color-teal"></i>&nbsp;&nbsp;A regular expression that must be matched by the filename
+                        </b>
+                    </label>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label">Line delimiter</label>
+                    <label class="input" ng-class="{'state-error':(configurationform['filedelimiter' + $index].$dirty || showErrors) && configurationform['filedelimiter' + $index].$invalid, 'state-success':configurationform['filedelimiter' + $index].$dirty && configurationform['filedelimiter' + $index].$valid}">
+                        <i class="icon-append fa fa-question-circle"></i>
+                        <input ng-model="m.Delimiter" placeholder="Line delimiter" type="text"
+                               dynamic-name="'filedelimiter' + $index" ng-minlength="1" ng-maxlength="1"
+                               ng-required="requiresDelimiter(m)">
+                        <b class="tooltip tooltip-top-right">
+                            <i class="fa fa-info txt-color-teal"></i>&nbsp;&nbsp;A character to split the line into groups
+                        </b>
+                    </label>
+                    <em ng-show="(configurationform['filedelimiter' + $index].$dirty || showErrors) && configurationform['filedelimiter' + $index].$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a char
+                    </em>
+                </section>
+            </div>
+
+            <div class="row">
+                <section class="col col-2">
+                    <label class="label">Encoding</label>
+                    <label class="select" ng-class="{'state-error':(!configurationform['fileencoding' + $index].firstTimer || showErrors) && configurationform['fileencoding' + $index].$invalid, 'state-success':configurationform['fileencoding' + $index].$dirty && configurationform['fileencoding' + $index].$valid}">
+                        <select style="width:100%" ui-select2 ng-model="m.Encoding" placeholder="Encoding" type="text"
+                                dynamic-name="'fileencoding' + $index" required first-timer>
+                            <option value=""></option>
+                            <option ng-repeat="e in encodings" value="{{e}}">{{e}}</option>
+                        </select>
+                    </label>
+                    <em ng-show="(!configurationform['fileencoding' + $index].firstTimer || showErrors) && configurationform['fileencoding' + $index].$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please select the file's encoding
+                    </em>
+                </section>
+
+                <section class="col col-2">
+                    <label class="label">Trim char</label>
+                    <label class="input">
+                        <i class="icon-append fa fa-question-circle"></i>
+                        <input ng-model="m.TrimChars" placeholder="Field trim char" type="text"
+                               dynamic-name="'filetrimchar' + $index" ng-minlength="1" ng-maxlength="1">
+                        <b class="tooltip tooltip-top-right">
+                            <i class="fa fa-info txt-color-teal"></i>&nbsp;&nbsp;
+                            A character that surrounds each field's value, usually double quotes (") as in  "53.23"
+                        </b>
+                    </label>
+                </section>
+
+                <section class="col col-2">
+                    <label class="label">Ignore Lines</label>
+                    <label class="input" ng-class="{'state-error':(configurationform['fileignorelines' + $index].$dirty || showErrors) && configurationform['fileignorelines' + $index].$invalid, 'state-success':configurationform['fileignorelines' + $index].$dirty && configurationform['fileignorelines' + $index].$valid}">
+                        <i class="icon-append fa fa-question-circle"></i>
+                        <input ng-model="m.IgnoreLines" placeholder="Ignore Lines" type="number"
+                               dynamic-name="'fileignorelines' + $index" ng-pattern="/^(0|[1-9][0-9]*)$/">
+                        <b class="tooltip tooltip-top-right">
+                            <i class="fa fa-info txt-color-teal"></i>&nbsp;&nbsp;
+                            The number of lines to ignore from the top of the file
+                        </b>
+                    </label>
+                    <em ng-show="(!configurationform['fileignorelines' + $index].firstTimer || showErrors) && configurationform['fileignorelines' + $index].$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a valid number
+                    </em>
+                </section>
+
+                <section class="col col-2">
+                    <label class="label">Remove char from line</label>
+                    <label class="input">
+                        <i class="icon-append fa fa-question-circle"></i>
+                        <input ng-model="m.RemoveChars" placeholder="File remove char" type="text"
+                               dynamic-name="'fileremovechar' + $index" ng-minlength="1" ng-maxlength="1">
+                        <b class="tooltip tooltip-top-right">
+                            <i class="fa fa-info txt-color-teal"></i>&nbsp;&nbsp;
+                            A character that will be removed from each line
+                        </b>
+                    </label>
+                </section>
+
+                <!--<div class="col-col-2">
+                    <label class="label">&nbsp;</label>
+                    <div class="btn-group" dropdown>
+                        <button type="button" class="btn btn-primary btn-inside-smartform dropdown-toggle">
+                            Actions <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-inside-sf" role="menu">
+                            <li><a href="javascript:void(0);" ng-click="removeFile($index)">Delete File</a></li>
+                            <li><a href="javascript:void(0);" ng-click="addField(m)">Add Field</a></li>
+                        </ul>
+                    </div>
+                </div>-->
+
+                <!--<section class="col col-2">
+                    <label class="label">Foreign Key</label>
+                    <label class="input">
+                        <input ng-model="m.RemoveChars" placeholder="File remove char" type="text"
+                               dynamic-name="'fileremovechar' + $index" ng-minlength="1" ng-maxlength="1">
+
+                    </label>
+                </section>-->
+            </div>
+
+
+
+        </fieldset>
+
+        <fieldset style="margin-left:20px" ng-repeat="f in m.Fields">
+            <h3 class="margin-bottom-10 txt-color-red">
+                Field <strong>{{f.Name}}</strong> of file {{m.Description}} <a ng-show="$last" class="btn btn-primary btn-xs" ng-click="addField(m)" href="javascript:void(0);">Add Field</a>
+                <a class="btn btn-primary btn-xs" ng-click="removeField(m.Fields, $index)" href="javascript:void(0);">Delete this</a>
+                <a ng-show="$parent.$last && $last" class="btn btn-primary btn-xs" ng-click="addFile()" href="javascript:void(0);">Add file</a>
+            </h3>
+
+            <div class="row">
+                <section class="col col-3">
+                    <label class="label">Field Name</label>
+                    <label class="select" ng-class="{'state-error':(!configurationform['fieldname' + $index].firstTimer || showErrors) && configurationform['fieldname' + $index].$invalid, 'state-success':configurationform['fieldname' + $index].$dirty && configurationform['fieldname' + $index].$valid}">
+                        <!--<input ng-model="f.Name" placeholder="Field name" type="text"
+                        dynamic-name="'fieldname' + $index" required first-timer />-->
+                        <select ng-model="f.Name" placeholder="Field name"
+                                dynamic-name="'fieldname' + $index" required first-timer ng-options="n as n for n in fieldnames[configuration.Type]">
+                            <option disabled selected value="">Select the field's name</option>
+                            <!--<option value="Alphanumeric">Alphanumeric</option>
+                            <option value="Decimal">Decimal</option>
+                            <option value="Date">Date</option>-->
+                        </select>
+                        <i></i>
+                    </label>
+                    <em ng-show="(!configurationform['fieldname' + $index].firstTimer || showErrors) && configurationform['fieldname' + $index].$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a field name
+                    </em>
+                </section>
+
+                <section class="col col-3" ng-hide="!colNumRequired(f)">
+                    <label class="label">Column (starting from 0)</label>
+                    <label class="input" ng-class="{'state-error':(!configurationform['fieldcolumn' + $index].firstTimer || showErrors) && configurationform['fieldcolumn' + $index].$invalid, 'state-success':configurationform['fieldcolumn' + $index].$dirty && configurationform['fieldcolumn' + $index].$valid}">
+                        <input ng-model="f.ColNum" placeholder="Field column" type="number" ng-pattern="/^(0|[1-9][0-9]*)$/"
+                               dynamic-name="'fieldcolumn' + $index" ng-required="colNumRequired(f)" first-timer />
+                    </label>
+                    <em ng-show="(!configurationform['fieldcolumn' + $index].firstTimer || showErrors) && configurationform['fieldcolumn' + $index].$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type the field's column
+                    </em>
+                </section>
+
+                <section class="col col-3" ng-hide="!posLengthRequired(f)">
+                    <label class="label">First Character Position (starting from 0)</label>
+                    <label class="input" ng-class="{'state-error':(!configurationform['fieldposition' + $index].firstTimer || showErrors) && configurationform['fieldposition' + $index].$invalid, 'state-success':configurationform['fieldposition' + $index].$dirty && configurationform['fieldposition' + $index].$valid}">
+                        <input ng-model="f.Position" placeholder="Field position" type="number" ng-pattern="/^(0|[1-9][0-9]*)$/"
+                               dynamic-name="'fieldposition' + $index" ng-required="posLengthRequired(f)" first-timer />
+                    </label>
+                    <em ng-show="(!configurationform['fieldposition' + $index].firstTimer || showErrors) && configurationform['fieldposition' + $index].$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type the field's position
+                    </em>
+                </section>
+
+                <section class="col col-3" ng-hide="!posLengthRequired(f)">
+                    <label class="label">Characters length</label>
+                    <label class="input" ng-class="{'state-error':(!configurationform['fieldlength' + $index].firstTimer || showErrors) && configurationform['fieldlength' + $index].$invalid, 'state-success':configurationform['fieldlength' + $index].$dirty && configurationform['fieldlength' + $index].$valid}">
+                        <input ng-model="f.Length" placeholder="Field length" type="number" min="1" ng-pattern="/^[1-9][0-9]*$/"
+                               dynamic-name="'fieldlength' + $index" ng-required="posLengthRequired(f)" first-timer />
+                    </label>
+                    <em ng-show="(!configurationform['fieldlength' + $index].firstTimer || showErrors) && configurationform['fieldlength' + $index].$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type the field's character length
+                    </em>
+                </section>
+            </div>
+
+            <div class="row">
+                <section class="col col-3">
+                    <label class="label">Field Type <small class="note">*Required</small></label>
+                    <label class="select" ng-class="{'state-error':(!configurationform['myfieldname2' + $index].firstTimer || showErrors) && configurationform['myfieldname2' + $index].$invalid, 'state-success':configurationform['myfieldname2' + $index].$dirty && configurationform['myfieldname2' + $index].$valid}">
+                        <select ng-model="f.Type" placeholder="Field name"
+                                dynamic-name="'myfieldname2' + $index" required first-timer ng-options="n as n for n in ['Alphanumeric', 'Decimal', 'Date']">
+                            <option disabled selected value="">Select the field's type</option>
+                        </select>
+                        <i></i>
+                    </label>
+                    <em ng-show="(!configurationform['myfieldname2' + $index].firstTimer || showErrors) && configurationform['myfieldname2' + $index].$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please select a field type
+                    </em>
+                </section>
+
+                <section class="col col-3" ng-show="f.Type === 'Decimal'">
+                    <label class="label">Decimal Culture</label>
+                    <label class="select">
+                        <select ng-model="f.DecimalCulture" dynamic-name="'fieldtype' + $index">
+                            <option selected value="">Select a decimal culture</option>
+                            <option value="en">English</option>
+                            <option value="el">Greek</option>
+                        </select>
+                        <i></i>
+                    </label>
+                    <div class="note">
+                        The default is english
+                    </div>
+                </section>
+
+                <section class="col col-3" ng-show="f.Type === 'Decimal'">
+                    <label class="label">Number of decimal digits</label>
+                    <label class="input">
+                        <i class="icon-append fa fa-question-circle"></i>
+                        <input ng-model="f.DecimalDigits" placeholder="Number of decimal digits" type="number" ng-pattern="/^[1-9][0-9]*$/"
+                               dynamic-name="'fielddecimaldigits' + $index" />
+                        <b class="tooltip tooltip-top-right">
+                            <i class="fa fa-info txt-color-teal"></i>&nbsp;&nbsp;
+                            Used only when the type is Decimal and the value does not contain a decimal point. It indicates the number of digits after the decimal point.
+                        </b>
+                    </label>
+                    <div class="note">
+                        If the value is 2, 100501 will be converted to 1005.01
+                    </div>
+                </section>
+
+                <section class="col col-3" ng-show="f.Type === 'Date'">
+                    <label class="label">Date mask</label>
+                    <label class="input">
+                        <i class="icon-append fa fa-question-circle"></i>
+                        <input ng-model="f.DateMask" placeholder="dd/MM/yyyy" type="text"
+                               dynamic-name="'fielddatemask' + $index" />
+                        <b class="tooltip tooltip-top-right">
+                            <i class="fa fa-info txt-color-teal"></i>&nbsp;&nbsp;
+                            The input will be passed as the format argument to the DateTime.ParseExact .NET method
+                        </b>
+                    </label>
+                </section>
+
+            </div>
+
+            <div class="row">
+                <section class="col col-3">
+                    <label class="label">Remove string</label>
+                    <label class="input">
+                        <i class="icon-append fa fa-question-circle"></i>
+                        <input ng-model="f.RemoveSubstring" placeholder="Field name" type="text"
+                               dynamic-name="'fieldremovestring' + $index" />
+                        <b class="tooltip tooltip-top-right">
+                            <i class="fa fa-info txt-color-teal"></i>&nbsp;&nbsp;The specified string will be replaced with ""
+                        </b>
+                    </label>
+                    
+                </section>
+
+                <section class="col col-2">
+                    <label class="label">&nbsp;</label>
+                    <label class="checkbox">
+                        <input type="checkbox" dynamic-name="'fieldforeignkey' + $index" ng-model="f.ForeignKey">
+                        <i></i>Foreign key
+                    </label>
+                </section>
+
+                <section class="col col-2">
+                    <label class="label">&nbsp;</label>
+                    <label class="checkbox">
+                        <input type="checkbox" dynamic-name="'fieldgroupby' + $index" ng-model="f.IsKey">
+                        <i></i>Group By
+                    </label>
+                </section>
+
+                <section class="col col-2">
+                    <label class="label">Aggregate Function</label>
+                    <label class="select">
+                        <select ng-model="f.Aggregate" dynamic-name="'fieldaggregate' + $index">
+                            <option selected value="">Aggregate functions</option>
+                            <option value="SUM">SUM</option>
+                        </select>
+                        <i></i>
+                    </label>
+                </section>
+            </div>
+
+            <!--<div class="row">
+                <div class="col col-2">
+                    <section class="col">
+                        <label class="label" for="instructions">&nbsp;</label>
+                        <a class="btn btn-primary btn-inside-smartform pull-left" ng-click="removeField(m.Fields, $index)" href="javascript:void(0);">Remove Field</a>
+                    </section>
+                </div>
+
+            </div>-->
+        </fieldset>
+
+
+    </div>
+</form>
+
+<pre>
+{{configuration | json}}
+</pre>
+
+<script>
+    pageSetUp();
+</script>

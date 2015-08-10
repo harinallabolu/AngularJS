@@ -1,0 +1,124 @@
+<style type="text/css">
+    .row > .clear-every-three:nth-child(3n + 4) {
+        clear: both;
+    }
+
+    .select2-container .select2-choice {
+        overflow: visible;
+    }
+</style>
+
+<script type="text/ng-template" id="textfield.html">
+    <label class="label">
+        {{f.Info.Caption}}<span ng-if="f.Info.Required"> *</span>
+    </label>
+    <label class="input" ng-class="{'state-error': !objectform['field' + f.Info.FieldID].firstTimer && objectform['field' + f.Info.FieldID].$invalid}">
+        <input type="text" class="fieldrequired" dynamic-name="'field' + f.Info.FieldID"
+               capitalize ng-required="f.Info.Required"
+               placeholder="{{f.Info.Caption}}" ng-model="f.Info.DefaultValue" first-timer>
+    </label>
+    <em ng-show="!objectform['field' + f.Info.FieldID].firstTimer && objectform['field' + f.Info.FieldID].$invalid" class="invalid"><i class="fa fa-warning"></i> Please fill this field</em>
+</script>
+
+<script type="text/ng-template" id="numberfield.html">
+    <label class="label">
+        {{f.Info.Caption}}<span ng-if="f.Info.Required"> *</span>
+    </label>
+    <label class="input" ng-class="{'state-error': !objectform['field' + f.Info.FieldID].firstTimer && objectform['field' + f.Info.FieldID].$invalid}">
+        <input type="number" dynamic-name="'field' + f.Info.FieldID" ng-class="{fieldrequired:f.Info.Required == 1}"
+               placeholder="{{f.Info.Caption}}" ng-model="f.Info.DefaultValue"
+               ng-init="Number(f.Info.DefaultValue)" ng-required="f.Info.Required" first-timer>
+    </label>
+    <em ng-show="!objectform['field' + f.Info.FieldID].firstTimer && objectform['field' + f.Info.FieldID].$invalid" class="invalid"><i class="fa fa-warning"></i> Please fill this field</em>
+</script>
+
+<script type="text/ng-template" id="selectfield.html">
+    <label class="label">
+        {{f.Info.Caption}}<span ng-if="f.Info.Required"> *</span>
+    </label>
+    <label class="select" ng-class="{'state-error': !objectform['field' + f.Info.FieldID].firstTimer && objectform['field' + f.Info.FieldID].$invalid}">
+        <select style="width:100%" ui-select2 ng-model="f.Info.DefaultValue" dynamic-name="'field' + f.Info.FieldID"
+                dynamic-id="'field' + f.Info.FieldID" ng-required="f.Info.Required" first-timer data-placeholder="--{{f.Info.Caption}}--">
+            <option value=""></option>
+            <option ng-repeat="v in f.Values" value="{{v}}">{{v}}</option>
+        </select>
+    </label>
+    <em ng-show="!objectform['field' + f.Info.FieldID].firstTimer && objectform['field' + f.Info.FieldID].$invalid" class="invalid"><i class="fa fa-warning"></i> Please fill this field</em>
+</script>
+
+<script type="text/ng-template" id="datefield.html">
+    <label class="label">{{f.Info.Caption}}<span ng-if="f.Info.Required"> *</span></label>
+    <label class="input" ng-class="{'state-error': !objectform['field' + f.Info.FieldID].firstTimer && objectform['field' + f.Info.FieldID].$invalid}">
+        <i style="z-index:11" class="icon-append fa fa-calendar"></i>
+        <input style="z-index:10" type="text" ng-model="f.Info.DefaultValue"
+               dynamic-name="'field' + f.Info.FieldID" dynamic-id="'field' + f.Info.FieldID"
+               placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+               data-datemindate="-100Y" data-datemaxdate="+1y" data-dateyearrange="-100:+1"
+               data-datechangemonth="true" data-dateformat="dd/mm/yy" ng-required="f.Info.Required"
+               first-timer jquery-datepicker>
+    </label>
+    <em ng-show="!objectform['field' + f.Info.FieldID].firstTimer && objectform['field' + f.Info.FieldID].$invalid" class="invalid"><i class="fa fa-warning"></i> Please fill this field</em>
+</script>
+
+<script type="text/ng-template" id="cbfield.html">
+    <label class="label">&nbsp;</label>
+    <label class="checkbox">
+        <input dynamic-name="'field' + f.Info.FieldID"
+               type="checkbox" ng-model="f.Info.DefaultValue">
+        <i></i>{{f.Info.Caption}}
+    </label>
+</script>
+
+<script type="text/ng-template" id="radiosfield.html">
+    <label class="label">{{f.Info.Caption}}<span ng-if="f.Info.Required"> *</span></label>
+    <div class="row">
+        <!--<label class="label col col-2">{{f.Info.Caption}}</label>-->
+        <div class="inline-group col col-10">
+            <label class="radio" ng-repeat="v in f.Values">
+                <input dynamic-name="'field' + f.Info.FieldID" type="radio" name="radio-inline" ng-model="f.Info.DefaultValue"
+                       ng-value="v" ng-required="f.Info.Required">
+                <i></i>{{v}}
+            </label>
+        </div>
+    </div>
+</script>
+
+<form id="objectform" name="objectform" class="smart-form" novalidate="novalidate">
+    <header>
+        Fill this form to create a new object of type "{{objectType.Description}}".
+    </header>
+
+    <fieldset>
+        <p class="margin-bottom-10">
+            Please note that fields marked with asterisk (*) are required.
+        </p>
+        </br>
+        <div class="row">
+            <section class="col col-4 clear-every-three" ng-repeat="f in fields">
+                <!--<my-object info="f"></my-object>-->
+                <!--{{f.Info.ControlToUse}}-->
+                <div ng-switch="f.Info.ControlToUse">
+                    <div ng-switch-when="TextEdit"><div ng-include="'textfield.html'"></div></div>
+                    <div ng-switch-when="RichEditControl"><div ng-include="'textfield.html'"></div></div>
+                    <div ng-switch-when="ComboBoxEdit"><div ng-include="'selectfield.html'"></div></div>
+                    <div ng-switch-when="DateEdit"><div ng-include="'datefield.html'"></div></div>
+                    <div ng-switch-when="CheckBox"><div ng-include="'cbfield.html'"></div></div>
+                    <div ng-switch-when="RadioGroup"><div ng-include="'radiosfield.html'"></div></div>
+                    <div ng-switch-when="SpinEdit"><div ng-include="'numberfield.html'"></div></div>
+                    <div ng-switch-default>{{f.Info.ControlToUse}}</div>
+                </div>
+            </section>
+        </div>
+    </fieldset>
+
+    <footer ng-hide="noSave">
+        <!--<button type="button" class="btn btn-default" ng-click="$dismiss('cancel')" data-dismiss="modal">
+            Cancel
+        </button>-->
+        <button type="button" ng-click="save(objectform)" ng-disabled="submitting" class="btn btn-primary">
+            Add Object
+        </button>
+    </footer>
+</form>
+
+

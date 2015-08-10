@@ -1,0 +1,893 @@
+﻿<style type="text/css">
+    .smart-form h3 {
+        margin: 20px 0;
+    }
+
+    .label.text-danger {
+        color: #b94a48 !important;
+    }
+</style>
+
+<script type="text/ng-template" id="phonecontact.html">
+    <label class="input">
+        <i ng-class="{'fa-mobile':currentContact.Type === 'Mobile', 'fa-phone':currentContact.Type==='HomePhone'||currentContact.Type==='WorkPhone'}"
+           class="icon-prepend fa"></i>
+        <input type="text" name="phone" id="phone" ng-model="currentContact.Value" placeholder="Phone">
+    </label>
+</script>
+
+<script type="text/ng-template" id="emailcontact.html">
+    <!--<input name="mypattern" ng-init="hello" type="text"
+           ng-model="mypattern" value="sdfsd">-->
+    <!--entityform.email.$error.validEmail: {{entityform.email.$error.validEmail}}<br/>
+    entityform.email.$error.pattern: {{entityform.email.$error.pattern}}<br/>
+    entityform.email.$error.email: {{entityform.email.$error.email}}<br/>-->
+    <!--<h1 class="ajax-loading-animation"><i class="fa fa-cog fa-spin"></i> Validating email...</h1>-->
+    <label class="input" ng-class="{'state-error':(!currentContact.validating && entityform.email.$error.validEmail) || (entityform.$error.email && !entityform.email.firstTimer),
+           'state-success':currentContact.Value && !entityform.email.firstTimer && entityform.email.$valid}">
+        <i class="icon-prepend fa fa-envelope"></i>
+        <input type="email" name="email" id="email" ng-model="currentContact.Value" placeholder="Email" valid-email first-timer>
+    </label>
+    <em ng-show="entityform.$error.email && !entityform.email.firstTimer" class="invalid state-error"><i class="fa fa-warning"></i> Please type a valid email address</em>
+    <!--<em ng-show="!currentContact.validating && entityform.email.$error.validEmail" class="invalid"><i class="fa fa-warning"></i> Cobisi error: {{currentContact.cobisi}}</em>-->
+    <em ng-show="currentContact.cobisi" class="txt-color-orangeDark"><i class="fa fa-warning"></i> This email cannot be verified ({{currentContact.cobisi}})</em>
+    <div ng-show="currentContact.validating" class="ajax-loading-animation"><i class="fa fa-cog fa-spin"></i> Validating email...</div>
+</script>
+
+<script type="text/ng-template" id="skypecontact.html">
+    <label class="input">
+        <i class="icon-prepend fa fa-skype"></i>
+        <input type="text" name="skype" id="skype" ng-model="currentContact.Value" placeholder="Skype">
+    </label>
+</script>
+
+<script type="text/ng-template" id="faxcontact.html">
+    <label class="input">
+        <i class="icon-prepend fa fa-fax"></i>
+        <input type="text" name="fax" id="fax" ng-model="currentContact.Value" placeholder="Fax">
+    </label>
+</script>
+
+<script type="text/ng-template" id="internetcontact.html">
+    <label class="input">
+        <i class="icon-prepend fa fa-desktop"></i>
+        <input type="text" name="internet" id="internet" ng-model="currentContact.Value" placeholder="www.amazingwebsite.com...">
+    </label>
+</script>
+
+<!--<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark">
+            <i class="fa fa-pencil-square-o fa-fw "></i> Forms <span>
+                >
+                Wizards
+            </span>
+        </h1>
+    </div>
+</div>-->
+<!-- widget grid -->
+<section id="widget-grid" ng-controller="NewEntityController">
+    <div class="row">
+
+        <!-- NEW WIDGET START -->
+        <article class="col-sm-12">
+
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget jarviswidget-color-darken animated fadeInDownBig" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-check"></i> </span>
+                    <h2>New Entity</h2>
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body fuelux">
+
+                        <div class="wizard" fuelux-wizard2 wizard-validators="validators" on-wiz-finish="submitEntity()" active-step="activeStep">
+                            <ul class="steps">
+                                <li data-target="#step1" class="active">
+                                    <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
+                                </li>
+                                <li data-target="#step2">
+                                    <span class="badge">2</span>Step 2<span class="chevron"></span>
+                                </li>
+                                <li data-target="#step3">
+                                    <span class="badge">3</span>Step 3<span class="chevron"></span>
+                                </li>
+                                <li data-target="#step4">
+                                    <span class="badge">4</span>Step 4<span class="chevron"></span>
+                                </li>
+                                <li data-target="#step5">
+                                    <span class="badge">5</span>Step 5<span class="chevron"></span>
+                                </li>
+                            </ul>
+                            <div class="actions">
+                                <button type="button" class="btn btn-sm btn-primary btn-prev">
+                                    <i class="fa fa-arrow-left"></i>Prev
+                                </button>
+                                <button type="button" class="btn btn-sm btn-success btn-next" ng-disabled="submitting || entityCreated"
+                                        data-last="Finish">
+                                    Next<i class="fa fa-arrow-right"></i>
+                                    <i ng-show="submitting" class="fa fa-cog fa-spin"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <form class="smart-form" id="fuelux-wizard" name="entityform" method="post" novalidate="novalidate">
+
+                                <div class="step-pane active" id="step1">
+                                    <h3><strong>Step 1 </strong> - General Information</h3>
+
+                                    <!-- wizard form starts here -->
+                                    <fieldset>
+
+                                        <!--<div class="row">
+                                            <section class="col col-6">
+                                                <label class="input">
+                                                    <i class="icon-prepend fa fa-user"></i>
+                                                    <input type="text" name="fname" placeholder="First name">
+                                                </label>
+                                            </section>
+                                            <section class="col col-6">
+                                                <label class="input">
+                                                    <i class="icon-prepend fa fa-user"></i>
+                                                    <input type="text" name="lname" placeholder="Last name">
+                                                </label>
+                                            </section>
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-6">
+                                                <label class="input">
+                                                    <i class="icon-prepend fa fa-envelope-o"></i>
+                                                    <input ng-model="email" type="email" name="email" placeholder="E-mail" first-timer required>
+                                                    <p ng-show="!entityform.email.firstTimer && entityform.email.$invalid">ERRRORRRRRRRRRR</p>
+                                                </label>
+                                            </section>
+                                            <section class="col col-6">
+                                                <label class="input">
+                                                    <i class="icon-prepend fa fa-phone"></i>
+                                                    <input type="tel" name="phone" placeholder="Phone" data-mask="(999) 999-9999">
+                                                </label>
+                                            </section>
+                                        </div>-->
+
+                                        <div class="row">
+                                            <label class="label col col-2" for="relation">Select Entity Kind</label>
+                                            <section class="col col-4">
+                                                <label class="select" ng-class="{'state-error':entityform.relation.$dirty && entityform.relation.$invalid}">
+                                                    <select ng-model="entity.RelationType" name="relation" id="relation"
+                                                            ng-options="option.RelationTypeID as option.Description group by option.RelationGroupName for option in relationGroups"
+                                                            class="select2" required ng-change="relationTypeChanged()">
+                                                        <option value="" selected="selected" localize="EntityKind">Select Entity Kind</option>
+                                                    </select>
+                                                </label>
+                                                <em ng-show="entityform.relation.$dirty && entityform.relation.$invalid" class="invalid"><i class="fa fa-warning"></i> Please select an entity kind</em>
+                                            </section>
+
+                                            <label class="label col col-2" ng-show="entity.isCustomer()" for="reference" localize="ReferencedBy">Referenced by</label>
+                                            <section class="col col-4" ng-show="entity.isCustomer()">
+                                                <label class="input">
+                                                    <input type="text" ng-model="holder" typeahead="e as e.searchName() for e in entities | filter:$viewValue | limitTo:15"
+                                                           placeholder="Search entities..." typeahead-on-select="onSelectReference($item, $model, $label)" name="reference" id="reference"
+                                                           typeahead-editable="false" typeahead-input-formatter="entityFormatInput($model)"
+                                                           autocomplete="off">
+                                                </label>
+                                            </section>
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-6">
+                                                <div class="inline-group">
+                                                    <!--<label class="label" for="relationGroup2"></label>-->
+                                                    <label class="radio">
+                                                        <input type="radio" ng-change="entityTypeChanged()" ng-model="entity.BasicInfo.EntityType" ng-value="1" name="entitytype">
+                                                        <i></i>Individual
+                                                    </label>
+                                                    <label class="radio">
+                                                        <input type="radio" ng-change="entityTypeChanged()" ng-model="entity.BasicInfo.EntityType" ng-value="2" name="entitytype">
+                                                        <i></i>Company
+                                                    </label>
+                                                    <!--<em ng-show="entityform.entitytype.$dirty && entityform.entitytype.$invalid" class="invalid"><i class="fa fa-warning"></i> Please select a company type</em>-->
+                                                </div>
+                                            </section>
+
+                                            <label ng-show="entity.isCompany()" for="companytype" class="label col col-2" localize="LegalForm">Select Legal Form</label>
+                                            <section ng-show="entity.isCompany()" class="col col-4">
+                                                <label class="select" ng-class="{'state-error': entityform.companytype.$dirty && entityform.companytype.$invalid, 'state-success':entity.BasicInfo.CompanyType}">
+                                                    <select ng-model="entity.BasicInfo.CompanyType" name="companytype" id="companytype" ng-required="entity.isCompany()">
+                                                        <option value="" selected="" disabled="">Select Legal Form</option>
+                                                        <option value="Personal">ΠΡΟΣΩΠΙΚΗ</option>
+                                                        <option value="OE">Ο.Ε.</option>
+                                                        <option value="EE">Ε.Ε.</option>
+                                                        <option value="EPE">Ε.Π.Ε.</option>
+                                                        <option value="AEBE">Α.Ε.Β.Ε.</option>
+                                                        <option value="AE">Α.Ε.</option>
+                                                        <option value="International">ΕΞΩΤΕΡΙΚΟΥ</option>
+                                                    </select>
+                                                    <i></i>
+                                                </label>
+                                                <em ng-show="entityform.companytype.$dirty && entityform.companytype.$invalid" class="invalid"><i class="fa fa-warning"></i> Please select a company type</em>
+                                                <div class="note">
+                                                    * Required
+                                                </div>
+                                            </section>
+
+                                            <label ng-show="entity.isIndividual()" class="label col col-2" for="dob" localize="DOB">Date of Birth / Age</label>
+                                            <section ng-show="entity.isIndividual()" class="col col-3">
+                                                <label class="input" ng-class="{'state-error': !entityform.dob.firstTimer && entityform.dob.$invalid, 'state-success': entityform.dob.$valid && entity.BasicInfo.DOB}">
+                                                    <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                                                    <input style="position:relative;z-index:10" type="text" ng-model="entity.BasicInfo.DOB" name="dob"
+                                                           id="dob" placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+                                                           data-datemindate="-90Y" data-datemaxdate="+0D" data-dateyearrange="-90:+0"
+                                                           data-datechangemonth="true" data-dateformat="dd/mm/yy" date-formatter ng-required="isDobRequired()"
+                                                           first-timer less-than-today>
+                                                </label>
+                                                <em class="state-error" ng-show="!entityform.dob.firstTimer && entityform.dob.$error.required" class="invalid"><i class="fa fa-warning"></i> Please select a Date of Birth</em>
+                                                <em ng-show="entityform.dob.$error.lessthantoday" class="invalid"><i class="fa fa-warning"></i> The date is invalid</em>
+                                                <div ng-show="isDobRequired()" class="note">
+                                                    * Required
+                                                </div>
+                                            </section>
+
+                                            <label ng-show="entity.isIndividual()" class="label col col-1">{{age()}}</label>
+                                            <!--<section ng-show="isIndividual()" class="col col-1">
+                                                <label class="input">
+                                                    <input type="text" ng-value="age()" readonly>
+                                                </label>
+                                            </section>-->
+                                        </div>
+
+                                        <div class="row">
+                                            <label for="afm" class="label col col-2" localize="VAT">VAT</label>
+                                            <section class="col col-4">
+                                                <label class="input" ng-class="{'state-error':!entityform.afm.firstTimer && entityform.afm.$invalid, 'state-success':entityform.afm.$dirty && entityform.afm.$valid && entity.BasicInfo.TaxID}">
+                                                    <input first-timer ng-model="entity.BasicInfo.TaxID" placeholder="Afm" type="text" name="afm" id="afm"
+                                                           ng-required="isTaxInfoRequired()" afm="!entity.isCompany() || entity.BasicInfo.CompanyType !== 'International'" afm-exists>
+                                                    <i ng-show="entityform.afm.$dirty && entityform.afm.$valid" class="icon-append fa fa-check"></i>
+                                                    <!--<p ng-show="!entityform.afm.firstTimer && entityform.afm.$invalid">ERRRORRRRRRRRRR</p>
+                                                    <div class="note note-error">File size must be less than 3Mb.</div>-->
+                                                </label>
+                                                <em ng-show="!entityform.afm.firstTimer && entityform.afm.$error.required" class="invalid state-error"><i class="fa fa-warning"></i> The Afm is required</em>
+                                                <em ng-show="!entityform.afm.firstTimer && entityform.afm.$error.afm" class="invalid state-error"><i class="fa fa-warning"></i> The Afm is invalid</em>
+                                                <em ng-show="entityform.afm.$error.afmExists" class="invalid"><i class="fa fa-warning"></i> The Afm already exists</em>
+                                                <div ng-show="isTaxInfoRequired()" class="note">
+                                                    * Required
+                                                </div>
+                                            </section>
+
+                                            <label for="doy" class="label col col-2" localize="TaxOffice">Tax Office</label>
+                                            <section class="col col-4">
+                                                <label class="select state-error">
+                                                    <select ng-model="entity.BasicInfo.Doy" name="doy" id="doy" ng-required="isTaxInfoRequired()"
+                                                            ng-options="option.ID as option.Description for option in doys" ui-select2 style="width:100%">
+                                                        <option value="" selected="selected">Select Doy</option>
+                                                    </select>
+                                                </label>
+                                                <em ng-show="entityform.doy.$dirty && entityform.doy.$error.required" class="invalid"><i class="fa fa-warning"></i> The Afm is required</em>
+                                                <div ng-show="isTaxInfoRequired()" class="note">
+                                                    * Required
+                                                </div>
+                                            </section>
+
+                                        </div>
+
+                                        <div class="row" ng-show="isProducerInfoRequired()">
+                                            <!--<label class="label col col-2" for="producer">Select a producer</label>
+                                            <section class="col col-4">
+                                                <select class="select2" ng-model="entity.Producer" name="producer" id="producer" data-placeholder="Pick a producer">
+                                                    <option value=""></option>
+                                                    <option ng-repeat="p in producers" value="{{p.Entity}}">{{p.Name}}</option>
+                                                </select>
+                                            </section>-->
+
+                                            <section class="col col-6">
+                                                <label class="label" for="producer" localize="ProducerClientBelongTo">Select the producer that the client belongs to</label>
+                                                <label class="select" ng-class="{'state-error': entityform.producer.$dirty && entityform.producer.$invalid}">
+                                                    <select class="select2" ng-model="entity.BasicInfo.Producer" name="producer" id="producer"
+                                                            data-placeholder="Pick a producer" ng-required="isProducerInfoRequired()">
+                                                        <option value=""></option>
+                                                        <option ng-repeat="p in producers" value="{{p.Entity}}">{{p.Name}}</option>
+                                                    </select>
+                                                </label>
+                                                <em ng-show="entityform.producer.$dirty && entityform.producer.$invalid" class="invalid">
+                                                    <i class="fa fa-warning"></i> Please select a producer
+                                                </em>
+                                            </section>
+                                        </div>
+
+                                    </fieldset>
+                                </div>
+
+                                <div class="step-pane" id="step2">
+                                    <h3><strong>Step 2 </strong> - Profile</h3>
+
+                                    <fieldset>
+                                        <div class="row" ng-show="entity.isIndividual()">
+                                            <section class="col col-4">
+                                                <label class="label" for="lastname" localize="LastName">Lastname</label>
+                                                <label class="input" ng-class="{'state-error':!entityform.lastname.firstTimer && entityform.lastname.$invalid, 'state-success':entityform.lastname.$dirty && entityform.lastname.$valid}">
+                                                    <i class="icon-prepend fa fa-user"></i>
+                                                    <input ng-model="entity.BasicInfo.Lastname" placeholder="Last Name" type="text"
+                                                           name="lastname" id="lastname" ng-required="entity.isIndividual()" first-timer capitalize>
+                                                </label>
+                                                <em ng-show="!entityform.lastname.firstTimer && entityform.lastname.$invalid" class="invalid">
+                                                    <i class="fa fa-warning"></i> Please type a lastname
+                                                </em>
+                                            </section>
+
+                                            <section class="col col-4">
+                                                <label class="label" for="firstname" localize="FirstName">Firstname</label>
+                                                <label class="input" ng-class="{'state-error':!entityform.firstname.firstTimer && entityform.firstname.$invalid, 'state-success':entityform.firstname.$dirty && entityform.firstname.$valid }">
+                                                    <i class="icon-prepend fa fa-user"></i>
+                                                    <input ng-model="entity.BasicInfo.Firstname" placeholder="First Name" type="text"
+                                                           name="firstname" id="firstname" ng-required="entity.isIndividual()" first-timer capitalize>
+                                                </label>
+                                                <em ng-show="!entityform.firstname.firstTimer && entityform.firstname.$invalid" class="invalid">
+                                                    <i class="fa fa-warning"></i> Please type a firstname
+                                                </em>
+                                            </section>
+
+                                            <section class="col col-4">
+                                                <label class="label" for="middlename" localize="MiddleName">Middlename</label>
+                                                <label class="input">
+                                                    <i class="icon-prepend fa fa-user"></i>
+                                                    <input ng-model="entity.BasicInfo.Middlename" placeholder="Middle Name" type="text"
+                                                           name="middlename" id="middlename" capitalize>
+                                                </label>
+                                                <!--<em ng-show="!entityform.middlename.firstTimer && entityform.middlename.$invalid" class="invalid">
+                                                    <i class="fa fa-warning"></i> Please type a middlename
+                                                </em>-->
+                                            </section>
+                                        </div>
+
+                                        <div class="row" ng-show="entity.isIndividual()">
+                                            <section class="col col-6">
+                                                <label class="label" for="birthname" localize="BirthName">Select Birth Name</label>
+                                                <label class="select" ng-class="{'state-error': entityform.birthname.$dirty && entityform.birthname.$invalid}">
+                                                    <select style="width:100%" ui-select2 ng-model="entity.BasicInfo.Birthname" name="birthname" id="birthname"
+                                                            ng-required="entity.isIndividual()">
+                                                        <option ng-repeat="b in birthnames" value="{{b.ID}}">{{b.Description}}</option>
+                                                    </select>
+                                                </label>
+                                                <em ng-show="entityform.birthname.$dirty && entityform.birthname.$invalid" class="invalid">
+                                                    <i class="fa fa-warning"></i> Please select a birthname
+                                                </em>
+                                            </section>
+
+                                            <!--<section class="col col-6">
+                                                <label class="label">E-mail</label>
+                                                <label class="select">
+                                                    <select ng-model="entity.Birthname" name="birthname" id="birthname"
+                                                            ng-required="isIndividual()"
+                                                            ng-options=" option.ID as option.Description for option in birthnames" class="select2">
+                                                        <option value="" selected="selected" disabled>Select Birth Name</option>
+                                                    </select>
+                                                </label>
+                                                <em ng-show="entityform.birthname.$dirty && entityform.birthname.$invalid" class="invalid">
+                                                    <i class="fa fa-warning"></i> Please select a birthname
+                                                </em>
+
+                                            </section>-->
+
+                                            <section class="col col-6">
+                                                <label class="label" for="gender" localize="Gender">Gender</label>
+                                                <div class="inline-group">
+                                                    <label class="radio" ng-class="{'state-error':entityform.gender.$dirty && entityform.gender.$invalid, 'state-success': entityform.gender.$valid }">
+                                                        <input ng-model="entity.BasicInfo.Gender" type="radio" value="Male" name="gender" ng-required="entity.isIndividual() && !entity.BasicInfo.Gender">
+                                                        <i></i><span class="fa fa-male"></span>&nbsp;Male
+                                                    </label>
+                                                    <label class="radio" ng-class="{'state-error':entityform.gender.$dirty && entityform.gender.$invalid, 'state-success': entityform.gender.$valid}">
+                                                        <input ng-model="entity.BasicInfo.Gender" type="radio" value="Female" name="gender" ng-required="entity.isIndividual() && !entity.BasicInfo.Gender">
+                                                        <i></i><span class="fa fa-female"></span>&nbsp;Female
+                                                    </label>
+                                                    <em ng-show="entityform.gender.$dirty && entityform.gender.$invalid" class="invalid">
+                                                        <i class="fa fa-warning"></i> Please select the person's gender
+                                                    </em>
+                                                    <div class="note">* Required</div>
+                                                </div>
+                                            </section>
+                                        </div>
+
+                                        <!--<section class="col col-4">
+                                            <label class="label" for="firstname">Firstname</label>
+                                            <label class="input" ng-class="{'state-error':!entityform.firstname.firstTimer && entityform.firstname.$invalid, 'state-success':entityform.firstname.$dirty && entityform.firstname.$valid }">
+                                                <i class="icon-prepend fa fa-user"></i>
+                                                <input ng-model="entity.Firstname" placeholder="First Name" type="text"
+                                                       name="firstname" id="firstname" ng-required="isIndividual()" first-timer capitalize>
+                                            </label>
+                                            <em ng-show="!entityform.firstname.firstTimer && entityform.firstname.$invalid" class="invalid">
+                                                <i class="fa fa-warning"></i> Please type a firstname
+                                            </em>
+                                        </section>-->
+
+
+                                        <div class="row" ng-show="entity.isCompany()">
+                                            <section class="col col-sm-6">
+                                                <label class="label" for="company" localize="CompanyName">Company Name</label>
+                                                <label class="input" ng-class="{'state-error':!entityform.company.firstTimer && entityform.company.$invalid, 'state-success':entityform.company.$dirty && entityform.company.$valid}">
+                                                    <i class="icon-prepend fa fa-briefcase"></i>
+                                                    <input ng-model="entity.BasicInfo.Lastname" placeholder="Microsoft" ng-change="copyLegal()" type="text" name="company" id="company"
+                                                           ng-required="entity.isCompany()" first-timer capitalize>
+                                                </label>
+                                                <em ng-show="!entityform.company.firstTimer && entityform.company.$invalid" class="invalid">
+                                                    <i class="fa fa-warning"></i> Please type the company's name
+                                                </em>
+                                            </section>
+
+                                            <section class="col col-sm-6">
+                                                <label class="label" for="company" localize="CompanyLegalName">Company Legal Name</label>
+                                                <label class="input" ng-class="{'state-success':entity.BasicInfo.Firstname}">
+                                                    <i class="icon-prepend fa fa-briefcase"></i>
+                                                    <input ng-model="entity.BasicInfo.Firstname" placeholder="Microsoft Corporation" type="text" name="companylegal" id="companylegal"
+                                                           capitalize first-timer ng-required="entity.isCompany()">
+                                                </label>
+                                                <em ng-show="!entityform.companylegal.firstTimer && entityform.companylegal.$invalid" class="invalid">
+                                                    <i class="fa fa-warning"></i> Please type the company's name legal name
+                                                </em>
+                                                <div class="note">e.g. Microsoft Corporation</div>
+                                            </section>
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-6">
+                                                <label class="label" for="nationality" localize="Nationality">Select Nationality</label>
+                                                <!--<select ng-model="entity.BasicInfo.Nationality" name="nationality" id="nationality"
+                                                        ng-options="option.ID as option.Description for option in nationalities" class="select2">
+                                                </select>-->
+                                                <select style="width:100%" ui-select2 ng-model="entity.BasicInfo.Nationality" name="nationality" id="nationality">
+                                                    <option ng-repeat="n in nationalities" value="{{n.ID}}">{{n.Description}}</option>
+                                                </select>
+                                                <!--<select style="width:100%" ui-select2 ng-model="entity.BasicInfo.Birthname" name="birthname" id="birthname"
+                                                        ng-required="isIndividual()" class="">
+                                                    <option ng-repeat="b in birthnames" value="{{b.ID}}">{{b.Description}}</option>
+                                                </select>-->
+                                            </section>
+
+                                        </div>
+
+                                        <div class="row" ng-show="entity.isIndividual()">
+                                            <section class="col col-6">
+                                                <label class="label" localize="AMKA">Social Security #</label>
+                                                <label class="input">
+                                                    <i class="icon-prepend fa fa-user"></i>
+                                                    <input ng-model="entity.BasicInfo.InsuranceNumber" placeholder="AMKA" type="text" name="AMKA" id="AMKA">
+                                                </label>
+                                            </section>
+
+                                            <section class="col col-6">
+                                                <label class="label" localize="Identity">Identity or Passport</label>
+                                                <label class="input">
+                                                    <i class="icon-prepend fa fa-user"></i>
+                                                    <input ng-model="entity.BasicInfo.Passport" placeholder="Identity or Passport" type="text" name="identity" id="identity">
+                                                </label>
+                                            </section>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-6">
+                                                <label class="label" localize="Relations">Add relationships with existing entities</label>
+                                                <label class="select">
+                                                    <select ng-model="currentRelation" ng-change="newRelation()" name="relationship" id="relationship"
+                                                            ng-options="r as (r.Parent + ' - ' + r.Child) for r in relations">
+                                                        <option value="" selected="" disabled="disabled">Select Relationship Type</option>
+                                                        <!--<option ng-repeat="r in relations" value="0">{{r.Parent}} - {{r.Child}}</option>-->
+                                                    </select>
+                                                    <i></i>
+                                                </label>
+                                            </section>
+                                        </div>
+
+                                        <table class="table table-bordered" ng-show="entity.Relations.length > 0">
+                                            <thead>
+                                                <tr><th>Actions</th><th>Entity</th><th>Relation</th><th>Of</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="r in entity.Relations">
+                                                    <td>
+                                                        <a href="javascript:void(0);" ng-click="entity.Relations.removeIndex($index)" class="btn btn-default btn-xs"><i class="fa fa-times"></i></a>
+                                                    </td>
+                                                    <td>
+                                                        {{entity.getFullname()}}
+                                                    </td>
+                                                    <td>
+                                                        <!--<label>{{r.Parent}}</label>
+                                                        <label>{{r.Child}}</label>-->
+                                                        <!--<span class="bg-color-blue txt-color-white pull-left" data-description="Currently busy" data-icon="fa-time">{{r.Parent}}</span>
+                                                        <span class="bg-color-blue txt-color-white pull-right" data-description="Currently busy" data-icon="fa-time">{{r.Child}}</span>-->
+                                                        <!--<a href="javascript:void(0);" class="btn bg-color-blueLight txt-color-white">.bg-color-blueLight</a>-->
+                                                        <button type="button" ng-click="swapRelation(r)" class="btn btn-sm bg-color-blueLight txt-color-white btn-next pull-left"><i class="fa fa-arrow-left"></i><span ng-show="r.IsParent">{{r.Parent}}</span><span ng-show="!r.IsParent">{{r.Child}}</span></button>
+                                                        <button type="button" ng-click="swapRelation(r)" class="btn btn-sm bg-color-teal txt-color-white btn-prev pull-right">
+                                                            <span ng-show="!r.IsParent">{{r.Parent}}</span><span ng-show="r.IsParent">{{r.Child}}</span><i class="fa fa-arrow-right"></i>
+                                                        </button>
+
+                                                        <!--<a href="javascript:void(0);" class="btn bg-color-teal txt-color-white">.bg-color-teal</a>
+                                                        <span class="label label-info pull-left">{{r.Parent}}</span>
+                                                        <span class="label label-info pull-right">{{r.Child}}</span>-->
+                                                    </td>
+                                                    <td>
+                                                        <section>
+                                                            <label ng-class="{'state-error': !entityform[r.inputName].firstTimer && entityform[r.inputName].$invalid}" class="input">
+                                                                <input type="text" ng-model="r.Entity" typeahead="e as e.searchName() for e in entities | filter:$viewValue | limitTo:15"
+                                                                       placeholder="Search entities..." typeahead-on-select="entityRelationSelected($item, $model, $label, $index)"
+                                                                       typeahead-editable="false" typeahead-input-formatter="entityFormatInput($model)"
+                                                                       autocomplete="off" dynamic-name="r.inputName" required first-timer>
+                                                            </label>
+                                                            <em ng-show="!entityform[r.inputName].firstTimer && entityform[r.inputName].$invalid" class="invalid">
+                                                                <i class="fa fa-warning"></i> Please select an entity
+                                                            </em>
+                                                        </section>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </fieldset>
+                                </div>
+
+                                <div class="step-pane" id="step3">
+                                    <h3><strong>Step 3 </strong> - Contacts</h3>
+
+                                    <fieldset>
+
+                                        <div ng-class="{'animated':contactsError, 'fadeInRight':contactsError}" ng-show="contactsError" class="alert alert-danger">
+                                            <i class="fa-fw fa fa-warning"></i>
+                                            <strong>Error!</strong> {{contactsError}}
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-3">
+                                                <label class="select">
+                                                    <select ng-model="currentContact.Type" name="contactType" ng-disabled="editContact">
+                                                        <option value="" selected="" disabled="" localize="ContactType">Select Contact Type</option>
+                                                        <option ng-repeat="c in contactTypes" value="{{c}}">{{c}}</option>
+                                                    </select>
+                                                    <i></i>
+                                                </label>
+                                            </section>
+
+                                            <!--<section class="col col-5" ng-show="entity.Contacts.length">
+                                                <label class="select">
+                                                    <select ng-model="editContact" ng-options="c as (c.Type + ': ' + c.Value + (c.IsDefault ? ', Default' : '')) for c in entity.Contacts">
+                                                        <option value="" selected="" disabled="">Contacts</option>
+                                                    </select>
+                                                    <i></i>
+                                                </label>
+                                            </section>-->
+
+                                            <section ng-show="currentContact.Type" class="col col-5" ng-switch="currentContact.Type">
+                                                <my-phone-contact ng-switch-when="HomePhone"></my-phone-contact>
+                                                <my-phone-contact ng-switch-when="WorkPhone"></my-phone-contact>
+                                                <my-phone-contact ng-switch-when="Mobile"></my-phone-contact>
+                                                <div ng-switch-when="Email"><div ng-include="'emailcontact.html'"></div></div>
+                                                <div ng-switch-when="Skype"><div ng-include="'skypecontact.html'"></div></div>
+                                                <div ng-switch-when="Fax"><div ng-include="'faxcontact.html'"></div></div>
+                                                <div ng-switch-when="Internet"><div ng-include="'internetcontact.html'"></div></div>
+                                                <!--<div ng-switch-default>select something else</div>-->
+                                            </section>
+                                            <!--<h1 class="ajax-loading-animation col col-4"><i class="fa fa-cog fa-spin"></i> Validating email...</h1>-->
+                                        </div>
+
+                                        <!--<div class="row" ng-switch="currentContact.Type">
+                                            <my-phone-contact ng-switch-when="HomePhone"></my-phone-contact>
+                                            <my-phone-contact ng-switch-when="WorkPhone"></my-phone-contact>
+                                            <my-phone-contact ng-switch-when="Mobile"></my-phone-contact>
+                                            <div ng-switch-default>select something else</div>
+                                        </div>-->
+                                        <div class="row" ng-show="currentContact.Type">
+
+
+                                            <section class="col col-3">
+                                                <label class="select">
+                                                    <select ng-model="currentContact.Use" name="contactuse" id="contactuse">
+                                                        <option ng-repeat="use in contactUses" value="{{use.ID}}">{{use.Description}}</option>
+                                                    </select>
+                                                    <i></i>
+                                                </label>
+                                            </section>
+
+                                            <section class="col col-2">
+                                                <label class="checkbox">
+                                                    <input type="checkbox" ng-model="currentContact.IsDefault" name="isdefault" id="isdefault">
+                                                    <i></i>Is Main?
+                                                </label>
+                                            </section>
+
+                                            <section class="col col-2">
+                                                <button class="btn btn-primary" ng-disabled="currentContact.validating" style="padding:5px 10px" ng-click="saveContact()" type="button">
+                                                    <i class="fa fa-save"></i>
+                                                    <span ng-show="editContact">Save</span>
+                                                    <span ng-show="!editContact">Add</span>
+                                                </button>
+                                            </section>
+
+                                            <section class="col col-2" ng-show="editContact">
+                                                <button class="btn btn-primary" style="padding:5px 10px" ng-click="removeContact()" type="button">
+                                                    <i class="fa fa-minus-square"></i>
+                                                    <span>Remove</span>
+                                                </button>
+                                            </section>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <!--<div ng-show="contactsError" class="alert alert-danger fade in">
+                                            <i class="fa-fw fa fa-times"></i>
+                                            <strong>Error!</strong> {{contactsError}}
+                                        </div>-->
+
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr><th>Actions</th><th>Contact</th><th>Use</th><th>Is Main?</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="c in entity.Contacts">
+                                                    <td>
+                                                        <a href="javascript:void(0);" ng-click="editContact2($index)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
+                                                        <a href="javascript:void(0);" ng-click="removeContact2($index)" class="btn btn-default btn-xs"><i class="fa fa-times"></i></a>
+                                                    </td>
+                                                    <td>
+                                                        {{c.Type}}: {{c.Value}}
+                                                    </td>
+                                                    <td>
+                                                        {{getContactUseByID(c.Use)}}
+                                                    </td>
+                                                    <td>{{c.IsDefault ? 'Yes': 'No'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+
+                                    </fieldset>
+
+                                </div>
+
+                                <div class="step-pane" id="step4">
+                                    <h3><strong>Step 4 </strong> - Addresses</h3>
+
+                                    <my-address doorbell="{{entity.getFullname()}}" addresses="entity.Addresses" map-render="addressStep"></my-address>
+
+                                    <!--<fieldset>
+
+                                        <div ng-show="entity.Addresses.length" class="row">
+                                            <div class="col col-sm-12">
+                                                <table style="margin-bottom:15px" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Actions</th>
+                                                            <th>Address</th>
+                                                            <th>Billing</th>
+                                                            <th>Mailing</th>
+                                                            <th>Collection</th>
+                                                            <th>Type</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="a in entity.Addresses">
+                                                            <td>
+                                                                <a href="javascript:void(0);" ng-click="editAddress($index)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
+                                                                <a href="javascript:void(0);" ng-click="removeAddress($index)" class="btn btn-default btn-xs"><i class="fa fa-times"></i></a>
+                                                            </td>
+                                                            <td>
+                                                                {{a.autocomplete}}
+                                                            </td>
+                                                            <td>
+                                                                {{a.IsBilling ? 'Yes': 'No'}}
+                                                            </td>
+                                                            <td>{{a.IsMailing ? 'Yes': 'No'}}</td>
+                                                            <td>{{a.IsCollection ? 'Yes': 'No'}}</td>
+                                                            <td>{{a.Type}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <section class="col col-6">
+                                                <label class="input">
+                                                    <i class="icon-prepend fa fa-google"></i>
+                                                    <input ng-model="address.autocomplete" placeholder="Enter street and number..." type="text" name="autocomplete" id="autocomplete">
+                                                </label>
+                                            </section>
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-2">
+                                                <label class="label" localize="Floor">Floor Number</label>
+                                                <label class="input">
+                                                    <input ng-model="address.Floor" placeholder="Floor" type="number" name="floor" id="floor">
+                                                </label>
+                                            </section>
+
+                                            <section class="col col-8">
+                                                <label class="label" localize="DoorBell">Doorbell</label>
+                                                <label class="input" ng-class="{'state-error': entityform.doorbell.$invalid, 'state-success': !entityform.doorbell.firstTimer && entityform.doorbell.$valid}">
+                                                    <i class="icon-prepend fa fa-user"></i>
+                                                    <input ng-model="address.Doorbell" placeholder="Doorbell name" type="text" name="doorbell" id="doorbell" required
+                                                           first-timer>
+                                                </label>
+                                                <em ng-show="entityform.doorbell.$invalid" class="invalid">
+                                                    <i class="fa fa-warning"></i> Please type the name of the doorbell
+                                                </em>
+                                            </section>
+
+                                            <section class="col col-2">
+                                                <label class="label" for="pobox" localize="POBox">P.O. Box</label>
+                                                <label class="input">
+                                                    <i class="icon-prepend fa fa-inbox"></i>
+                                                    <input ng-model="address.POBox" placeholder="P.O. Box" type="text" name="pobox" id="pobox">
+                                                </label>
+                                            </section>
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-sm-6">
+                                                <label class="label" ng-class="{'text-danger':!hasAddressType()}">Please select <strong>at least one</strong> the checkboxes below</label>
+                                                <div class="inline-group">
+                                                    <label class="checkbox" ng-class="{'state-error':!hasAddressType(), 'state-success': hasAddressType()}">
+                                                        <input type="checkbox" ng-model="address.IsBilling" name="billing" id="billing" ng-required="hasAddressType()">
+                                                        <i></i>Billing
+                                                    </label>
+                                                    <label class="checkbox" ng-class="{'state-error':!hasAddressType(), 'state-success': hasAddressType()}">
+                                                        <input type="checkbox" ng-model="address.IsMailing" name="mailing" id="mailing" ng-required="hasAddressType()">
+                                                        <i></i>Mailing
+                                                    </label>
+                                                    <label class="checkbox" ng-class="{'state-error':!hasAddressType(), 'state-success': hasAddressType()}">
+                                                        <input type="checkbox" ng-model="address.IsCollection" name="collection" id="collection" ng-required="hasAddressType()">
+                                                        <i></i>Collection
+                                                    </label>
+                                                </div>
+                                            </section>
+
+                                            <section class="col col-sm-6">
+                                                <label class="label" ng-class="{'text-danger':!address.Type && trySaveAddress}">Please select one address type</label>
+                                                <div class="inline-group">
+                                                    <label class="radio" ng-class="{'state-error':!address.Type && trySaveAddress, 'state-success': address.Type }">
+                                                        <input type="radio" value="Home" ng-model="address.Type" name="addresstype" id="addresstype" ng-required="!address.Type">
+                                                        <i></i>Home
+                                                    </label>
+                                                    <label class="radio" ng-class="{'state-error':!address.Type && trySaveAddress, 'state-success': address.Type }">
+                                                        <input type="radio" value="Work" ng-model="address.Type" name="addresstype" id="addresstype" ng-required="!address.Type">
+                                                        <i></i>Work
+                                                    </label>
+                                                    <label class="radio" ng-class="{'state-error':!address.Type && trySaveAddress, 'state-success': address.Type }">
+                                                        <input type="radio" value="Cottage" ng-model="address.Type" name="addresstype" id="addresstype" ng-required="!address.Type">
+                                                        <i></i>Cottage
+                                                    </label>
+                                                </div>
+                                            </section>
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-sm-12">
+                                                <label class="label" localize="AdditionalInstructions">Additional Instructions</label>
+                                                <label class="textarea textarea-expandable">
+                                                    <i class="icon-append fa fa-comment"></i>
+                                                    <textarea class="custom-scroll" rows="4" name="comment" placeholder="Είσοδος είναι από Βερβαινών κτλ..."
+                                                              ng-model="address.Comments" name="comments" id="comments"></textarea>
+                                                </label>
+                                            </section>
+                                        </div>
+
+                                        <button type="button" name="button" class="button" ng-click="addAddress()">
+                                            Save
+                                        </button>
+
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <h4 style="margin-bottom:20px">Address Information (filled by Google Places)</h4>
+
+                                        <div class="row">
+                                            <section class="col col-4">
+                                                <label class="toggle">
+                                                    <input type="checkbox" ng-model="manualAddress" name="checkbox-toggle">
+                                                    <i data-swchon-text="YES" data-swchoff-text="NO"></i>Enable manual input
+                                                </label>
+                                            </section>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <section class="col col-10">
+                                                <label class="label" localize="Street">Street</label>
+                                                <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                                                    <input ng-model="address.Street" type="text" name="street" id="street" ng-disabled="!manualAddress">
+                                                </label>
+                                            </section>
+
+                                            <section class="col col-2">
+                                                <label class="label" localize="StreetNumber">Street Number</label>
+                                                <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                                                    <input ng-model="address.StreetNumber" placeholder="Number" type="text" name="streetnumber" id="streetnumber" ng-disabled="!manualAddress">
+                                                </label>
+                                            </section>
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-2">
+                                                <label class="label" localize="PostalCode">Postal Code</label>
+                                                <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                                                    <input ng-model="address.Zip" type="text" name="zip" id="zip" ng-disabled="!manualAddress">
+                                                </label>
+                                            </section>
+
+                                            <section class="col col-5">
+                                                <label class="label" localize="Area">Area</label>
+                                                <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                                                    <input ng-model="address.Area" type="text" name="area" id="area" placeholder="State, Area, Province" ng-disabled="!manualAddress">
+                                                </label>
+                                            </section>
+
+                                            <section class="col col-5">
+                                                <label class="label" localize="City">City</label>
+                                                <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                                                    <input ng-model="address.City" type="text" name="city" id="city" ng-disabled="!manualAddress">
+                                                </label>
+                                            </section>
+                                        </div>
+
+                                        <div class="row">
+                                            <section class="col col-2">
+                                                <label class="label" localize="CountryCode">Country Code</label>
+                                                <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                                                    <input ng-model="address.CountryCode" type="text" name="countrycode" id="countrycode" ng-disabled="!manualAddress">
+                                                </label>
+                                            </section>
+
+                                            <section class="col col-10">
+                                                <label class="label" localize="Country">Country</label>
+                                                <label class="input" ng-class="{'state-disabled': !manualAddress}">
+                                                    <input ng-model="address.Country" type="text" name="country" id="country" ng-disabled="!manualAddress">
+                                                </label>
+                                            </section>
+                                        </div>
+
+                                    </fieldset>-->
+
+                                </div>
+
+                                <div class="step-pane" id="step5">
+                                    <h3><strong>Step 5 </strong> - Finished!</h3>
+                                    </br>
+                                    <h1 class="text-center text-success">
+                                        <i class="fa fa-check"></i> Congratulations!
+                                        <br>
+                                        <small>Click finish to save the entity</small>
+                                    </h1>
+                                    </br>
+                                    </br>
+                                    <!--<a href="#app/policies/newpolicy" class="btn btn-default btn-block">Create Policy</a>-->
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+
+            </div>
+            <!-- end widget -->
+
+        </article>
+
+</section>
+
+<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language=el"></script>-->
+
+<script type="text/javascript">
+    pageSetUp();
+</script>

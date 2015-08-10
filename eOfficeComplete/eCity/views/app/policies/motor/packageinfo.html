@@ -1,0 +1,124 @@
+﻿<style type="text/css">
+    /*table.smaller-height > tbody > tr > td {
+        height:25px;
+    }*/
+</style>
+
+<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+
+    <h3 class="modal-title">Generali package "{{pack.Title}}" covers</h3>
+</div>
+<div class="modal-body">
+    <form id="renewalform" name="renewalform" class="smart-form">
+        <!--<header>
+            Fill this form to create a renewal of Policy
+        </header>-->
+
+        <table style="font-size:smaller" class="smaller-height footable toggle-circle-filled table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <!--<th>Code</th>-->
+                    <th>Description</th>
+                    <th>Selected</th>
+                    <th>Sum Insured</th>
+                    <th>Exemptions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="c in pack.Covers">
+                    <!--<td>{{c.codeField}}</td>-->
+                    <td>{{c.Title}}</td>
+                    <!--<td><i ng-show="c.mandatoryField" class="glyphicon glyphicon-ok txt-color-greenOkSign"></i></td>-->
+                    <td>
+                        <label class="checkbox" ng-class="{'state-disabled': c.Mandatory}">
+                            <input type="checkbox" ng-model="c.selected" name="coverselected{{c.Code}}" ng-disabled="c.Mandatory">
+                            <i></i>
+                        </label>
+                        <!--<input type="checkbox" ng-model="c.selected" name="coverselected{{c.codeField}}" ng-disabled="selected">-->
+                    </td>
+                    <td>
+                        <!--<label class="select">
+                            <input type="checkbox" ng-model="c.selected" name="coverselected{{c.codeField}}" ng-disabled="c.mandatoryField">
+                            <i></i>
+                        </label>-->
+                        <!--<label ng-if="c.sumInsuredField.optionField.length" class="select">
+                            <select ng-model="c.MySumInsured" name="sumInsured{{c.codeField}}"
+                                    ng-options="option.codeField as option.descriptionField for option in c.sumInsuredField.optionField"
+                                    required>
+                            </select>
+                        </label>-->
+
+                        <div ng-switch="c.Capitals.length || 0">
+                            <span ng-switch-when="0">Automatic</span>
+                            <span ng-switch-when="1">{{c.Capitals[0].Description}}</span>
+                            <label ng-switch-default class="select">
+                                <select class="input-sm" ng-model="c.SumInsured" name="sumInsured{{c.ID}}"
+                                        ng-options="c.ID as c.Description for c in c.Capitals"
+                                        required>
+                                    <!--<option value="" selected="selected" localize="EntityKind">Select Entity Kind</option>-->
+                                </select>
+                            </label>
+                        </div>
+                        <!--<input type="checkbox" ng-model="c.selected" name="coverselected{{c.codeField}}" ng-disabled="selected">-->
+                    </td>
+                    <td>
+                        <div ng-switch="c.Exemptions.length || 0">
+                            <span ng-switch-when="0"></span>
+                            <span ng-switch-when="1">{{c.Exemptions[0].Description}}</span>
+                            <label ng-switch-default class="select">
+                                <select class="input-sm" ng-model="c.Exemption.Value" name="param{{c.Code}}"
+                                        ng-options="e.Code as e.Description for e in c.Exemptions"
+                                        required>
+                                </select>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+
+
+        <!--<footer>
+            <button type="button" class="btn btn-default" ng-click="$dismiss('cancel')" data-dismiss="modal">
+                Cancel
+            </button>
+            <button type="button" ng-disabled="saving" ng-click="" class="btn btn-primary">
+                <span ng-hide="saving">Save</span>
+                <span ng-show="saving">Saving&nbsp;<i class="fa fa-cog fa-spin"></i></span>
+            </button>
+        </footer>-->
+
+    </form>
+
+
+    <!--<div myformvalidate></div>-->
+
+
+
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" ng-disabled="saving" ng-click="$close()" class="btn btn-primary">
+        <span ng-hide="saving">Save</span>
+        <span ng-show="saving">Saving&nbsp;<i class="fa fa-cog fa-spin"></i></span>
+    </button>
+
+    <button type="button" class="btn btn-warning" ng-click="$dismiss('cancel')" data-dismiss="modal">
+        Cancel
+    </button>
+</div>
+<script>
+
+    pageSetUp();
+
+
+    // Load form validation dependency
+    //loadScript("js/plugin/jquery-form/jquery-form.min.js", $objectForm);
+
+</script>

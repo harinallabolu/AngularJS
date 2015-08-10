@@ -1,0 +1,1009 @@
+﻿<!-- widget grid -->
+<style type="text/css">
+    .m-signature-pad {
+        position: relative;
+        margin: 0 auto;
+        font-size: 10px;
+        width: 700px;
+        height: 400px;
+        /*top: 50%;
+        left: 50%;
+        margin-left: -350px;
+        margin-top: -200px;*/
+        border: 1px solid #e8e8e8;
+        background-color: #fff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.08) inset;
+        border-radius: 4px;
+    }
+
+        .m-signature-pad:before, .m-signature-pad:after {
+            position: absolute;
+            z-index: -1;
+            content: "";
+            width: 40%;
+            height: 10px;
+            left: 20px;
+            bottom: 10px;
+            background: transparent;
+            -webkit-transform: skew(-3deg) rotate(-3deg);
+            -moz-transform: skew(-3deg) rotate(-3deg);
+            -ms-transform: skew(-3deg) rotate(-3deg);
+            -o-transform: skew(-3deg) rotate(-3deg);
+            transform: skew(-3deg) rotate(-3deg);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .m-signature-pad:after {
+            left: auto;
+            right: 20px;
+            -webkit-transform: skew(3deg) rotate(3deg);
+            -moz-transform: skew(3deg) rotate(3deg);
+            -ms-transform: skew(3deg) rotate(3deg);
+            -o-transform: skew(3deg) rotate(3deg);
+            transform: skew(3deg) rotate(3deg);
+        }
+
+    .m-signature-pad--body {
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        top: 20px;
+        bottom: 60px;
+        border: 1px solid #f4f4f4;
+    }
+
+        .m-signature-pad--body canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.02) inset;
+        }
+
+    .m-signature-pad--footer {
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        height: 40px;
+    }
+
+        .m-signature-pad--footer .description {
+            color: #C3C3C3;
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 1.8em;
+        }
+
+        .m-signature-pad--footer .button {
+            position: absolute;
+            bottom: 0;
+        }
+
+            .m-signature-pad--footer .button.clear {
+                left: 0;
+            }
+
+            .m-signature-pad--footer .button.save {
+                right: 0;
+            }
+
+    @media screen and (max-width: 1024px) {
+        .m-signature-pad {
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: auto;
+            height: auto;
+            min-width: 250px;
+            min-height: 250px;
+            margin: 5%;
+        }
+    }
+
+    @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+        .m-signature-pad {
+            margin: 10%;
+            /*min-height: 250px;*/
+        }
+    }
+
+    @media screen and (max-height: 320px) {
+        .m-signature-pad--body {
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 32px;
+        }
+
+        .m-signature-pad--footer {
+            left: 20px;
+            right: 20px;
+            bottom: 4px;
+            height: 28px;
+        }
+
+            .m-signature-pad--footer .description {
+                font-size: 1em;
+                margin-top: 1em;
+            }
+    }
+</style>
+
+<script type="text/ng-template" id="newobjectmodal1.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add object of type {{objectType.Description}}</h3>
+    </div>
+    <div class="modal-body">
+        <!--<form class="smart-form" name="dummyformname" novalidate="novalidate">
+            <new-object object-type="objectType"></new-object>
+        </form>-->
+        <new-object object-type="objectType" success-fn="$close()" policy-id="policyId"></new-object>
+
+        <!--<my-address doorbell="{{doorbell}}" addresses="addresses"></my-address>-->
+    </div>
+    <div class="modal-footer">
+        <!--<button class="btn btn-primary" ng-click="save()">Save</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>-->
+        <button class="btn btn-primary" ng-click="$dismiss()">Close</button>
+    </div>
+</script>
+
+
+<section id="widget-grid" ng-controller="NewPolicyController">
+
+    <script type="text/ng-template" id="updateInitialStartDateModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Update Initial Start Date?</h3>
+        </div>
+        <div class="modal-body">
+            Click "Yes" if you want to set the <b>initial</b> start date to {{startDate | date:'dd/MM/yyyy'}}?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">Yes</button>
+            <button class="btn btn-warning" ng-click="cancel()">No</button>
+        </div>
+    </script>
+
+   
+
+
+    <!--<script type="text/ng-template" id="test1.html">
+        test1
+        <input type="text" value="fasdfsdf" name="test1" id="test" class="fieldrequired" myformvalidate />
+        <div ng-controller="validationController">fasdf</div>
+    </script>-->
+    <!--<script type="text/ng-template" id="newObject.html">
+        <div class="modal-header">
+            <h3 class="modal-title">New object</h3>
+        </div>
+        <div class="modal-body">
+            Click "Yes" if you want to set the <b>initial</b> start date to {{var1}}?
+
+            <form>
+
+
+            </form>
+
+
+
+
+
+
+
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">Save</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>-->
+    <!--<button class="btn btn-default" ng-click="open()">Open me!</button>
+    <button class="btn btn-default" ng-click="open('lg')">Large modal</button>
+    <button class="btn btn-default" ng-click="open('sm')">Small modal</button>
+    <div ng-show="selected">Selection from a modal: {{ selected }}</div>-->
+    <!--<div class="row">
+        Message: {{hello}}
+        <br />
+        {{policy}}
+        <br />
+        {{currentFrequency}}
+        <br />
+        selectedObjectType: {{objType}},
+        object {{object}}
+    </div>-->
+    <!--<div class="row" ng-controller="ModalDemoCtrl">
+        <script type="text/ng-template" id="myModalContent.html">
+            <div class="modal-header">
+                <h3 class="modal-title">I'm a modal!</h3>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li ng-repeat="item in items">
+                        <a ng-click="selected.item = item">{{ item }}</a>
+                    </li>
+                </ul>
+                Selected: <b>{{ selected.item }}</b>
+                <form id="test-form" name="test-form">
+                    <input type="text" name="testinput1" id="testinput1"  />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" ng-click="ok()">OK</button>
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            </div>
+        </script>
+
+        <button class="btn btn-default" ng-click="open()">Open me!</button>
+        <button class="btn btn-default" ng-click="open('lg')">Large modal</button>
+        <button class="btn btn-default" ng-click="open('sm')">Small modal</button>
+        <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+    </div>-->
+    <!-- row -->
+    <div class="row">
+
+        <!-- NEW WIDGET START -->
+        <article class="col-sm-12">
+
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget jarviswidget-color-darken animated fadeInLeft" id="wid-id-2" data-widget-editbutton="false" data-widget-deletebutton="false">
+                <!-- widget options:
+        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+        data-widget-colorbutton="false"
+        data-widget-editbutton="false"
+        data-widget-togglebutton="false"
+        data-widget-deletebutton="false"
+        data-widget-fullscreenbutton="false"
+        data-widget-custombutton="false"
+        data-widget-collapsed="true"
+        data-widget-sortable="false"
+
+        -->
+
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-check"></i> </span>
+                    <h2>New Policy </h2>
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body fuelux">
+                        <div class="wizard" fuelux-wizard2 wizard-validators="validators" on-wiz-finish="newPolicy()" active-step="activeStep">
+                            <ul class="steps">
+                                <li data-target="#step1" class="active">
+                                    <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
+                                </li>
+                                <li data-target="#step2">
+                                    <span class="badge">2</span>Step 2<span class="chevron"></span>
+                                </li>
+                                <!--<li data-target="#step3">
+                            <span class="badge">3</span>Step 3<span class="chevron"></span>
+                        </li>
+                        <li data-target="#step4">
+                            <span class="badge">4</span>Step 4<span class="chevron"></span>
+                        </li>-->
+                                <li data-target="#step3">
+                                    <span class="badge">3</span>Step 3<span class="chevron"></span>
+                                </li>
+                            </ul>
+                            <div class="actions">
+                                <button type="button" class="btn btn-sm btn-primary btn-prev">
+                                    <i class="fa fa-arrow-left"></i>Prev
+                                </button>
+                                <button ng-disabled="submittingPolicy || policyCreated" type="button" class="btn btn-sm btn-success btn-next" data-last="Finish">
+                                    Next<i ng-hide="submittingPolicy" class="fa fa-arrow-right"></i>
+                                    <i ng-show="submittingPolicy" class="fa fa-cog fa-spin"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <form class="form-horizontal" id="fuelux-wizard" name="policyform" method="post">
+
+                                <div class="step-pane active" id="step1">
+                                    <h3><strong>Step 1 </strong> - General Policy Information</h3>
+
+                                    <!-- wizard form starts here -->
+                                    <fieldset>
+
+                                        <!--<div class="form-group">
+                                    <label class="col-md-2 control-label">Name</label>
+                                    <div class="col-md-10">
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" name="input1">
+                                        </div>
+                                    </div>
+                                </div>-->
+                                        <!--<div class="row">
+                                    <section class="col col-6">
+                                        <label class="input">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                            <input type="text" name="fname" placeholder="First name">
+                                        </label>
+                                    </section>
+                                    <section class="col col-6">
+                                        <label class="input">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                            <input type="text" name="lname" placeholder="Last name">
+                                        </label>
+                                    </section>
+                                </div>-->
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': policyform.holder.$invalid && !policyform.holder.firstTimer}">
+                                                    <label class="col-md-4 control-label" for="holder" localize="Holder">Holder</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" ng-model="holder" typeahead="e as e.searchName() for e in entities | filter:$viewValue | limitTo:30"
+                                                               placeholder="Search holder..." typeahead-on-select="onSelectHolder($item, $model, $label)"
+                                                               class="form-control" typeahead-editable="false"
+                                                               name="holder" id="holder" required first-timer autocomplete="off">
+                                                        <span ng-show="policyform.holder.$invalid && !policyform.holder.firstTimer" class="help-block">
+                                                            <i class="fa fa-warning"></i> Please select a policy holder
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6 pull-left">
+                                                <div class="form-group" ng-class="{'has-error': policyform.applicationid.$invalid && !policyform.applicationid.firstTimer}">
+                                                    <label class="col-md-2 control-label" for="applicationid" localize="Application">Application ID</label>
+                                                    <div class="col-md-8">
+                                                        <input ng-model="policy.ApplicationID" class="form-control" type="text" name="applicationid" id="applicationid"
+                                                               required first-timer>
+                                                        <p class="help-block">
+                                                            <i ng-show="policyform.applicationid.$invalid && !policyform.applicationid.firstTimer" class="fa fa-warning"></i> Type "0" if an application ID is not available.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': policyform.company.$invalid && !policyform.company.firstTimer}">
+                                                    <label class="col-md-4 control-label" for="company" localize="Agency">Select Agency</label>
+                                                    <div class="col-md-8">
+                                                        <select class="form-control" ng-model="policy.Company" id="company" name="company"
+                                                                ng-options="option.CompanyID as option.CompanyLegalName for option in companies"
+                                                                required first-timer>
+                                                            <option value="" disabled="">New CiTY or Old CiTY</option>
+                                                        </select>
+                                                        <span ng-show="policyform.company.$invalid && !policyform.company.firstTimer" class="help-block"><i class="fa fa-warning"></i> Please select an agency</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6 pull-left">
+                                                <div class="form-group" ng-class="{'has-error': policyform.producer.$invalid && !policyform.producer.firstTimer}">
+                                                    <label class="col-md-2 control-label" for="producer" localize="Producer">Producer</label>
+                                                    <div class="col-md-8">
+                                                        <select placeholder="Pick a producer" ui-select2 style="width:100%"
+                                                                ng-model="policy.Producer" id="producer" name="producer" required first-timer>
+                                                            <option value=""></option>
+                                                            <option ng-repeat="p in producers" value="{{p.Entity}}">{{p.Name}}</option>
+                                                        </select>
+                                                        <span ng-show="policyform.producer.$invalid && !policyform.producer.firstTimer" class="help-block"><i class="fa fa-warning"></i> Please select a producer</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="group" localize="Package">Policy Package Group</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control" ng-model="policy.Group" id="group" name="group" required
+                                                        ng-options="option.ID as option.Description for option in policyGroups"></select>
+                                            </div>
+                                        </div>
+
+                                        <!--<div class="form-group">
+                                    <label class="col-md-2 control-label" for="provider">Insurance Provider</label>
+                                    <div class="col-md-4">
+                                        <select class="form-control" ng-model="policy.Provider" id="provider" name="provider"
+                                                ng-options="option.ID as option.Description for option in providers"></select>
+                                    </div>
+                                </div>-->
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': policyform.provider.$invalid && !policyform.provider.firstTimer}">
+                                                    <label class="col-md-4 control-label" for="provider" localize="Provider">Insurance Provider</label>
+                                                    <div class="col-md-8">
+                                                        <select data-placeholder="Pick a provider" required first-timer ui-select2
+                                                                ng-model="policy.Provider" id="provider" name="provider" style="width:100%">
+                                                            <option value=""></option>
+                                                            <option ng-repeat="p in providers" value="{{p.ID}}">{{p.Description}}</option>
+                                                        </select>
+                                                        <span ng-show="policyform.provider.$invalid && !policyform.provider.firstTimer" class="help-block"><i class="fa fa-warning"></i> Please select a provider</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': policyform.slob.$invalid && !policyform.slob.firstTimer}">
+                                                    <label class="col-md-2 control-label" for="slob" localize="SLOB">SLOB</label>
+                                                    <div class="col-md-8">
+                                                        <!--<select class="form-control" ng-model="policy.SLOB" id="slob" name="slob" ng-disabled="!policy.Provider"
+                                                        class="select2"
+                                                        ng-options="option.SlobID as option.SlobDescription for option in slobs | filter:{Provider:policy.Provider}">
+                                                    <option value="">Pick a sub line of business</option>
+                                                </select>-->
+                                                        <select style="width:100%" ui-select2 ng-model="policy.SLOB" name="slob" id="slob" required first-timer
+                                                                data-placeholder="Pick a sub line of business" ng-disabled="!policy.Provider"
+                                                                ng-change="slobSelected()">
+                                                            <option value=""></option>
+                                                            <option ng-repeat="option in slobs | filter:{Provider:policy.Provider}" value="{{option.SlobID}}">{{option.SlobDescription}}</option>
+                                                        </select>
+                                                        <span ng-show="policyform.slob.$invalid && !policyform.slob.firstTimer" class="help-block"><i class="fa fa-warning"></i> Please select a slob</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label" for="finance" localize="Finance">Finance</label>
+                                                    <div class="col-md-8">
+                                                        <select class="form-control" ng-model="policy.Finance" id="finance" name="finance"
+                                                                required
+                                                                ng-options="option.LogID as option.LogDescription for option in filteredFinanceCodes"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': policyform.paymentmeans.$invalid && !policyform.paymentmeans.firstTimer}">
+                                                    <label class="col-md-2 control-label" for="paymentmeans" localize="MOP">Means of Payment</label>
+                                                    <div class="col-md-8">
+                                                        <select class="form-control" ng-model="policy.PaymentMeans" id="paymentmeans" name="paymentmeans"
+                                                                ng-options="option.ID as option.Description for option in meansOfPayment" required first-timer>
+                                                            <option value="" selected="" disabled>Pick a means of payment</option>
+                                                        </select>
+                                                        <span ng-show="policyform.paymentmeans.$invalid && !policyform.paymentmeans.firstTimer" class="help-block"><i class="fa fa-warning"></i> Please select a means of payment</span>
+                                                    </div>
+                                                </div>
+                                                <!--<select  ng-model="policy.PaymentMeans" id="paymentmeans" name="paymentmeans"
+                                               required>
+                                            <option value="" selected="">Pick a means of payment</option>
+                                            <option value="{{option.ID}}" ng-repeat="option in meansOfPayment">{{option.Description}}</option>
+                                        </select>-->
+
+
+                                            </div>
+                                        </div>
+
+                                        <!--<div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="agreedpremium">Agreed Premium</label>
+                                            <div class="col-md-8">
+                                                <input ng-model="policy.AgreedPremium" class="form-control" type="number" name="agreedpremium" id="agreedpremium">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="currency">Currency</label>
+                                            <div class="col-md-8">
+                                                <select class="form-control" ng-model="policy.Currency" id="currency" name="currency">
+                                                    <option value="EUR">EUR</option>
+                                                    <option value="USD">USD</option>
+                                                    <option value="GBP">GBP</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
+                                        <!--mydate1 = {{mydate.toGMTString()}}
+                                <br/>mydate2 = {{mydate2.toGMTString()}}
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="asdf" localize="StartDate">Start Date</label>
+                                            <div class="col-md-8">
+                                                <input ng-model="mydate" type="text" name="asdf" id="asdf" placeholder="Pick a start date"
+                                                       class="form-control datepicker" data-dateformat="dd/mm/yy" data-datechangemonth="true"
+                                                       data-datechangeyear="true" date-formatter first-timer required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" ng-click="testdate()">click me</button>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="startdat32e">Start Date</label>
+                                            <div class="col-md-8">
+                                                <input ng-model="mydate2" type="text" name="asdf" id="asdf" placeholder="Pick a start date"
+                                                       class="form-control datepicker" data-dateformat="dd/mm/yy" data-datechangemonth="true"
+                                                       data-datechangeyear="true" date-formatter first-timer required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': policyform.startdate.$invalid && !policyform.startdate.firstTimer}">
+                                                    <label class="col-md-4 control-label" for="startdate" localize="StartDate">Start Date</label>
+                                                    <div class="col-md-8">
+                                                        <input ng-model="policy.StartDate" type="text" name="startdate" id="startdate" placeholder="Pick a start date"
+                                                               class="form-control datepicker" data-dateformat="dd/mm/yy" data-datechangemonth="true"
+                                                               data-datechangeyear="true" date-formatter first-timer greater-equal-date="today" required>
+                                                        <span ng-show="policyform.startdate.$error.required && !policyform.startdate.$error.greaterequaldate && !policyform.startdate.firstTimer" class="help-block"><i class="fa fa-warning"></i> Please type a start date</span>
+                                                        <span ng-show="policyform.startdate.$error.greaterequaldate" class="help-block"><i class="fa fa-warning"></i> The policy's start date cannot be a past date</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': policyform.frequency.$invalid && !policyform.frequency.firstTimer}">
+                                                    <label class="col-md-2 control-label" for="frequency" localize="Frequency">Frequency (months)</label>
+                                                    <div class="col-md-8">
+                                                        <select class="form-control" ng-model="currentFrequency" id="frequency" name="frequency"
+                                                                ng-options="option as option.Description for option in paymentFrequences"
+                                                                required first-timer>
+                                                            <option value="" selected="" disabled>Pick a payment frequency</option>
+                                                        </select>
+                                                        <span ng-show="policyform.frequency.$error.required && !policyform.frequency.firstTimer" class="help-block"><i class="fa fa-warning"></i> Please select a payment frequency</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': !policyform.initialstartdate.firstTimer && policyform.initialstartdate.$invalid}">
+                                                    <label class="col-md-4 control-label" for="initialstartdate" localize="InitialStart">Initial Start Date</label>
+                                                    <div class="col-md-8">
+                                                        <input ng-model="policy.InitialStartDate" type="text" name="initialstartdate" id="initialstartdate"
+                                                               placeholder="Pick an initial start date"
+                                                               class="form-control datepicker" data-dateformat="dd/mm/yy" data-datechangemonth="true"
+                                                               data-datechangeyear="true" date-formatter required first-timer>
+                                                        <span ng-show="!policyform.initialstartdate.firstTimer && policyform.initialstartdate.$error.required" class="help-block"><i class="fa fa-warning"></i> Please type an initial start date</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--<div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="frequency">Anniversary Date</label>
+                                            <div class="col-md-8">
+                                                <input ng-model="policy.AnniversaryDate" type="text" name="initialstartdate" id="initialstartdate"
+                                                       placeholder="Pick an initial start date"
+                                                       class="form-control datepicker" data-dateformat="dd/mm/yy">
+                                            </div>
+                                        </div>
+                                    </div>-->
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': !policyform.enddate.firstTimer && policyform.enddate.$invalid}">
+                                                    <label class="col-md-4 control-label" for="enddate" localize="EndDate">End Date</label>
+                                                    <div class="col-md-8">
+                                                        <input ng-model="policy.EndDate" type="text" name="enddate" id="endate"
+                                                               placeholder="Pick an end date for a non renewable policy."
+                                                               ng-disabled="isNotRenewable()" class="form-control datepicker" data-dateformat="dd/mm/yy" data-datechangemonth="true"
+                                                               data-datechangeyear="true" date-formatter required first-timer>
+                                                        <span ng-show=" !policyform.enddate.firstTimer && policyform.enddate.$invalid" class="help-block"><i class="fa fa-warning"></i> Please type an end date</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="col-md-2 control-label" for="quote" localize="QuoteID">Quote ID</label>
+                                                    <div class="col-md-8">
+                                                        <input ng-model="policy.Quote" type="number" name="quote" id="quote"
+                                                               placeholder="Type an offer number" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <!--<label class="col-md-2 control-label">Name</label>-->
+                                            <div class="col-sm-offset-2 col-sm-4">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input ng-model="policy.Transfer" type="checkbox" class="checkbox style-0">
+                                                        <span style="z-index:1" localize="FromTransfer">From transfer</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-3">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input ng-model="policy.Commission" type="checkbox" class="checkbox style-0">
+                                                        <span style="z-index:1" localize="SpecialCommission">Special Commission</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--<div class="form-group has-warning">
+                                    <label class="col-md-2 control-label">Input warning</label>
+                                    <div class="col-md-10">
+                                        <div class="input-group">
+                                            <input class="form-control" type="text">
+                                            <span class="input-group-addon"><i class="fa fa-warning"></i></span>
+                                        </div>
+                                        <span class="help-block">Something may have gone wrong</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group has-error">
+                                    <label class="col-md-2 control-label">Input error</label>
+                                    <div class="col-md-10">
+                                        <div class="input-group">
+                                            <input class="form-control" type="text">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-remove-circle"></i></span>
+                                        </div>
+                                        <span class="help-block"><i class="fa fa-warning"></i> Please correct the error</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group has-success">
+                                    <label class="col-md-2 control-label">Input success</label>
+                                    <div class="col-md-10">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                                            <input class="form-control" type="text">
+                                            <span class="input-group-addon"><i class="fa fa-check"></i></span>
+                                        </div>
+                                        <span class="help-block">Something may have gone wrong</span>
+                                    </div>
+                                </div>-->
+                                        <!--<div class="form-group">
+                                    <label class="control-label col-md-2">Input icon success</label>
+                                    <div class="col-md-10">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+
+                                                <div class="input-icon-left">
+                                                    <i class="fa txt-color-green fa-check"></i>
+                                                    <input class="form-control" placeholder="Left Icon" type="text">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
+                                        <!--<div ng-include="test1.html">-->
+                                        <!--<div ng-controller="validationController">
+                                    <div ng-include="'test1.html'">
+                                    </div>
+                                </div>
+
+                                <div ng-include="'test1.html'">
+                                </div>
+
+                                <div myformvalidate></div>-->
+
+
+
+
+
+
+
+                                    </fieldset>
+
+                                </div>
+
+                                <div class="step-pane" id="step2">
+                                    <h3><strong>Step 2 </strong> - Add Policy Objects</h3>
+
+                                    <fieldset>
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group" ng-class="{'has-error': !policyform.agreedpremium.firstTimer && policyform.agreedpremium.$invalid}">
+                                                    <label class="col-md-4 control-label" for="agreedpremium" localize="AgreedPremium">Agreed Premium</label>
+                                                    <div class="col-md-8">
+                                                        <input ng-model="policy.AgreedPremium" class="form-control" type="number" name="agreedpremium" id="agreedpremium" required min="10"
+                                                               first-timer>
+                                                        <span ng-show="!policyform.agreedpremium.firstTimer && policyform.agreedpremium.$invalid" class="help-block"><i class="fa fa-warning"></i> Please correct the error</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="col-md-2 control-label" for="currency" localize="Currency">Currency</label>
+                                                    <div class="col-md-8">
+                                                        <select class="form-control" ng-model="policy.Currency" id="currency" name="currency">
+                                                            <option value="EUR">EUR</option>
+                                                            <option value="USD">USD</option>
+                                                            <option value="GBP">GBP</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <h1> Search <span class="semi-bold">{{objType.Description}}</span></h1>
+                                    <br>
+                                    <div class="input-group">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                {{objType.Description}} <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <!--<li ng-click="selectObjectType(-1)" ng-class="{active:isObjectType(0)}">
+                                            <a href="javascript:void(0)"><i ng-show="isObjectType(0)" class="fa fa-check"></i> Everything</a>
+                                        </li>
+                                        <li class="divider"></li>-->
+                                                <li ng-click="selectObjectType(o.ObjectTypeID)" ng-class="{active:isObjectType(o.ObjectTypeID)}"
+                                                    ng-repeat="o in objectTypes | filter:{SlobID: policy.SLOB}">
+                                                    <a href="javascript:void(0)"><i ng-show="isObjectType(o.ObjectTypeID)" class="fa fa-check"></i> {{o.Description}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!--<input class="form-control" type="text" placeholder="Search object..." id="search-project">-->
+                                        <input type="text" class="form-control" ng-model="object" placeholder="Search object or press the '+' button to add a new one..." id="search-project"
+                                               typeahead="obj as obj.Description for obj in getObject($viewValue)" typeahead-loading="loadingObjects" typeahead-min-length="3" autocomplete="off"
+                                               typeahead-input-formatter="formatInput($model)" typeahead-editable="false">
+                                        <i ng-show="loadingObjects" class="glyphicon glyphicon-refresh"></i>
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default btn-warning" ng-click="addObject()">
+                                                <!--&nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-plus fa-lg"></i>&nbsp;&nbsp;&nbsp;-->
+                                                <!--&nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-search fa-lg"></i>&nbsp;&nbsp;&nbsp;-->
+                                                <span class="glyphicon glyphicon-plus"></span> <span ng-hide="object" localize="New">New</span><span ng-show="object" localize="Add">Add</span>
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="row">
+
+                                        <div class="col-sm-4">
+
+                                            <h6>Covers</h6>
+
+                                            <div class="tree">
+                                                <ul>
+                                                    <li ng-repeat="t in coverTypes" mycollapsible>
+                                                        <span><i class="fa fa-lg fa-medkit"></i> {{t}}</span>
+                                                        <ul>
+                                                            <!--<li>
+                                                        <span class="label label-success"><i class="fa fa-lg fa-minus-circle"></i> Monday, January 14: 8.00 hours</span>
+                                                        <ul>
+                                                            <li>
+                                                                <span><i class="fa fa-clock-o"></i> 7.75</span> &ndash; <a href="javascript:void(0);">Writing documentation...</a>
+                                                            </li>
+                                                            <li>
+                                                                <span><i class="fa fa-clock-o"></i> 0.25</span> &ndash; <a href="javascript:void(0);">Reverting code back to...</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>-->
+                                                            <li ng-repeat="c in covers | filter:{TypeDescription: t}" class="mycovers">
+                                                                <!--<li ng-repeat="c in getCovers(t)" class="mycovers">-->
+                                                                <span mydraggable cover="c">{{c.Description}}</span>
+                                                                <!--<ul>
+                                                            <li>
+                                                                <span><i class="fa fa-clock-o"></i> 7.75</span> &ndash; <a href="javascript:void(0);">Writing documentation...</a>
+                                                            </li>
+                                                            <li>
+                                                                <span><i class="fa fa-clock-o"></i> 0.25</span> &ndash; <a href="javascript:void(0);">Reverting code back to...</a>
+                                                            </li>
+                                                        </ul>-->
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-sm-8">
+
+                                            <h6>Objects</h6>
+
+
+                                            <accordion close-others="oneAtATime">
+                                                <!--<accordion-group heading="Static Header, initially expanded" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
+                                            This content is straight in the template.
+                                        </accordion-group>-->
+                                                <accordion-group ng-repeat="obj in objects" class="acc" mydroppable is-open="isopen">
+                                                    <accordion-heading>
+                                                        <i ng-show="isopen" class="fa fa-fw fa-plus-circle txt-color-green"></i> <i ng-show="!isopen" class="fa fa-fw fa-minus-circle txt-color-red"></i>
+                                                        {{obj.Description}}
+                                                        <!--<i class="pull-right glyphicon"
+                                                ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>-->
+                                                        <!--<button class="pull-right" type=" button" class="btn btn-default" ng-click="removeObject($index)">Remove</button>-->
+                                                        <!--<div class="pull-right btn-group btn-group-xs">
+                                                    <button class="btn btn-success btn-xs">Smth</button>
+                                                </div>-->
+                                                        <!--<input type="number" style="width:20px;" class="pull-right" ng-model=" obj.objectamount" placeholder="Amount" />-->
+                                                        <button class="pull-right btn btn-info btn-xs" ng-click="removeObject($index, $event)">Remove</button>
+                                                        <!--<button class="btn btn-labeled btn-danger btn-xs pull-right" ng-click="removeObject($index, $event)"> <span class="btn-label"><i class="glyphicon glyphicon-trash"></i></span>Remove </button>-->
+                                                        <!--<div class="col-sm-3">
+                                                    <div class="input-group pull-right">
+                                                        <input class="form-control" id="appendbutton" ng-focus="$event.stopPropagation();" type="text">
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-default" ng-click="removeObject($index, $event)" type="button">
+                                                                Options
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+                                                    </accordion-heading>
+                                                    <!--<div class="row">
+
+                                                <div class="form-group form-group-sm" ng-class="{'has-error': !policyform['object' + obj.ID].firstTimer && policyform['object' + obj.ID].$invalid}" style="margin: 5px 0">
+                                                    <label class="col-sm-3 control-label" for="formGroupInputSmall">Object Amount</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="number" class="form-control" dynamic-name="'object' + obj.ID" ng-model="obj.ObjectAmount" placeholder="Value"
+                                                               min="0.1" required first-timer />
+                                                    </div>
+                                                </div>
+
+
+                                            </div>-->
+
+                                                    <table class="table table-bordered table-condensed no-margin">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>CoverID</th>
+                                                                <th>Description</th>
+                                                                <th>Type Description</th>
+                                                                <th>Amount</th>
+                                                                <th>Deductibles</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="6">
+                                                                    <div class="form-group form-group-sm no-margin" ng-class="{'has-error': !policyform['object' + obj.ID].firstTimer && policyform['object' + obj.ID].$invalid}">
+                                                                        <label class="col-sm-3 control-label" for="formGroupInputSmall" localize="ObjectAmount">Object Amount</label>
+                                                                        <div class="col-sm-3">
+                                                                            <input type="number" class="form-control" dynamic-name="'object' + obj.ID" ng-model="obj.ObjectAmount" placeholder="Value"
+                                                                                   min="0" required first-timer ng-change="setCoverAmounts(obj)" />
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
+
+                                                        <tbody>
+                                                            <tr ng-repeat="c in obj.Covers">
+                                                                <td>{{c.CoverID}}</td>
+                                                                <td>{{c.Description}}</td>
+                                                                <td>{{c.TypeDescription}}</td>
+                                                                <td>
+                                                                    <select ng-if="c.Amounts.length > 0" ng-model="c.CoverAmount" ng-options="am as am for am in c.Amounts"></select>
+                                                                    <span ng-if="c.Amounts.length === 0"><!--{{obj.ObjectAmount}}-->{{c.CoverAmount}}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <select ng-if="c.Deductibles.length > 0" ng-model="c.Deductible" ng-options="d.DeductibleID as d.Deductible for d in c.Deductibles"></select>
+                                                                    <span ng-if="c.Deductibles.length === 0">0</span>
+                                                                </td>
+                                                                <td><a href="javascript:void(0);" ng-click="removeCover(obj, $index)" class="btn btn-default btn-xs"><i class="fa fa-times"></i></a></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </accordion-group>
+
+                                            </accordion>
+
+                                        </div>
+
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="step-pane" id="step3">
+                                    <h3><strong>Step 3 </strong> - Finished!</h3>
+                                    <br>
+                                    <br>
+                                    <h1 class="text-center text-success">
+                                        <i class="fa fa-check"></i> Congratulations!
+                                        <br>
+                                        <small>Sign and click finish to submit the new policy!!!</small>
+                                    </h1>
+                                    </br>
+                                    </br>
+
+                                    <div id="signature-pad" class="m-signature-pad">
+                                        <div class="m-signature-pad--body">
+                                            <canvas width="658" height="318" signature-pad></canvas>
+                                        </div>
+                                        <div class="m-signature-pad--footer">
+                                            <div class="description" localize="SignAbove">Sign above</div>
+                                            <button class="button clear" data-action="clear" localize="Clear">Clear</button>
+                                            <!--<button class="button save" data-action="save">Save</button>-->
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+
+            </div>
+            <!-- end widget -->
+
+        </article>
+        <!-- WIDGET END -->
+
+    </div>
+
+    <!-- end row -->
+
+</section>
+<!-- end widget grid -->
+
+
+<script type="text/javascript">
+    pageSetUp();
+</script>
+
+<!--<script src="../../../js/plugin/signature_pad/signature_pad.min.js"></script>
+<script>
+    $(function () {
+        var wrapper = document.getElementById("signature-pad"),
+         clearButton = wrapper.querySelector("[data-action=clear]"),
+         saveButton = wrapper.querySelector("[data-action=save]"),
+         canvas = wrapper.querySelector("canvas"),
+         signaturePad;
+
+        // Adjust canvas coordinate space taking into account pixel ratio,
+        // to make it look crisp on mobile devices.
+        // This also causes canvas to be cleared.
+        function resizeCanvas() {
+            var ratio = window.devicePixelRatio || 1;
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+        }
+
+        window.onresize = resizeCanvas;
+        resizeCanvas();
+
+        signaturePad = new SignaturePad(canvas);
+
+        //clearButton.addEventListener("click", function (event) {
+        //    signaturePad.clear();
+        //});
+
+        //saveButton.addEventListener("click", function (event) {
+        //    if (signaturePad.isEmpty()) {
+        //        alert("Please provide signature first.");
+        //    } else {
+        //        window.open(signaturePad.toDataURL());
+        //    }
+        //});
+
+
+    });
+</script>-->

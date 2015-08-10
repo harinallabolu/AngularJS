@@ -1,0 +1,256 @@
+
+<style type="text/css">
+        /*form.header-search > .dropdown-menu {
+            left: auto !important;
+        }*/
+
+        #myheadersearch ~ .dropdown-menu {
+            left: auto !important;
+        }
+
+        .close-icon:after {
+            content: "X";
+            display: block;
+            width: 15px;
+            height: 15px;
+            position: absolute;
+            background: url('../img/clear.png') center center no-repeat;
+            z-index: 1;
+            right: 33px;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            padding: 2px;
+            border-radius: 50%;
+            text-align: center;
+            color: white;
+            font-weight: normal;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+        .close-icon:hover:after {
+            opacity: 1;
+        }
+
+        #myheadersearch:not(:valid) ~ .close-icon {
+            display: none;
+        }
+
+        .my-ui-autocomplete-loading {
+            background-image: url("../img/select2-spinner.gif") !important;
+            background-repeat: no-repeat;
+            background-position: 5% 50%;
+            padding-right: 27px;
+        }
+
+        /*#myheadersearch {
+      display: block;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      min-width: 200px;
+      width: 100%;
+      height: 30px;
+      padding: 0 10px;
+      outline: none;
+      border-width: 1px;
+      border-style: solid;
+      border-radius: 0;
+      border-color: #bfbfbf;
+      background: #ffffff;
+      color: #404040;
+      appearance: normal;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      margin-top: 10px;
+      line-height: normal;
+    }*/
+        #headersearchbutton {
+            background: none;
+            border: none;
+            color: #6D6A69;
+            font-size: 17px;
+            height: 30px;
+            line-height: 30px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            right: 0px;
+            top: 10px;
+            width: 30px;
+            z-index: 2;
+        }
+</style>
+
+<div id="logo-group">
+
+    <!-- PLACE YOUR LOGO HERE -->
+    <span id="logo"> <img src="img/logo.png" alt="CiTY Brokers"> </span>
+    <!-- END LOGO PLACEHOLDER -->
+    <!--<span data-ng-controller="ActivityDemoCtrl">
+        <activity data-onrefresh="refreshCallback">
+            <activity:button data-icon="fa fa-user" data-total="total" />
+            <activity:content data-footer="footerContent">
+                <activity:item data-src="item.src" data-onload="item.onload" data-active="item.active" data-ng-repeat="item in items">
+                    <span data-localize="{{ item.title }}">{{ item.title }}</span> ({{ item.count }})
+                </activity:item>
+            </activity:content>
+        </activity>
+    </span>-->
+</div>
+
+<!-- projects dropdown -->
+<!--<div class="project-context hidden-xs">
+
+    <span class="label"><span data-localize="Projects">Projects</span>:</span>
+    <span class="project-selector" class="popover-trigger-element dropdown-toggle" data-toggle="dropdown"><span data-localize="Recent projects">Recent projects </span> <i class="fa fa-angle-down"></i></span>
+
+    <ul class="dropdown-menu">
+        <li>
+            <a href="javascript:void(0);">Online e-merchant management system - attaching integration with the iOS</a>
+        </li>
+        <li>
+            <a href="javascript:void(0);">Notes on pipeline upgradee</a>
+        </li>
+        <li>
+            <a href="javascript:void(0);">Assesment Report for merchant account</a>
+        </li>
+        <li class="divider"></li>
+        <li>
+            <a href="javascript:void(0);"><i class="fa fa-power-off"></i> Clear</a>
+        </li>
+    </ul>
+
+</div>-->
+<!-- end projects dropdown -->
+<!-- pulled right: nav area -->
+<div class="pull-right">
+
+    <!-- collapse menu button -->
+    <div id="hide-menu" class="btn-header pull-right">
+        <span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
+    </div>
+    <!-- end collapse menu -->
+    <!-- Top menu profile link : this shows only when top menu is active -->
+    <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
+        <li class="">
+            <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
+                <img src="img/avatars/sunny.png" alt="John Doe" class="online" />
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"><i class="fa fa-cog"></i> Setting</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#/misc/other/profile" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-user"></i> <u>P</u>rofile</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0" data-action="toggleShortcut"><i class="fa fa-arrow-down"></i> <u>S</u>hortcut</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0" data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Full <u>S</u>creen</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="login.html" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <!-- logout button -->
+    <div id="logout" class="btn-header transparent pull-right">
+        <span> <a href="login.html" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
+    </div>
+    <!-- end logout button -->
+    <!-- search mobile button (this is hidden till mobile view port) -->
+    <div id="search-mobile" class="btn-header transparent pull-right">
+        <span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
+    </div>
+    <!-- end search mobile button -->
+    <!-- input: search field -->
+    <form class="header-search pull-right form-inline" ng-controller="HeaderSearchController">
+        <!--<input id="search-fld"  type="text" name="param" data-localize="Find reports and more" placeholder="Find reports and more" data-autocomplete='[
+        "ActionScript",
+        "Scheme"]'>-->
+        <!--<pre>Model: {{asyncSelected | json}}</pre>
+        <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" typeahead="address for address in getLocation($viewValue)" class="form-control">-->
+
+        <div class="input-group margin-top-10 pull-right">
+            <div class="input-group-btn">
+                <button type="button" style="height:30px" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i ng-class="{'fa-user': search === 'entities', 'fa-book': search === 'policies'}" class="fa"></i>
+                </button>
+                <ul class="dropdown-menu" style="min-width:1px">
+                    <li ng-class="{active: search === 'entities'}"><a ng-click="search='entities';placeholder = 'Search entities...';" href="javascript:void(0)"><i class="fa fa-user"></i> </a></li>
+                    <li ng-class="{active: search === 'policies'}"><a ng-click="search='policies';placeholder = 'Search policies...';" href="javascript:void(0)"><i class="fa fa-book"></i> </a></li>
+                </ul>
+            </div>
+
+            <input ng-class="{'my-ui-autocomplete-loading': loadingEntities}" type="text" style="height:30px" class="form-control" ng-model="entity" typeahead="e as display(e) for e in getResults($viewValue) | limitTo:15"
+                   name="myheadersearch" id="myheadersearch" placeholder="{{placeholder}}"
+                   typeahead-editable="false" typeahead-input-formatter="display(e)"
+                   autocomplete="off" typeahead-on-select="gotoViewPolicy($item, $model, $label)" required>
+            <!--<button class="close-icon" type="reset"></button>-->
+        </div>
+
+        <!--<div class="input-group">
+            <div class="input-group-btn">
+                <button type="button" style="height:30px;margin-top:10px" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i ng-class="{'fa-user': search === 'entities', 'fa-book': search === 'policies'}" class="fa"></i>
+                </button>
+                <ul class="dropdown-menu" style="min-width:initial">
+                    <li ng-class="{active: search === 'entities'}"><a ng-click="search='entities'" href="javascript:void(0)"><i class="fa fa-user"></i> </a></li>
+                    <li ng-class="{active: search === 'policies'}"><a ng-click="search='policies'" href="javascript:void(0)"><i class="fa fa-book"></i> </a></li>
+                </ul>
+            </div>
+            <input type="text" class="form-control" ng-model="entity" typeahead="e as e.searchName() for e in entities | filter:$viewValue | limitTo:15"
+                   placeholder="Search entities..." name="myheadersearch" id="myheadersearch"
+                   typeahead-editable="false" typeahead-input-formatter="e.searchName()" localize="Search entities"
+                   autocomplete="off" typeahead-on-select="selectEntity($item, $model, $label)" required>
+            <button class="close-icon" type="reset"></button>
+        </div>-->
+
+        <button type="submit" id="headersearchbutton">
+            <i class="fa fa-search"></i>
+        </button>
+        <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
+
+
+        <!--<input type="text" ng-model="entity" typeahead="e as e.searchName() for e in entities | filter:$viewValue | limitTo:15"
+               placeholder="Search entities..." name="myheadersearch" id="myheadersearch"
+               typeahead-editable="false" typeahead-input-formatter="e.searchName()" localize="Search entities"
+               autocomplete="off" typeahead-on-select="selectEntity($item, $model, $label)" required>
+        <button class="close-icon" type="reset"></button>
+        <button type="submit" id="headersearchbutton">
+            <i class="fa fa-search"></i>
+        </button>
+        <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>-->
+    </form>
+    <!-- end input: search field -->
+    <!-- fullscreen button -->
+    <div id="fullscreen" class="btn-header transparent pull-right">
+        <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
+    </div>
+    <!-- end fullscreen button -->
+    <!-- multiple lang dropdown : find all flags in the image folder -->
+    <ul data-lang-menu="" class="header-dropdown-list hidden-xs" data-ng-controller="LangController">
+        <li>
+            <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                <img alt="" class="flag flag-{{ currentLang.flagCode }}" src="img/blank.gif"> <span> {{ currentLang.translation }} </span> <i class="fa fa-angle-down"></i>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li data-ng-class="{active: lang == currentLang}" data-ng-repeat="lang in languages">
+                    <a href="" data-ng-click="setLang(lang)"><img class="flag flag-{{ lang.flagCode }}" src="img/blank.gif" /> {{ lang.language }} ({{ lang.translation }}) </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <!-- end multiple lang -->
+
+</div>
+<!-- end pulled right: nav area -->

@@ -1,0 +1,6 @@
+D:\Projects\Harinath\City Brokers\eOfficeComplete\eCity\bin\eCity.dll.config
+D:\Projects\Harinath\City Brokers\eOfficeComplete\eCity\bin\eCity.dll
+D:\Projects\Harinath\City Brokers\eOfficeComplete\eCity\bin\eCity.pdb
+D:\Projects\Harinath\City Brokers\eOfficeComplete\eCity\obj\Debug\eCity.csprojResolveAssemblyReference.cache
+D:\Projects\Harinath\City Brokers\eOfficeComplete\eCity\obj\Debug\eCity.dll
+D:\Projects\Harinath\City Brokers\eOfficeComplete\eCity\obj\Debug\eCity.pdb

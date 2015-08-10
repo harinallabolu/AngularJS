@@ -1,0 +1,290 @@
+﻿
+<style type="text/css">
+    .table-cell-hover > tbody > tr > td:hover {
+        background-color: #ecf3f8;
+    }
+
+    .active-package {
+        background-color: Highlight !important;
+        color: white;
+    }
+
+    .select2-container .select2-choice {
+        height: 28px;
+        line-height: 28px;
+    }
+</style>
+
+<new-object2 object-type="objectType" no-save="true" fields="insurableFieldsArray" show-errors="showErrors"
+             has-errors="insurableFieldsHaveErrors">
+</new-object2>
+
+
+<form name="driverform" class="smart-form">
+    <fieldset>
+        <div class="row">
+
+            <section class="col col-3">
+                <label class="label">Search for Driver</label>
+                <label class="input">
+                    <input class="input-sm" type="text" ng-model="driver" typeahead="e as e.searchName() for e in entities | filter:$viewValue | limitTo:30"
+                           placeholder="Search person..." typeahead-on-select="driverSelected($item, $model, $label)"
+                           typeahead-editable="false"
+                           autocomplete="off">
+                </label>
+            </section>
+
+            <section class="col col-2">
+                <label class="label" for="ownerbirthdate">Owner Birth Date</label>
+                <label class="input">
+                    <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                    <input style="z-index:10" type="text" ng-model="insurable.OwnerBirthDate" name="ownerbirthdate"
+                           id="ownerbirthdate" placeholder="Select a date" class="datepicker input-sm" data-datechangeyear="true"
+                           data-datemindate="-100Y" data-datemaxdate="+0d" data-dateyearrange="-100:+1"
+                           data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy"
+                           first-timer>
+                </label>
+            </section>
+
+            <section class="col col-2">
+                <label class="label" for="gender">Driver Gender</label>
+                <label class="select" ng-class="{'state-error':(!driverform.gender.firstTimer || showErrors) && driverform.gender.$invalid, 'state-success':driverform.gender.$dirty && driverform.gender.$valid}">
+                    <select class="input-sm" ng-model="insurable.Gender" name="gender" id="gender" required first-timer>
+                        <option value="" selected="" disabled="">Gender</option>
+                        <option value="1">Male</option>
+                        <option value="2">Female</option>
+                        <option value="3">Company</option>
+                    </select>
+                    <i></i>
+                </label>
+                <em ng-show="(!driverform.gender.firstTimer || showErrors) && driverform.gender.$invalid" class="invalid">
+                    <i class="fa fa-warning"></i> Please pick a gender
+                </em>
+            </section>
+
+            <section class="col col-3">
+                <label class="label" for="gender">Driver Marital Status</label>
+                <label class="select" ng-class="{'state-error':(!driverform.drivermaritalstatus.firstTimer || showErrors) && driverform.drivermaritalstatus.$invalid, 'state-success':driverform.drivermaritalstatus.$dirty && driverform.drivermaritalstatus.$valid}">
+                    <select class="input-sm" ng-model="insurable.DriverMaritalStatus" name="drivermaritalstatus" id="drivermaritalstatus" required first-timer>
+                        <option value="" selected="" disabled="">Marital Status</option>
+                        <option value="1">Married with children</option>
+                        <option value="2">Married</option>
+                        <option value="3">Single</option>
+                    </select>
+                    <i></i>
+                </label>
+                <em ng-show="(!driverform.drivermaritalstatus.firstTimer || showErrors) && driverform.drivermaritalstatus.$invalid" class="invalid">
+                    <i class="fa fa-warning"></i> Please select the driver's marital status
+                </em>
+            </section>
+
+
+            <section class="col col-2">
+                <!--<label class="label" for="yearly">Annual?</label>
+                <label class="toggle pull-left">
+                    <input type="checkbox" ng-model="annual" name="annual">
+                    <i style="left:-4px" data-swchon-text="YES" data-swchoff-text="NO"></i>
+                </label>-->
+                <!--<label class="select" ng-class="{'state-error':!driverform.drivermaritalstatus.firstTimer && driverform.drivermaritalstatus.$invalid, 'state-success':driverform.drivermaritalstatus.$dirty && driverform.drivermaritalstatus.$valid}">-->
+                <label class="label" for="paymenttype">Payment Type</label>
+                <label class="select" ng-class="{'state-error':(!driverform.paymenttype.firstTimer || showErrors) && driverform.paymenttype.$invalid, 'state-success':driverform.paymenttype.$dirty && driverform.paymenttype.$valid}">
+                    <select class="input-sm" ng-model="insurable.PaymentType" name="paymenttype" id="paymenttype" required first-timer
+                            ng-options="p.ID as p.Description for p in paymentTypes">
+                        <option value="" selected="" disabled="">Payment Type</option>
+                    </select>
+                    <i></i>
+                </label>
+                <em ng-show="(!driverform.paymenttype.firstTimer || showErrors) && driverform.paymenttype.$invalid" class="invalid">
+                    <i class="fa fa-warning"></i> Please select the policy's payment type
+                </em>
+            </section>
+        </div>
+
+        <div class="row">
+
+            <section class="col col-2">
+                <label class="label" for="driverbirthdate">Driver BirthDate</label>
+                <label class="input" ng-class="{'state-error': (!driverform.driverbirthdate.firstTimer || showErrors) && driverform.driverbirthdate.$invalid, 'state-success': driverform.driverbirthdate.$valid && !driverform.driverbirthdate.firstTimer}">
+                    <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                    <input style="z-index:10" type="text" ng-model="insurable.DriverBirthDate"
+                           name="driverbirthdate"
+                           id="driverbirthdate" placeholder="Select a date" class="datepicker input-sm" data-datechangeyear="true"
+                           data-datemindate="-100Y" data-datemaxdate="+0d" data-dateyearrange="-100:+1"
+                           data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required
+                           first-timer>
+                </label>
+                <em ng-show="(!driverform.driverbirthdate.firstTimer || showErrors) && driverform.driverbirthdate.$error.required" class="invalid"><i class="fa fa-warning"></i> Please select a driver birthdate</em>
+            </section>
+
+            <!--<section class="col col-1">
+                <label class="label" for="seats">Seats</label>
+                <label class="input">
+                    <input class="input-sm" ng-model="insurable.Seats" type="number" name="seats" id="seats">
+                </label>
+            </section>
+
+            <section class="col col-2">
+                <label class="label" for="cubism">Cubism</label>
+                <label class="input">
+                    <input class="input-sm" ng-model="insurable.Cubism" type="number" name="cubism" id="cubism">
+                </label>
+            </section>-->
+            <!--<section class="col col-3">
+                <label class="label" for="licencefirstissuedate">Licence First Issue Date</label>
+                <label class="input" ng-class="{'state-error': !groupamaform.licencefirstissuedate.firstTimer && groupamaform.licencefirstissuedate.$invalid, 'state-success': groupamaform.licencefirstissuedate.$valid && !groupamaform.licencefirstissuedate.firstTimer}">
+                    <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                    <input style="z-index:10" type="text" ng-model="insurable.LicenceFirstIssueDate"
+                           name="licencefirstissuedate"
+                           id="licencefirstissuedate" placeholder="Select a date" class="datepicker input-sm" data-datechangeyear="true"
+                           data-datemindate="-100Y" data-datemaxdate="+0d" data-dateyearrange="-100:+1"
+                           data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required
+                           first-timer>
+                </label>
+                <em ng-show="!groupamaform.licencefirstissuedate.firstTimer && groupamaform.licencefirstissuedate.$error.required" class="invalid"><i class="fa fa-warning"></i> Please select the vehicle's purchased date</em>
+            </section>-->
+
+            <section class="col col-2">
+                <label class="label" for="drivinglicenceissuedate">Driving Licence Issue Date</label>
+                <label class="input">
+                    <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                    <input style="z-index:10" type="text" ng-model="insurable.DrivingLicenceIssueDate"
+                           name="drivinglicenceissuedate"
+                           id="drivinglicenceissuedate" placeholder="Select a date" class="datepicker input-sm" data-datechangeyear="true"
+                           data-datemindate="-100Y" data-datemaxdate="+0d" data-dateyearrange="-100:+1"
+                           data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy">
+                </label>
+            </section>
+
+            <section class="col col-2">
+                <label class="label" for="afm">Afm</label>
+                <label class="input">
+                    <input class="input-sm" placeholder="Afm" ng-model="insurable.Afm" type="text" name="afm" id="afm">
+                </label>
+            </section>
+
+            <section class="col col-2">
+                <label class="label" for="marketvalue">Market Value</label>
+                <label class="input" ng-class="{'state-error': (!driverform.marketvalue.firstTimer || showErrors) && driverform.marketvalue.$invalid, 'state-success': driverform.marketvalue.$valid && !driverform.marketvalue.firstTimer}">
+                    <input class="input-sm" ng-model="insurable.MarketValue" placeholder="Market Value"
+                           type="number" name="marketvalue" id="marketvalue" ng-pattern="/^[0-9]+$/" required min="0" first-timer>
+                </label>
+                <em ng-show="(!driverform.marketvalue.firstTimer || showErrors) && driverform.marketvalue.$error.required" class="invalid"><i class="fa fa-warning"></i> Please select a market value</em>
+            </section>
+
+            <section class="col col-2">
+                <label class="label" for="purchaseddate">Purchased Date</label>
+                <label class="input" ng-class="{'state-error': (!driverform.purchaseddate.firstTimer || showErrors) && driverform.purchaseddate.$invalid, 'state-success': driverform.purchaseddate.$valid && !driverform.purchaseddate.firstTimer}">
+                    <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                    <input style="z-index:10" type="text" ng-model="insurable.PurchasedDate"
+                           name="purchaseddate"
+                           id="purchaseddate" placeholder="Select a date" class="datepicker input-sm" data-datechangeyear="true"
+                           data-datemindate="-100Y" data-datemaxdate="+0d" data-dateyearrange="-100:+1"
+                           data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required
+                           first-timer>
+                </label>
+                <em ng-show="(!driverform.purchaseddate.firstTimer || showErrors) && driverform.purchaseddate.$error.required" class="invalid"><i class="fa fa-warning"></i> Please select the vehicle's purchased date</em>
+            </section>
+
+        </div>
+
+    </fieldset>
+
+    <footer>
+        <button type="button" ng-disabled="tariffying" ng-click="tariffyAll()" class="btn btn-primary">
+            <span ng-hide="tariffying">Tariffy</span>
+            <span ng-show="tariffying">Please Wait&nbsp;<i class="fa fa-cog fa-spin"></i></span>
+        </button>
+    </footer>
+</form>
+
+<provider-packs provider="generali" provider-image="http://www.citybrokers.gr/assets/cityimages/providers/generali.gif"></provider-packs>
+
+<form name="groupamaform" class="smart-form">
+    <fieldset>
+
+        <!--<div class="row">
+
+            <section class="col col-3">
+                <label class="label" for="ownerbirthdate">Owner Birth Date</label>
+                <label class="input" ng-class="{'state-error': !groupamaform.ownderbirthdate.firstTimer && groupamaform.ownderbirthdate.$invalid, 'state-success': groupamaform.ownderbirthdate.$valid && !groupamaform.ownderbirthdate.firstTimer}">
+                    <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                    <input style="z-index:10" type="text" ng-model="insurable.OwnerBirthDate"
+                           name="ownerbirthdate"
+                           id="ownerbirthdate" placeholder="Select a date" class="datepicker input-sm" data-datechangeyear="true"
+                           data-datemindate="-100Y" data-datemaxdate="+0d" data-dateyearrange="-100:+1"
+                           data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy"
+                           first-timer>
+                </label>
+                <em ng-show="!groupamaform.ownderbirthdate.firstTimer && groupamaform.ownderbirthdate.$error.required" class="invalid"><i class="fa fa-warning"></i> Please select the vehicle's purchased date</em>
+            </section>
+
+            <section class="col col-1">
+                <label class="label" for="seats">Seats</label>
+                <label class="input">
+                    <input class="input-sm" ng-model="insurable.Seats" type="number" name="seats" id="seats">
+                </label>
+            </section>
+
+            <section class="col col-2">
+                <label class="label" for="cubism">Cubism</label>
+                <label class="input">
+                    <input class="input-sm" ng-model="insurable.Cubism" type="number" name="cubism" id="cubism">
+                </label>
+            </section>
+
+            <section class="col col-3">
+                <label class="label" for="licencefirstissuedate">Licence First Issue Date</label>
+                <label class="input" ng-class="{'state-error': !groupamaform.licencefirstissuedate.firstTimer && groupamaform.licencefirstissuedate.$invalid, 'state-success': groupamaform.licencefirstissuedate.$valid && !groupamaform.licencefirstissuedate.firstTimer}">
+                    <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                    <input style="z-index:10" type="text" ng-model="insurable.LicenceFirstIssueDate"
+                           name="licencefirstissuedate"
+                           id="licencefirstissuedate" placeholder="Select a date" class="datepicker input-sm" data-datechangeyear="true"
+                           data-datemindate="-100Y" data-datemaxdate="+0d" data-dateyearrange="-100:+1"
+                           data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required
+                           first-timer>
+                </label>
+                <em ng-show="!groupamaform.licencefirstissuedate.firstTimer && groupamaform.licencefirstissuedate.$error.required" class="invalid"><i class="fa fa-warning"></i> Please select the vehicle's purchased date</em>
+            </section>
+
+            <section class="col col-3">
+                <label class="label" for="drivinglicenceissuedate">Driving Licence Issue Date</label>
+                <label class="input">
+                    <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                    <input style="z-index:10" type="text" ng-model="insurable.DrivingLicenceIssueDate"
+                           name="drivinglicenceissuedate"
+                           id="drivinglicenceissuedate" placeholder="Select a date" class="datepicker input-sm" data-datechangeyear="true"
+                           data-datemindate="-100Y" data-datemaxdate="+0d" data-dateyearrange="-100:+1"
+                           data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required>
+                </label>
+            </section>
+
+        </div>-->
+
+        <div class="row">
+            <section class="col col-3">
+                <label class="label" for="affinity">Affinity</label>
+                <label class="select">
+                    <select class="input-sm" ng-model="insurable.Affinity" ng-options="a.ID as a.Description for a in affinities"
+                            name="affinity" id="affinity">
+                        <option value="" selected="" disabled="">Affinities</option>
+                    </select>
+                    <i></i>
+                </label>
+            </section>
+        </div>
+
+    </fieldset>
+</form>
+
+<provider-packs provider="groupama" provider-image="http://www.citybrokers.gr/assets/cityimages/providers/logo-groupama.jpg"></provider-packs>
+
+<provider-packs provider="ethniki" provider-image="http://www.citybrokers.gr/assets/cityimages/providers/ethnikilogo.png"></provider-packs>
+
+<!--<provider-packs provider="groupama" provider-image="http://www.citybrokers.gr/assets/cityimages/providers/interamerican.png"></provider-packs>
+<provider-packs provider="groupama" provider-image="http://www.citybrokers.gr/assets/cityimages/providers/atlantiki.gif"></provider-packs>
+<provider-packs provider="groupama" provider-image="http://www.citybrokers.gr/assets/cityimages/providers/ergo.png"></provider-packs>-->
+
+
+<script type="text/javascript">
+    pageSetUp();
+</script>

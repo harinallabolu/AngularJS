@@ -1,0 +1,54 @@
+﻿<div class="row animated zoomIn" ng-controller="HelpPhonesController">
+    <div class="col-xs-12">
+        <h1 class="page-title txt-color-blueDark">
+            Help Phones
+        </h1>
+    </div>
+
+    <article class="col-xs-12">
+
+        <select style="width:20%;min-width:200px;" data-placeholder="Pick a provider"
+                ng-model="provider" id="provider" name="provider" ui-select2>
+            <option value=""></option>
+            <option ng-repeat="c in providers" value="{{c.ID}}">{{c.Description}}</option>
+        </select>
+
+        <div class="table-responsive margin-top-10">
+            <table class="footable table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th data-class="expand">Service</th>
+                        <th data-hide="phone">From Mobile</th>
+                        <th data-hide="phone">From Landline</th>
+                        <th data-hide="phone">Instructions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="a in filteredPhones = (phones | filter:{'ProviderID': provider})" foo-row>
+                        <td>
+                            {{a.Name}}
+                        </td>
+                        <td>
+                            <a ng-href="tel:{{removeSpaces(a.Mobile)}}">{{removeSpaces(a.Mobile)}}</a>
+                        </td>
+                        <td>
+                            <a ng-href="tel:{{removeSpaces(a.Landline)}}">{{removeSpaces(a.Landline)}}</a>
+                        </td>
+                        <td>
+                            {{a.Instructions}}
+                        </td>
+                    </tr>
+                    <tr ng-show="!filteredPhones.length && provider"><td colspan="4">No phones available</td></tr>
+                    <tr ng-show="!filteredPhones.length && !provider"><td colspan="4">Please select a provider</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+</div>
+
+<script type="text/javascript">
+
+    pageSetUp();
+
+
+</script>

@@ -1,0 +1,105 @@
+﻿<style>
+    .table.has-tickbox.smart-form tbody tr td:first-child .checkbox {
+        padding-left: 20px !important;
+    }
+
+    .my-input-error {
+        border: 1px solid red;
+    }
+
+</style>
+
+<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+    <h3 class="modal-title">Objects of policy {{policy.PolicyID}} </h3>
+</div>
+<div class="modal-body">
+
+    <div class="smart-form">
+        <div class="inline-group">
+            <label class="checkbox">
+                <input type="checkbox" name="currentonly" ng-model="currentOnly" checked="checked">
+                <i></i>Show Current only
+            </label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="input-group">
+                <div class="input-group-btn" dropdown ng-show="wantsToDelete()">
+                    <button type="button" ng-click="delete('Normal')" ng-disabled="deleting" class="btn btn-danger">Delete</button>
+                    <button ng-if="user.isAdmin || user.isEmployee" type="button" class="btn btn-danger dropdown-toggle" ng-disabled="deleting">
+                        <span class="caret"></span>
+                        <span class="sr-only">Split button!</span>
+                    </button>
+                    <ul ng-if="user.isAdmin || user.isEmployee" class="dropdown-menu" role="menu">
+                        <li ng-if="user.isAdmin"><a href="#" ng-click="delete('Erase')">Erase</a></li>
+                        <li><a href="#" ng-click="delete('Noendorsement')">Delete Without Endorsement</a></li>
+                    </ul>
+                </div>
+                <input type="text" class="form-control" ng-model="searchobject" placeholder="Search object or press the '+' button to add a new one..." id="search-project">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-warning" ng-click="connectObject()">
+                        <span class="glyphicon glyphicon-plus"></span> <span localize="Add">Add</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <table class="animated footable table table-striped table-bordered table-hover smart-form has-tickbox" ng-form="delobjectsform" id="objectsFoo">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Description</th>
+                <th>Membership Field</th>
+                <th>Amount</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="o in objects | showCurrentOnly:currentOnly | filter: searchobject " foo-row>
+                <td>
+                    <label class="checkbox">
+                        <input ng-model="o.delete" type="checkbox" name="checkbox-inline">
+                        <i></i>
+                    </label>
+                </td>
+                <td>
+                    {{o.ObjectDescription}}
+                </td>
+                <td>
+                    {{o.MembershipField}}
+                </td>
+                <td>
+                    {{o.TypeID === 31 ? '' : o.ObjectAmount}}
+                </td>
+                <td>
+                    {{o.ObjStartDate | date: 'dd/MM/yyyy' }}
+                </td>
+                <td>
+                    <input ng-class="{'my-input-error': delobjectsform['enddate' + o.ObjectID].$invalid }" style="z-index:10;width:70px;" type="text" ng-model="o.endDate" dynamic-name="'enddate' + o.ObjectID"
+                           dynamic-id="'enddate' + o.ObjectID" placeholder="End date" class="datepicker" data-datechangeyear="true"
+                           data-datemindate="-1y" data-datemaxdate="+1y" data-dateyearrange="-1:+1"
+                           data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy"
+                           jquery-datepicker ng-required="o.delete">
+                </td>
+            </tr>
+            <tr class="txt-color-orangeDark" ng-hide="objects">
+                <td colspan="6"><i class="fa fa-cog fa-spin fa-3x"></i> Loading Policy Objects...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="$dismiss('cancel')" data-dismiss="modal">
+        Close
+    </button>
+</div>

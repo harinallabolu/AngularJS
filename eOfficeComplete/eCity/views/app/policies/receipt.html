@@ -1,0 +1,138 @@
+
+<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+    <h3 class="modal-title">Receipt {{receipt.ReceiptID}}</h3>
+</div>
+<div class="modal-body">
+    <ul>
+        <li>Application ID: <strong>{{receipt.ApplicationNumber}}</strong></li>
+        <li>Reference #: <strong>{{receipt.ReceiptReference}}</strong></li>
+        <li>Dias Code: <strong>{{receipt.DiasCode}}</strong></li>
+        <li>Agreed Premium: <strong>{{receipt.AgreedPremium}}</strong></li>
+    </ul>
+ 
+    <h3>Payments</h3>
+    <table class="footable table table-striped table-bordered table-hover" footable="{}" id="foo0">
+        <thead>
+            <tr>
+                <th data-class="expand">Payment ID</th>
+                <th data-hide="">Type</th>
+                <th data-hide="">Amount</th>
+                <th data-hide="phone">Date</th>
+                <th data-hide="phone,tablet">Check</th>
+                <th data-hide="phone,tablet">Finalize Date</th>
+                <th data-hide="phone,tablet">Account Payment ID</th>
+            </tr>
+        </thead>
+        <tfoot ng-show="payments.length">
+            <tr class="my-bold">
+                <td>Totals:</td>
+                <td></td>
+                <td>{{totalAmount | number:2}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr ng-repeat="p in payments" foo-row>
+                <td>
+                    {{p.PaymentID}}
+                </td>
+                <td>
+                    {{p.Type}}
+                </td>
+                <td>
+                    {{p.Amount | number:2}}
+                </td>
+                <td>
+                    {{p.Date | date: 'dd/MM/yyyy'}}
+                </td>
+                <td>
+                    {{p.Check}}
+                </td>
+                <td>
+                    {{p.FinalizeDate | date: 'dd/MM/yyyy'}}
+                </td>
+                <td>
+                    {{p.AccountPaymentID}}
+                </td>
+            </tr>
+            <tr class="txt-color-orangeDark" ng-show="loadingInfo"><td colspan="7"><i class="fa fa-cog fa-spin fa-2x"></i> Loading Payments...</td></tr>
+            <tr ng-hide="payments.length || loadingInfo"><td colspan="7">This receipt has no associated payments</td></tr>
+        </tbody>
+    </table>
+
+    <!--public decimal Amount { get; set; }
+    public DateTime Date { get; set; }
+    public int Version { get; set; }
+    public string ProducerName { get; set; }
+    public int ProducerID { get; set; }
+    public string Tax { get; set; }
+    public string Notes { get; set; }-->
+    <h3 ng-if="showCommissions()">Commissions</h3>
+    <table ng-if="showCommissions()" class="footable table table-striped table-bordered table-hover" footable="{}" id="foo1">
+        <thead>
+            <tr>
+                <th data-class="expand">Version</th>
+                <th data-hide="">Date</th>
+                <th data-hide="">Commission</th>
+                <th data-hide="phone">ProducerName</th>
+                <th data-hide="phone">Tax</th>
+                <th data-hide="phone,tablet">Notes</th>
+            </tr>
+        </thead>
+
+        <tfoot ng-show="commissions.length">
+            <tr class="my-bold">
+                <td>Totals:</td>
+                <td></td>
+                <td>{{totalCommissionAmount | number:2}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+
+        <tbody>
+            <tr ng-repeat="c in commissions" foo-row>
+                <td>
+                    {{c.Version}}
+                </td>
+                <td>
+                    {{c.Date | date: 'dd/MM/yyyy'}}
+                </td>
+                <td>
+                    {{c.Amount | number: 2}}
+                </td>
+                <td>
+                    {{c.ProducerName}}
+                </td>
+                <td>
+                    {{c.Tax}}
+                </td>
+                <td>
+                    {{c.Notes.substr}}
+                </td>
+            </tr>
+            <tr class="txt-color-orangeDark" ng-show="loadingInfo"><td colspan="6"><i class="fa fa-cog fa-spin fa-2x"></i> Loading Commissions...</td></tr>
+            <tr ng-hide="commissions.length || loadingInfo"><td colspan="6">This receipt has no associated commissions</td></tr>
+            <!--<tr ng-show="commissions.length"><td>sum</td><td colspan="5"></td></tr>-->
+        </tbody>
+    </table>
+
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="$close()" data-dismiss="modal">
+        OK
+    </button>
+</div>
+
+<script>
+    pageSetUp();
+</script>

@@ -1,0 +1,195 @@
+
+<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+    <!--<h4 class="modal-title"><img src="img/logo.png" width="150" alt="City Brokers">Receipt Issue</h4>
+    <h4 class="modal-title">Receipt Issue</h4>-->
+    <h3 class="modal-title">Issue Receipt {{policy.selectedReceipt.ReceiptID}}</h3>
+</div>
+<div class="modal-body no-padding">
+    <form action="" id="issuereceiptform" name="issuereceiptform" class="smart-form">
+        <header>
+            Fill this form to issue the receipt {{policy.selectedReceipt.ReceiptID}}.
+        </header>
+
+        <fieldset>
+
+            <div class="row">
+                <section class="col col-4">
+                    <label class="label" for="policyreference">Policy Reference</label>
+                    <label class="input" ng-class="{'state-error':!issuereceiptform.policyreference.firstTimer && issuereceiptform.policyreference.$invalid, 'state-success':issuereceiptform.policyreference.$dirty && issuereceiptform.policyreference.$valid}">
+                        <input ng-model="policy.selectedReceipt.PolicyReference" placeholder="Policy Reference" type="text"
+                               name="policyreference" id="policyreference" required first-timer capitalize ng-minlength="4">
+                    </label>
+                    <em ng-show="!issuereceiptform.policyreference.firstTimer && issuereceiptform.policyreference.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a valid Policy Reference
+                    </em>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="renewal">Renewal Number</label>
+                    <label class="input" ng-class="{'state-error':!issuereceiptform.renewal.firstTimer && issuereceiptform.renewal.$invalid, 'state-success':issuereceiptform.renewal.$dirty && policy.selectedReceipt.RenewalNumber}">
+                        <input ng-model="policy.selectedReceipt.RenewalNumber" placeholder="Renewal Number" type="text"
+                               name="renewal" id="renewal" capitalize>
+                    </label>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="receiptreference">Receipt Reference</label>
+                    <label class="input" ng-class="{'state-error':!issuereceiptform.receiptreference.firstTimer && issuereceiptform.receiptreference.$invalid, 'state-success':issuereceiptform.receiptreference.$dirty && policy.selectedReceipt.ReceiptReference}">
+                        <input ng-model="policy.selectedReceipt.ReceiptReference" placeholder="Receipt Reference" type="text"
+                               name="receiptreference" id="receiptreference" capitalize>
+                    </label>
+                </section>
+            </div>
+
+            <div class="row">
+
+
+                <section class="col col-4">
+                    <label class="label" for="issueddate">Issued Date</label>
+                    <label class="input" ng-class="{'state-error': !issuereceiptform.issueddate.firstTimer && issuereceiptform.issueddate.$invalid, 'state-success': issuereceiptform.issueddate.$valid && !issuereceiptform.issueddate.firstTimer}">
+                        <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                        <input style="z-index:10" type="text" ng-model="policy.selectedReceipt.IssuedDate"
+                               name="issueddate"
+                               id="issueddate" placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+                               data-datemindate="-100Y" data-datemaxdate="+1y" data-dateyearrange="-100:+1"
+                               data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required
+                               first-timer>
+                    </label>
+                    <em ng-show="!issuereceiptform.issueddate.firstTimer && issuereceiptform.issueddate.$error.required" class="invalid"><i class="fa fa-warning"></i> Please select an Issued Date</em>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="applicationnumber">Application Number</label>
+                    <label class="input" ng-class="{'state-error':!issuereceiptform.applicationnumber.firstTimer && issuereceiptform.applicationnumber.$invalid, 'state-success':!issuereceiptform.applicationnumber.firstTimer && policy.selectedReceipt.ApplicationNumber}">
+                        <input ng-model="policy.selectedReceipt.ApplicationNumber" placeholder="Application Number" type="number"
+                               name="applicationnumber" id="applicationnumber" ng-pattern="/^[-]?[0-9]+$/" first-timer>
+                    </label>
+                    <em ng-show="!issuereceiptform.applicationnumber.firstTimer && issuereceiptform.applicationnumber.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> The application Number must be a number
+                    </em>
+                </section>
+            </div>
+
+            <div class="row">
+                <section class="col col-4">
+                    <label class="label" for="netpremium">Net Premium</label>
+                    <label class="input" ng-class="{'state-error':!issuereceiptform.netpremium.firstTimer && issuereceiptform.netpremium.$invalid, 'state-success':issuereceiptform.netpremium.$dirty && issuereceiptform.netpremium.$valid}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="policy.selectedReceipt.NetPremium" placeholder="Net Premium" type="number"
+                               name="netpremium" id="netpremium" required first-timer ng-blur="netChanged()">
+                    </label>
+                    <em ng-show="!issuereceiptform.netpremium.firstTimer && issuereceiptform.netpremium.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please a type a valid Net Premium
+                    </em>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="grosspremium">Gross Premium</label>
+                    <label class="input" ng-class="{'state-error':!issuereceiptform.grosspremium.firstTimer && issuereceiptform.grosspremium.$invalid, 'state-success':issuereceiptform.grosspremium.$dirty && issuereceiptform.grosspremium.$valid}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="policy.selectedReceipt.GrossPremium" placeholder="Gross Premium" type="number"
+                               name="grosspremium" id="grosspremium" required first-timer ng-blur="grossChanged()">
+                    </label>
+                    <em ng-show="!issuereceiptform.grosspremium.firstTimer && issuereceiptform.grosspremium.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a valid Gross Premium
+                    </em>
+                </section>
+
+                <section class="col col-4">
+                    <label class="label" for="commission">Commission</label>
+                    <label class="input" ng-class="{'state-error':!issuereceiptform.commission.firstTimer && issuereceiptform.commission.$invalid, 'state-success':issuereceiptform.commission.$dirty && issuereceiptform.commission.$valid}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="policy.selectedReceipt.Commission" placeholder="Commission" type="number"
+                               name="commission" id="commission" first-timer>
+                    </label>
+                    <em ng-show="!issuereceiptform.commission.firstTimer && issuereceiptform.commission.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a valid Commission
+                    </em>
+                </section>
+            </div>
+
+        </fieldset>
+
+        <fieldset ng-show="policy.slob.NeedsMembershipNumber && policy.selectedReceipt.objects.length">
+
+            <label class="label">Please fill in a membership number for every object.</label>
+
+            <table class="footable table table-striped table-bordered table-hover" id="objectstable">
+                <thead>
+                    <tr>
+                        <th>Object</th>
+                        <th>Membership Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="o in policy.selectedReceipt.objects" foo-row>
+                        <td>
+                            {{o.ObjectDescription}}
+                        </td>
+                        <td>
+                            <label class="input" ng-class="{'state-error':!issuereceiptform['membershipfield' + $index].firstTimer && issuereceiptform['membershipfield' + $index].$invalid, 'state-success':issuereceiptform['membershipfield' + $index].$dirty && issuereceiptform['membershipfield' + $index].$valid}">
+                                <!--<i class="icon-prepend fa fa-money"></i>-->
+                                <input ng-model="o.MembershipField" placeholder="Membership Number" type="text"
+                                       dynamic-name="'membershipfield' + $index" first-timer ng-required="policy.slob.NeedsMembershipNumber">
+                            </label>
+                                <!--<em ng-show="!issuereceiptform.commission.firstTimer && issuereceiptform.commission.$invalid" class="invalid">
+                                    <i class="fa fa-warning"></i> Please type a valid Commission
+                                </em>-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!--<div class="row" ng-repeat="o in policy.selectedReceipt.objects">
+                  {{o.MembershipField}}
+
+                <section class="col col-6">
+                    <label class="label">{{o.ObjectDescription}}</label>
+                </section>
+
+                <section class="col col-6">
+                    <label class="label" for="commission">Commission</label>
+                    <label class="input" ng-class="{'state-error':!issuereceiptform.commission.firstTimer && issuereceiptform.commission.$invalid, 'state-success':issuereceiptform.commission.$dirty && issuereceiptform.commission.$valid}">
+                        <i class="icon-prepend fa fa-money"></i>
+                        <input ng-model="policy.selectedReceipt.Commission" placeholder="Commission" type="number"
+                               name="commission" id="commission" first-timer>
+                    </label>
+                    <em ng-show="!issuereceiptform.commission.firstTimer && issuereceiptform.commission.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please type a valid Commission
+                    </em>
+                </section>
+            </div>-->
+
+
+        </fieldset>
+
+        <footer>
+            <button type="button" class="btn btn-default" ng-click="$dismiss('cancel')" data-dismiss="modal">
+                Cancel
+            </button>
+            <button type="button" ng-disabled="saving" ng-click="save(issuereceiptform)" class="btn btn-primary">
+                <span ng-hide="saving">Save</span>
+                <span ng-show="saving">Saving&nbsp;<i class="fa fa-cog fa-spin"></i></span>
+            </button>
+        </footer>
+
+    </form>
+
+
+    <!--<div myformvalidate></div>-->
+
+
+    <script>
+
+        pageSetUp();
+
+
+        // Load form validation dependency
+        //loadScript("js/plugin/jquery-form/jquery-form.min.js", $objectForm);
+
+    </script>
+
+</div>

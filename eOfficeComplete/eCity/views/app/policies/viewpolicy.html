@@ -1,0 +1,609 @@
+﻿<style type="text/css">
+    .close-tab {
+        background: #a90329;
+        color: #ffffff;
+    }
+
+    .close-tab:hover {
+        background: #ffffff;
+        color: #a90329;
+    }
+
+
+</style>
+
+<div ng-hide="entityViews.length" class="alert alert-info no-margin">
+    <h4 class="alert-heading">Hello!</h4>
+    Use the <strong>search input</strong> at the top of the screen to view an entity's information!
+</div>
+
+<section id="widget-grid" ng-show="entityViews.length">
+    <div class="row">
+        <!--<h2 class="row-seperator-header"><i class="fa fa-plus"></i> Customized Tabs </h2>-->
+        <!-- NEW WIDGET START -->
+        <article class="col-sm-12">
+
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-3"
+                 data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-editbutton="false"
+                 data-widget-custombutton="false" data-widget-sortable="false" data-widget-colorbutton="false">
+                <!-- widget options:
+                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                data-widget-colorbutton="false"
+                data-widget-editbutton="false"
+                data-widget-togglebutton="false"
+                data-widget-deletebutton="false"
+                data-widget-fullscreenbutton="false"
+                data-widget-custombutton="false"
+                data-widget-collapsed="true"
+                data-widget-sortable="false"
+
+                -->
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-male"></i> </span>
+                    <h2>Entities </h2>
+
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <!--<div class="jarviswidget-editbox">
+
+                    </div>-->
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body">
+
+                        <tabset>
+                            <tab ng-repeat="e in entityViews"
+                                 active="e.active">
+                                <tab-heading>
+                                    {{e.getFullname()}}{{e.BasicInfo.Age ? '-' + e.BasicInfo.Age : ''}}&nbsp;<span style="color:#999" class="font-xs">({{e.EntityID}})</span>&nbsp;<!--<a ng-click="entityViews.removeIndex($index)" href="javascript:void(0);" class="btn btn-default btn-circle btn-sm"><i class="fa fa-times"></i></a>-->
+                                    <!--<button ng-click="entityViews.removeIndex($index)" class="close-icon" type="button"></button>-->
+                                    <!--<a href="javascript:void(0);" ng-click="entityViews.removeIndex($index)" title="Cancel Search" class="close-tab"><i class="fa fa-times"></i></a>-->
+                                    <a href="javascript:void(0);" ng-click="entityViews.removeIndex($index)"
+                                       title="Cancel Search" class="btn btn-default btn-xs close-tab"><i class="fa fa-times"></i></a>
+                                </tab-heading>
+
+                                <div class="padding-10 animated zoomIn">
+                                    <div class="well">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                Producer: <strong>{{e.BasicInfo.ProducerName}}</strong>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                AcM: <strong>{{e.ExtendedInfo.AccountManager}}</strong>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                Running Total: <span ng-class="{'label': e.policiesRunningTotal > 0, 'bg-color-red': e.policiesRunningTotal > 0 }">{{e.policiesRunningTotal | number:2}}</span>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                Ranking: <strong>{{e.ExtendedInfo.CustomerLevel}} {{e.ExtendedInfo.CommissionLevel}}</strong>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                Open&nbsp;Tickets: <strong>N/A</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="padding-10">
+
+                                    <div class="row" style="margin-bottom:40px">
+
+                                        <div class="col col-sm-8">
+                                            <ul id="policyTab" class="nav nav-tabs tabs-pull-left bordered">
+                                                <li class="active">
+                                                    <a ng-href="#policies{{e.EntityID}}" data-toggle="tab">Policies<span ng-show="filteredPolicies.length" class="badge">{{filteredPolicies.length}}</span></a>
+                                                </li>
+                                                <li>
+                                                    <a ng-href="#history{{e.EntityID}}" data-toggle="tab">History</a>
+                                                </li>
+                                                <li>
+                                                    <a ng-href="#finance{{e.EntityID}}" data-toggle="tab">Finance</a>
+                                                </li>
+                                                <li class="pull-right">
+                                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lg fa-gear"></i> <b class="caret"></b></a>
+                                                    <ul class="dropdown-menu">
+                                                        <li class="dropdown-submenu">
+                                                            <a tabindex="-1" href="javascript:void(0);" localize="ViewPolicy.New Receipt">New Receipt</a>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a href="javascript:void(0);" ng-click="renewal(e.viewPolicy)"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<span localize="Renewal">Renewal</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:void(0);" ng-click="endorsement(e.viewPolicy)"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;<span localize="Endorsement">Endorsement</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:void(0);" ng-hide="e.activePolicy.StatusID === 4" ng-click="cancellation(e.viewPolicy)"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;<span localize="Cancellation">Cancellation</span></a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:void(0);" ng-click="newClaim(e.viewPolicy.PolicyID)">New Claim</a>
+                                                        </li>
+                                                        <li>
+                                                            <a ng-href="#/app/finance/clientpayments/{{e.EntityID}}"><i class="fa fa-money"></i> Make Payments</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:void(0);" ng-click="viewObjects(e.viewPolicy)">View Objects</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li class="pull-right smart-form" style="height: 39px;border-right:1px solid rgba(0,0,0,.09);padding-right:8px;padding-left:8px">
+                                                    <div style="padding-top:8px">
+                                                        <label class="toggle">
+                                                            <input type="checkbox" ng-model="e.showLapsed">
+                                                            <i data-swchon-text="TRUE" data-swchoff-text="FALSE"></i>Show Lapsed
+                                                        </label>
+                                                    </div>
+                                                </li>
+                                                <li class="pull-right" style="height: 39px;border-right:1px solid rgba(0,0,0,.09);padding-right:8px">
+                                                    <!--<input class="" type="text" placeholder="Search...">-->
+                                                    <div class="input-group" style="padding-top:8px;width:130px">
+                                                        <input ng-model="e.policyfilter" class="form-control input-xs" type="text" placeholder="Search...">
+                                                        <!--<span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>-->
+                                                    </div>
+                                                </li>
+                                            </ul>
+
+                                            <div id="policyTabContent" class="tab-content padding-10">
+
+                                                <div class="tab-pane fade in active" dynamic-id="'policies' + e.EntityID">
+
+                                                    <div ng-show="e.loadingPolicies" class="txt-color-orangeDark"><i class="fa fa-cog fa-spin fa-3x"></i> Loading Entity Policies...</div>
+                                                    <div ng-hide="e.loadingPolicies" style="height:183px; overflow-y:auto">
+                                                        <table class="footable toggle-circle-filled table table-striped table-bordered table-hover" dynamic-id="'policiesFoo' + e.EntityID"
+                                                               footable="{breakpoints: { medium: 650 }}">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th data-class="expand">SLOB</th>
+                                                                    <th data-toggle="true" data-class="phone">Policy&nbsp;ID</th>
+                                                                    <th>Object</th>
+                                                                    <th data-hide="phone">Provider</th>
+                                                                    <th data-hide="phone">Start Date</th>
+                                                                    <th data-hide="phone">Reference</th>
+                                                                    <th data-hide="phone">Running Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-class="{'active': p === e.activePolicy, 'txt-color-red':p.StatusID === 4}" ng-repeat="p in filteredPolicies = (e.policies | filter: e.policyfilter | cancelledpoliciesfilter:!e.showLapsed)"
+                                                                    ng-click=" selectPolicy(e, p); e.activePolicy=p;" class="cursor-pointer" foo-row>
+                                                                    <!--<tr ng-class="{'active': p === e.activePolicy}" ng-repeat="p in e.policies" ng-click="selectPolicy(e, p); e.activePolicy=p;" foo-row>-->
+                                                                    <td>
+                                                                        <i popover="{{p.SLOB}}" popover-trigger="mouseenter" ng-style="p.getIconStyle()" ng-class="p.getIcon()" class="fa"></i>
+                                                                    </td>
+                                                                    <td>
+                                                                        {{p.PolicyID}}
+                                                                    </td>
+                                                                    <td>
+                                                                        <span popover="{{p.PolicyObject}}" popover-trigger="mouseenter">
+                                                                            {{p.PolicyObject.length > 8 ? p.PolicyObject.substring(0, 8) + '...' :  p.PolicyObject}}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span popover="{{p.Provider}}" popover-trigger="mouseenter">
+                                                                            {{p.Provider.length > 8 ? p.Provider.substring(0, 8) + '...' :  p.Provider}}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        {{p.StartDate | date : 'dd/MM/yyyy'}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{p.PolicyReference}}
+                                                                    </td>
+                                                                    <td class="text-right">
+                                                                        <span ng-class="{'label': p.RunningTotal > 0, 'bg-color-red': p.RunningTotal > 0 }">{{(p.RunningTotal | number:2) + ' ' + p.Currency}}</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-hide="filteredPolicies.length"><td colspan="9">No active policies available for this entity</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane fade" dynamic-id="'history' + e.EntityID">
+                                                    <div ng-show="e.loadingLogs" class="txt-color-orangeDark"><i class="fa fa-cog fa-spin fa-3x"></i> Loading Entity Policies...</div>
+                                                    <div ng-hide="e.loadingLogs" style="height:183px; overflow-y:auto">
+                                                        <table class="footable table table-striped table-bordered table-hover" footable="{}" dynamic-id="'historyFoo' + e.EntityID">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th data-class="expand">Type</th>
+                                                                    <th data-class="phone"></th>
+                                                                    <th data-hide="phone">Description</th>
+                                                                    <th data-hide="phone"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tfoot>
+                                                                <tr class="text-align-right">
+                                                                    <td colspan="4">
+                                                                        <pagination ng-change="pageChanged(e)" total-items="e.logs.length" ng-model="e.logsCurrentPage"
+                                                                                    max-size="maxSize" class="pagination-sm" items-per-page="itemsPerPage"
+                                                                                    boundary-links="true"></pagination>
+                                                                    </td>
+                                                                </tr>
+                                                            </tfoot>
+                                                            <tbody>
+                                                                <tr ng-repeat="l in e.filteredLogs | filter: e.policyfilter"
+                                                                    foo-row>
+                                                                    <!--<tr ng-class="{'active': p === e.activePolicy}" ng-repeat="p in e.policies" ng-click="selectPolicy(e, p); e.activePolicy=p;" foo-row>-->
+                                                                    <td>
+                                                                        {{l.Type}}
+                                                                    </td>
+                                                                    <td>
+                                                                        <i ng-class="{'fa-long-arrow-down': l.Direction === 1, 'fa-long-arrow-up': l.Direction === 2, 'fa-circle-o': l.Direction === 0}" class="fa"></i>
+                                                                    </td>
+                                                                    <td>
+                                                                        {{l.Description}}
+                                                                    </td>
+                                                                    <td>
+                                                                        <!--<button ng-show="l.Notes" action-notes="l" ng-click="launchModal(l)" type="button" class="btn btn-default btn-xs">-->
+                                                                        <button ng-show="l.Notes" action-notes="l.Notes" action-time="l.TimeStamp" type="button" class="btn btn-default btn-xs">
+                                                                            <!--<span class="glyphicon glyphicon-eye-open"></span>-->
+                                                                            <span class="fa fa-info-circle txt-color-blue"></span>
+                                                                        </button>
+                                                                        <!--<button popover="I appeared on mouse enter!" popover-trigger="mouseenter" class="btn btn-default">Mouseenter</button>-->
+                                                                        <!--<a href="javascript:void(0);" class="btn btn-default btn-lg" rel="popover-hover"
+                                                                        data-placement="top" data-original-title="Popover activated on hover"
+                                                                        data-content="Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum."><strong>On</strong> <i>Hover</i></a>-->
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-hide="e.logs.length"><td colspan="4">No logs available for this entity</td></tr>
+                                                            </tbody>
+
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane fade" dynamic-id="'finance' + e.EntityID">
+                                                    <div ng-show="e.loadingCharges" class="txt-color-orangeDark"><i class="fa fa-cog fa-spin fa-3x"></i> Loading Entity Charges...</div>
+                                                    <div ng-hide="e.loadingCharges" style="height:183px; overflow-y:auto">
+                                                        <table class="footable table table-striped table-bordered table-hover" dynamic-id="'chargesFoo' + e.EntityID"
+                                                               footable="{}">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th data-class="expand">ChargeID</th>
+                                                                    <th data-class="phone">Description</th>
+                                                                    <th data-hide="phone">Amount</th>
+                                                                    <th data-hide="phone">Running Total</th>
+                                                                    <th data-hide="phone">Date</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <!--<tfoot>
+                                                                <tr class="text-align-right">
+                                                                    <td colspan="4">
+                                                                        <pagination ng-change="pageChanged(e)" total-items="e.logs.length" ng-model="e.logsCurrentPage"
+                                                                                    max-size="maxSize" class="pagination-sm" items-per-page="itemsPerPage"
+                                                                                    boundary-links="true"></pagination>
+                                                                    </td>
+                                                                </tr>
+                                                            </tfoot>-->
+                                                            <tbody>
+                                                                <tr ng-repeat="c in e.charges" foo-row>
+                                                                    <td>
+                                                                        {{c.ChargeID}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{c.Description}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{c.Amount}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{c.RunningTotal}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{c.Date | date : 'dd/MM/yyyy'}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-hide="e.charges.length"><td colspan="5">No charges available for this entity</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col col-sm-4">
+                                            <ul id="myTab3" class="nav nav-tabs tabs-pull-left bordered">
+                                                <li class="active">
+                                                    <a ng-href="#contacts{{e.EntityID}}" data-toggle="tab"><i class="fa fa-phone"></i></a>
+                                                </li>
+                                                <li>
+                                                    <a ng-href="#informations{{e.EntityID}}" ng-disabled="true" data-toggle="tab"><i class="fa fa-info"></i></a>
+                                                </li>
+                                                <li>
+                                                    <a ng-href="#notes{{e.EntityID}}" disabled data-toggle="tab"><i class="fa fa-pencil-square-o"></i></a>
+                                                </li>
+                                                <li class="pull-right">
+                                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lg fa-gear"></i> <b class="caret"></b></a>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a href="javascript:void(0);" ng-click="openEntityInfo(e)"><i class="txt-color-blue fa fa-info fa-1-4x"></i>&nbsp;&nbsp;Entity</a>
+                                                        </li>
+                                                        <li class="divider"></li>
+                                                        <li>
+                                                            <a href="javascript:void(0);" ng-click="coverLetter(e)">Cover Letter</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+
+                                                <li class="pull-right" style="height: 39px;border-right:1px solid rgba(0,0,0,.09);padding-right:8px">
+                                                    <!--<input class="" type="text" placeholder="Search...">-->
+                                                    <div class="input-group" style="padding-top:8px;width:130px">
+                                                        <input ng-model="e.contactssearch" class="form-control input-xs" type="text" placeholder="Search...">
+                                                        <!--<span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>-->
+                                                    </div>
+                                                </li>
+                                            </ul>
+
+                                            <div id="myTab3Content" class="tab-content padding-10">
+                                                <div class="tab-pane fade in active" dynamic-id="'contacts' + e.EntityID">
+                                                    <div ng-show="e.loadingContacts" class="txt-color-orangeDark"><i class="fa fa-cog fa-spin fa-3x"></i> Loading Contacts...</div>
+                                                    <div ng-hide="e.loadingContacts" style="height:183px; overflow-y:auto">
+                                                        <table class="footable table table-striped table-bordered table-hover" dynamic-id="'contactsFoo' + e.EntityID" footable="{}">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th data-class="expand">Contact</th>
+                                                                    <th data-hide="phone">Type</th>
+                                                                    <th data-hide="phone">Notes</th>
+                                                                    <th data-hide="phone">Use</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="c in e.Contacts | filter: e.contactssearch" foo-row>
+                                                                    <td>
+                                                                        <span ng-if="c.Type != 5 && c.Type != 1 && c.Type != 2" ng-class="{'my-bold': c.IsDefault}">{{c.Value}}</span>
+                                                                        <span ng-if="c.Type == 5 || c.Type == 1 || c.Type == 2" ng-class="{'my-bold': c.IsDefault}"><a ng-href="tel:{{c.Value}}">{{c.Value}}</a></span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span ng-class="{'label': c.IsVerified, 'bg-color-greenDark': c.IsVerified}"><i ng-class="{'fa-envelope': c.Type === 4,'fa-mobile': c.Type === 5, 'fa-phone': c.Type === 1 || c.Type ===  2, 'fa-fax': c.Type === 3, 'fa-skype': c.Type === 8, 'fa-desktop': c.Type === 6}" class="fa"></i></span>
+                                                                    </td>
+                                                                    <td>
+                                                                        {{c.Notes}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{c.UseString}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-hide="e.Contacts.length"><td colspan="4">No contacts available for this entity</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" dynamic-id="'informations' + e.EntityID">
+                                                    Under Construction
+                                                </div>
+                                                <div class="tab-pane fade" dynamic-id="'notes' + e.EntityID">
+                                                    Under Construction
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <ul id="myTab4" class="nav nav-tabs tabs-pull-left bordered">
+                                            <li class="active">
+                                                <a ng-href="#receiptsTab{{e.EntityID}}" data-toggle="tab">Receipts</a>
+                                                <!--<a href="#receiptsTab23" data-toggle="tab">Receipts</a>-->
+                                            </li>
+                                            <li>
+                                                <a ng-href="#claimsTab{{e.EntityID}}" data-toggle="tab">Claims<span ng-show="unresolvedClaims = (e.viewPolicy.claims | filter:{'IsResolved': false}).length" class="badge bg-color-pinkDark txt-color-white">{{unresolvedClaims}}</span></a>
+                                                <!--<a href="#claimsTab15" data-toggle="tab">Claims</a>-->
+                                            </li>
+                                            <li class="pull-right multi-level">
+                                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lg fa-gear"></i> <b class="caret"></b></a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="javascript:void(0);" ng-click="viewReceipt(e.viewPolicy.selectedReceipt)"><i class="txt-color-blue fa fa-info fa-1-4x"></i>&nbsp;&nbsp; Receipt</a>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li>
+                                                        <a ng-class="{'text-muted': !user.isAdmin && e.viewPolicy.selectedReceipt.IssuedDate}" href="javascript:void(0);" ng-click="issueReceipt(e.viewPolicy)">Issue Receipt<span ng-show="!user.isAdmin && e.viewPolicy.selectedReceipt.IssuedDate"> (Admin only)</span></a>
+                                                    </li>
+                                                    <!--<li>
+                                                        <a href="javascript:void(0);" ng-click="editClaim(e.viewPolicy)">Edit Claim</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-href="#app/policies/editclaim/{{e.viewPolicy.PolicyID}}">Edit Claim2</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-href="#/app/policies/editclaim/{{e.viewPolicy.PolicyID}}">Edit Claim2 {{e.viewPolicy.PolicyID}}</a>
+                                                    </li>-->
+                                                    <li>
+                                                        <a href="javascript:void(0);" ng-click="editClaim(e.viewPolicy.PolicyID, e.viewPolicy.selectedClaim.ClaimID)">View Claim</a>
+                                                    </li>
+                                                   
+                                                    <!--<li>
+                                                        <a href="javascript:void(0);" ng-click="newReceipt(e.viewPolicy)">New Receipt</a>
+                                                    </li>
+                                                    <li class="divider"></li>-->
+                                                    <!--<li class="dropdown-submenu pull-left">
+                                                        <a tabindex="-1" href="javascript:void(0);">Hover me for more options</a>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <a tabindex="-1" href="javascript:void(0);">Second level</a>
+                                                            </li>
+                                                            <li class="dropdown-submenu">
+                                                                <a href="javascript:void(0);">Even More..</a>
+                                                                <ul class="dropdown-menu">
+                                                                    <li>
+                                                                        <a href="javascript:void(0);">3rd level</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:void(0);">3rd level</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:void(0);">Second level</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:void(0);">Second level</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>-->
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                        <div id="myTabContent43" class="tab-content padding-10">
+                                            <div class="tab-pane fade in active" dynamic-id="'receiptsTab' + e.EntityID">
+                                                <div ng-show="e.viewPolicy.loadingReceipts" class="txt-color-orangeDark"><i class="fa fa-cog fa-spin fa-3x"></i> Loading Receipts...</div>
+                                                <table ng-hide="e.viewPolicy.loadingReceipts" class="footable table table-striped table-bordered table-hover" footable="{}" id="foo1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th data-class="expand">Receipt ID</th>
+                                                            <th>Type</th>
+                                                            <th data-hide="phone">Issued Date</th>
+                                                            <th data-hide="phone">Start Date</th>
+                                                            <th data-hide="phone,tablet">End Date</th>
+                                                            <th data-hide="phone,tablet">Net Premium</th>
+                                                            <th data-hide="phone">Gross Premium</th>
+                                                            <th data-hide="phone">Running Total</th>
+                                                            <th data-hide="phone,tablet">Payment Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-class="{'active': r === e.viewPolicy.selectedReceipt}" ng-click="selectReceipt(e.viewPolicy, r)"
+                                                            ng-repeat="r in e.viewPolicy.receipts" foo-row class="cursor-pointer" ng-dblclick="viewReceipt(r)">
+                                                            <td>
+                                                                <a href="javascript:void(0)" ng-click="viewReceipt(r)">{{r.ReceiptID}}</a>
+                                                            </td>
+                                                            <td>
+                                                                <i popover="{{r.Comments}}" popover-trigger="mouseenter" ng-class="{'fa-file-text-o': r.Type === 'ΑΙΤΗΣΗ','fa-refresh': r.Type === 'ΑΝΑΝΕΩΣΗ', 'fa-pencil-square-o': r.Type === 'ΠΡ.ΠΡΑΞΗ' || r.Type ===  'ΠΡ.ΠΡΑΞΗ ΣΤΗΝ ΑΝΑΝΕΩΣΗ', 'fa-building': r.Type === 'ΑΛΛΑΓΗ ΕΤΑΙΡΙΑΣ','fa-trash-o': r.Type === 'ΠΡ.ΠΡΑΞΗ ΑΚΥΡΩΣΗΣ' || r.Type === 'ΠΡ.ΠΡΑΞΗ ΑΚΥΡΩΣΗΣ(τύπου 2)'}" class="fa"></i>
+                                                            </td>
+                                                            <td>
+                                                                {{r.IssuedDate | date: 'dd/MM/yyyy'}}
+                                                            </td>
+                                                            <td ng-class="{'my-bold': e.viewPolicy.InitialStartDate.getMonth() == r.StartDate.getMonth() && (r.TypeID == 1 || r.TypeID == 2 || r.TypeID == 4) }">
+                                                                {{r.StartDate | date: 'dd/MM/yyyy'}}
+                                                            </td>
+                                                            <td>
+                                                                {{r.EndDate | date: 'dd/MM/yyyy'}}
+                                                            </td>
+                                                            <td class="text-right">
+                                                                {{(r.NetPremium | number:2) + ' ' + r.Currency}}
+                                                            </td>
+                                                            <td class="text-right">
+                                                                {{(r.GrossPremium | number:2) + ' ' + r.Currency}}
+                                                            </td>
+                                                            <td class="text-right">
+                                                                <span ng-class="{'bg-color-red': r.RunningTotal > 0, 'label': r.RunningTotal > 0}">{{(r.RunningTotal | number:2) + ' ' + r.Currency}}</span>
+                                                            </td>
+                                                            <td>
+                                                                <span ng-show="r.PaymentDate">
+                                                                    {{r.PaymentDate | date: 'dd/MM/yyyy'}}
+                                                                </span>
+                                                                <i class="fa fa-flag txt-color-green" popover-trigger="mouseenter" popover="{{r.PendingDate | date : 'dd/MM/yyyy' + ' : ' + r.PendingNotes}}" ng-show="!r.PaymentDate && r.PendingDate">
+                                                                </i>
+                                                            </td>
+                                                        </tr>
+                                                        <tr ng-show="!e.viewPolicy.receipts.length && e.viewPolicy"><td colspan="9">No receipts available for this policy</td></tr>
+                                                        <tr ng-hide="e.viewPolicy"><td colspan="9">Select a policy to view its receipts</td></tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            <div class="tab-pane fade" dynamic-id="'claimsTab' + e.EntityID">
+                                                <!--<div class="tab-pane fade" id="#claimsTab15">-->
+                                                <div ng-show="e.viewPolicy.loadingClaims" class="txt-color-orangeDark"><i class="fa fa-cog fa-spin fa-3x"></i> Loading Claims...</div>
+                                                <table ng-hide="e.viewPolicy.loadingClaims" class="footable table table-striped table-bordered table-hover" footable="{}" id="foo2">
+                                                    <thead>
+                                                        <tr>
+                                                            <th data-class="expand">Claim ID</th>
+                                                            <th data-hide="phone,tablet">File Number</th>
+                                                            <th data-hide="phone">Date</th>
+                                                            <th data-hide="phone,tablet">Announcement Date</th>
+                                                            <th data-hide="phone">Claimed</th>
+                                                            <th data-hide="phone">Paid</th>
+                                                            <th data-hide="phone,tablet">Object</th>
+                                                            <th data-hide="phone">Status</th>
+                                                            <th data-hide="phone,tablet">Bank Account</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td>Totals:</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>{{(e.viewPolicy.claims.totalPaidAmount | number: 2)  + ' ' + e.viewPolicy.Currency}}</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                    <tbody>
+                                                        <tr ng-class="{'active': c === e.viewPolicy.selectedClaim}" ng-click="e.viewPolicy.selectedClaim = c"
+                                                            ng-repeat="c in e.viewPolicy.claims" foo-row class="cursor-pointer">
+                                                            <td>
+                                                                <a href="javascript:void(0)" ng-click="editClaim(e.viewPolicy.PolicyID, c.ClaimID)">{{c.ClaimID}}</a>
+                                                            </td>
+                                                            <td>
+                                                                {{c.FileNumber}}
+                                                            </td>
+                                                            <td>
+                                                                {{c.Date | date : 'dd/MM/yyyy'}}
+                                                            </td>
+                                                            <td>
+                                                                {{c.AnnouncementDate | date : 'dd/MM/yyyy'}}
+                                                            </td>
+                                                            <td>
+                                                                {{(c.Claimed | number:2) + ' ' + e.viewPolicy.Currency}}
+                                                            </td>
+                                                            <td>
+                                                                {{(c.Payment | number:2) + ' ' + e.viewPolicy.Currency}}
+                                                            </td>
+                                                            <td>
+                                                                {{c.Object}}
+                                                            </td>
+                                                            <td ng-style="c.style">
+                                                                {{c.Status}}
+                                                                <progressbar class="no-margin margin-top-5" value="c.Progress" max="5" type="success"><b>{{c.Progress * 20}}%</b></progressbar>
+                                                            </td>
+                                                            <td>
+                                                                {{c.BankAccount}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr ng-show="!e.viewPolicy.claims.length && e.viewPolicy"><td colspan="9">No claims available for this policy</td></tr>
+                                                        <tr ng-hide="e.viewPolicy"><td colspan="9">Select a policy to view its corresponding claims</td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </tab>
+                        </tabset>
+
+                    </div>
+                    <!-- end widget content -->
+                </div>
+                <!-- end widget div -->
+            </div>
+            <!-- end widget -->
+        </article>
+    </div>
+
+
+</section>
+
+<script type="text/javascript">
+
+    pageSetUp();
+
+</script>

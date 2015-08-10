@@ -1,0 +1,286 @@
+﻿<style type="text/css">
+    .table-hover tbody tr.cell-bg > td {
+        background-color: #87b21c;
+    }
+
+</style>
+
+<form class="row smart-form" name="paymentform">
+    <fieldset>
+        <div class="row">
+
+            <div class="col col-5">
+
+                <!--<div class="col col-6">
+                    <label class="label" for="provider">Insurance Provider</label>
+                </div>-->
+                <section style="display:inline-table;width:100%">
+                    <label class="label" style="display:table-cell;padding-right:10px" for="provider">Insurance Provider</label>
+                    <select style="width:100%;display:table-cell" data-placeholder="Pick a provider"
+                            ng-model="provider" id="provider" name="provider" ui-select2 ng-change="configurationUpdated()">
+                        <option value=""></option>
+                        <option ng-repeat="c in providers" value="{{c.ID}}">{{c.Description}}</option>
+                    </select>
+                </section>
+            </div>
+
+            <div class="col col-4">
+                <section style="display:inline-table">
+                    <label class="label" style="display:table-cell;padding-right:10px" for="duedate">Due Date &le;</label>
+                    <label class="input" style="display:table-cell">
+                        <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                        <input style="z-index:10" type="text" ng-model="dueDate" name="duedate"
+                               id="duedate" placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+                               data-datemindate="-100Y" data-datemaxdate="+1y" data-dateyearrange="-100:+1"
+                               data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" required>
+                    </label>
+                </section>
+
+            </div>
+
+            <div class="col col-3">
+                <a class="btn btn-primary btn-inside-smartform pull-right" ng-show="getConfiguration()" ng-click="openConfig()" href="javascript:void(0);">Load File</a>
+                <a class="btn btn-primary btn-inside-smartform pull-right" ng-click="updatePolicies()" href="javascript:void(0);">View</a>
+            </div>
+            <!--<div class="col col-2">
+                <a class="btn btn-primary btn-inside-smartform" href="javascript:void(0);">Load From File</a>
+            </div>-->
+        </div>
+    </fieldset>
+
+    <div collapse="fileInfoCollapse">
+        <fieldset>
+
+            <div class="row">
+                <div class="col col-6">
+                    <section>
+                        <!--<label class="label">{{f.Name}}</label>-->
+                        <label for="file" class="input input-file">
+                            <div class="button">
+                                <input type="file" ng-file-select="onFileSelect($files, $index)"
+                                       ng-model="paymentsFile" first-timer>Browse
+                            </div><input type="text" ng-model="filename" placeholder="Include some files" readonly=""
+                                         required dynamic-name="'file2' + f.ID">
+                        </label>
+                        <!--<em ng-show="!fileform['file' + f.ID].firstTimer && fileform['file2' + f.ID].$invalid" class="invalid"><i class="fa fa-warning"></i> Please select a file</em>-->
+                    </section>
+                </div>
+
+                <div class="col col-6">
+                    <a class="btn btn-primary btn-inside-smartform pull-right" ng-click="match()" href="javascript:void(0);"><span><i ng-show="loadingMatches" class="fa fa-cog fa-spin fa-2x"></i> </span>Match</a>
+                    <a class="btn btn-primary btn-inside-smartform pull-right" ng-click="preview()" href="javascript:void(0);">Preview</a>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+    <!--<footer>
+        <button type="button" class="btn btn-default" ng-click="clear()">
+            Clear
+        </button>
+        <button type="button" ng-disabled="paying" ng-click="pay()" class="btn btn-primary">
+            <span ng-hide="paying">Pay</span>
+            <span ng-show="paying">Paying&nbsp;<i class="fa fa-cog fa-spin"></i></span>
+        </button>
+    </footer>-->
+</form>
+
+<!--<div collapse="fileInfoCollapse">
+    <div class="well no-margin">Some content</div>
+</div>-->
+
+<section id="widget-grid">
+    <div class="row">
+
+        <!-- NEW WIDGET START -->
+        <article class="col-sm-12">
+
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-sortable="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                <!--<header>
+                    <span class="widget-icon"> <i class="fa fa-lock"></i> </span>
+                    <h2><strong>Locked</strong> <i>Widget</i> </h2>
+                    <div class="widget-toolbar smart-form">
+
+                        <label class="input">
+                            <i class="icon-append fa fa-question-circle"></i>
+                            <input type="text" placeholder="Focus to view the tooltip">
+                            <b class="tooltip tooltip-top-right">
+                                <i class="fa fa-warning txt-color-teal"></i>
+                                Some helpful information
+                            </b>
+                        </label>
+
+                    </div>
+
+                </header>-->
+
+
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-list-alt"></i> </span>
+                    <h2>Policies</h2>
+
+                    <div class="widget-toolbar smart-form" role="menu">
+
+                        <label class="input">
+                            <!--<i class="icon-append fa fa-question-circle"></i>-->
+                            <input type="text" style="width:150px" ng-model="policyfilter" class="input-sm" placeholder="Search">
+                            <!--<b class="tooltip tooltip-top-right">
+                                <i class="fa fa-warning txt-color-teal"></i>
+                                Type something to filter the policies
+                            </b>-->
+                        </label>
+                    </div>
+
+                    <div class="widget-toolbar" role="menu">
+                        <!--<span class="onoffswitch-title"><i class="fa fa-location-arrow"></i> Show Lapsed</span>-->
+                        <span class="onoffswitch-title"> Show Lapsed</span>
+                        <span class="onoffswitch">
+                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" ng-model="showLapsed" id="myonoffswitch">
+                            <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner" data-swchon-text="YES" data-swchoff-text="NO"></span> <span class="onoffswitch-switch"></span> </label>
+                        </span>
+                    </div>
+
+                    <div class="widget-toolbar">
+
+                        <div class="btn-group">
+                            <button class="btn dropdown-toggle btn-xs btn-warning" data-toggle="dropdown">
+                                Actions <i class="fa fa-caret-down"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a ng-class="{'text-muted': paying}" href="javascript:void(0);" ng-click="pay()">
+                                        <span ng-hide="paying">Pay</span>
+                                        <span ng-show="paying">Paying&nbsp;<i class="fa fa-cog fa-spin"></i></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" ng-click="clear()">Clear Amounts</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" ng-click="payFullAmount()">Set Max Amount</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="javascript:void(0);">Currencies</a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a ng-click="currency=''" href="javascript:void(0);" ng-class="{'text-muted': currency}">All</a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="currency='EUR'" href="javascript:void(0);" ng-class="{'text-muted': currency != 'EUR'}"><i class="fa fa-euro"></i> EUR</a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="currency='USD'" href="javascript:void(0);" ng-class="{'text-muted':  currency != 'USD'}"><i class="fa fa-dollar"></i> USD</a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="currency='GBP'" href="javascript:void(0);" ng-class="{'text-muted':  currency != 'GBP'}"><i class="fa fa-gbp"></i> GBP</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </header>
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body no-padding">
+                        <table class="footable toggle-circle-filled table table-striped table-bordered table-hover" footable="{}">
+                            <thead>
+                                <tr>
+                                    <th class="footable-sortable" ng-class="{'footable-sorted': predicate === 'PolicyID', 'footable-sorted-desc': predicate === 'PolicyID' && reverse}" ng-click="order('PolicyID')" data-class="expand">Policy ID<span class="footable-sort-indicator"></span></th>
+                                    <th class="footable-sortable" ng-class="{'footable-sorted': predicate === 'PolicyReference', 'footable-sorted-desc': predicate === 'PolicyReference' && reverse}" ng-click="order('PolicyReference')" data-hide="phone,tablet">Reference<span class="footable-sort-indicator"></span></th>
+                                    <th class="footable-sortable" ng-class="{'footable-sorted': predicate === 'HolderFullname', 'footable-sorted-desc': predicate === 'HolderFullname' && reverse}" ng-click="order('HolderFullname')" data-hide="phone">Holder<span class="footable-sort-indicator"></span></th>
+                                    <th class="footable-sortable" ng-class="{'footable-sorted': predicate === 'LOB', 'footable-sorted-desc': predicate === 'LOB' && reverse}" ng-click="order('LOB')" data-hide="phone,tablet">LOB<span class="footable-sort-indicator"></span></th>
+                                    <th class="footable-sortable" ng-class="{'footable-sorted': predicate === 'PolicyObject', 'footable-sorted-desc': predicate === 'PolicyObject' && reverse}" ng-click="order('PolicyObject')" data-hide="phone,tablet">Object<span class="footable-sort-indicator"></span></th>
+                                    <th class="footable-sortable" ng-class="{'footable-sorted': predicate === 'MinDueDate', 'footable-sorted-desc': predicate === 'MinDueDate' && reverse}" ng-click="order('MinDueDate')" data-hide="phone">Min Due Date<span class="footable-sort-indicator"></span></th>
+                                    <th class="footable-sortable" ng-class="{'footable-sorted': predicate === 'MaxDueDate', 'footable-sorted-desc': predicate === 'MaxDueDate' && reverse}" ng-click="order('MaxDueDate')" data-hide="phone">Max Due Date<span class="footable-sort-indicator"></span></th>
+                                    <th data-hide="phone,tablet">Type</th>
+                                    <th data-hide="">Amount</th>
+                                    <th class="footable-sortable" ng-class="{'footable-sorted': predicate === 'RunningTotal', 'footable-sorted-desc': predicate === 'RunningTotal' && reverse}" data-hide="" ng-click="order('RunningTotal')">Running Total<span class="footable-sort-indicator"></span></th>
+                                    <th data-hide="all">Status</th>
+                                </tr>
+                            </thead>
+                            <tfoot ng-show="policies.length">
+                                <tr class="my-bold">
+                                    <td>Totals:</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{paymentsTotal | number:2}}</td>
+                                    <td>{{runningTotalsSum | number:2}}</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr ng-class="{'txt-color-red': p.StatusID === 3 || p.StatusID === 4, 'cell-bg': p.PaymentAmount > 0}"
+                                    ng-repeat="p in filteredPolicies = (policies | filter: {'Currency': currency} | filter: policyfilter | notcancelledpoliciesfilter:!showLapsed) | orderBy:predicate:reverse" foo-row>
+                                    <td>
+                                        {{p.PolicyID}}
+                                    </td>
+                                    <td>
+                                        {{p.PolicyReference}}
+                                    </td>
+                                    <td>
+                                        {{p.HolderFullname}}
+                                    </td>
+                                    <td>
+                                        {{p.LOB}}
+                                    </td>
+                                    <td>
+                                        {{p.PolicyObject}}
+                                    </td>
+                                    <td>
+                                        {{p.MinDueDate | date : 'dd/MM/yyyy'}}
+                                    </td>
+                                    <td>
+                                        {{p.MaxDueDate | date : 'dd/MM/yyyy'}}
+                                    </td>
+                                    <td>
+                                        Statements {{p.MatchedPaymentDate | date: 'dd/MM/yyyy'}}
+                                    </td>
+                                    <td ng-class="{ 'bg-color-redLight': p.PaymentAmount > p.RunningTotal }">
+                                        <input ng-change="updateTotal()" style="width:70px" type="number" ng-model="p.PaymentAmount" min="0" />
+                                    </td>
+                                    <td>
+                                        {{p.RunningTotal}} {{p.Currency}}
+                                    </td>
+                                    <td>
+                                        {{p.Status}}
+                                    </td>
+                                </tr>
+                                <tr class="no-footable-toggle txt-color-orangeDark" ng-show="loadingPolicies"><td colspan="11"><i class="fa fa-cog fa-spin"></i> Loading policies...</td></tr>
+                                <tr class="no-footable-toggle" ng-show="!policies.length && provider && !loadingPolicies"><td colspan="11">This provider does not have any policies</td></tr>
+                                <tr class="no-footable-toggle" ng-hide="provider"><td colspan="11">Please select a provider to view its outstanding policies</td></tr>
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+
+<script>
+    pageSetUp();
+</script>
+
+

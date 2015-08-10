@@ -1,0 +1,314 @@
+﻿
+<div class="modal-header">
+    <div class="alert alert-info no-margin fade in row" style="position:relative">
+        <button style="position:absolute;top:0;right:0" type="button" ng-click="$dismiss('cancel')" class="close" 
+                data-dismiss="modal" aria-hidden="true">
+            &times;
+        </button>
+
+        <div class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>Customer: </strong>{{receipt.CustomerFullname}}
+        </div>
+        <div class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>Policy: </strong>{{receipt.PolicyReference}}
+        </div>
+        <div class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>Receipt: </strong>{{receipt.ReceiptReference}}
+        </div>
+        <div ng-show="receipt.Type" class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>Type: </strong>{{receipt.Type}}
+        </div>
+        <div class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>Net&nbsp;Premium: </strong>{{receipt.NetPremium}}
+        </div>
+        <div class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>Gross&nbsp;Premium: </strong>{{receipt.GrossPremium}}
+        </div>
+        <div class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>Issued&nbsp;Date: </strong>{{receipt.IssuedDate | date: 'dd/MM/yyyy'}}
+        </div>
+        <div class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>Start&nbsp;Date: </strong>{{receipt.StartDate | date: 'dd/MM/yyyy'}}
+        </div>
+        <div ng-show="receipt.EndDate" class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>End&nbsp;Date: </strong>{{receipt.EndDate | date: 'dd/MM/yyyy'}}
+        </div>
+        <div ng-show="receipt.Commission" class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>Commission: </strong>{{receipt.Commission}}
+        </div>
+        <div ng-show="receipt.DiasCode" class="col col-xs-6 col-sm-3 col-lg-2">
+            <strong>DiasCode: </strong>{{receipt.DiasCode}}
+        </div>
+    </div>
+</div>
+<div class="modal-body">
+    <div ng-show="receipt.hasError()" class="alert alert-warning no-margin fade in">
+        <i class="fa-fw fa fa-warning"></i>
+        {{receipt.ErrorDescription}}. You are adviced to manually find a match for this receipt.
+    </div>
+    <div class="collapse navbar-collapse navbar-inverse">
+        <ul class="nav navbar-nav">
+            <li ng-class="{'active': view === 'default'}">
+                <a href="javascript:void(0);" ng-click="$parent.view='default'">View Default</a>
+            </li>
+
+            <li ng-class="{'active': view === 'details'}" id="nav1">
+                <a href="javascript:void(0);" ng-click="$parent.view='details'">Details</a>
+            </li>
+
+            <li class="">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"> Actions <b class="caret"></b> </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="javascript:void(0);" ng-click="setForInsert()">Insert to Receipt's Policy</a>
+                    </li>
+                    <!--<li>
+                        <a href="javascript:void(0);">Another action</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);">Something else here</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);">Separated link</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);">One more separated link</a>
+                    </li>-->
+                </ul>
+            </li>
+        </ul>
+
+        <form class="navbar-form navbar-left pull-left" role="search">
+            <div class="form-group">
+                <!--<input placeholder="Search" type="text">-->
+                <input class="form-control" type="text" ng-model="entity" typeahead="e as e.searchName() for e in entities | filter:$viewValue | limitTo:15"
+                       placeholder="Search" name="entitysearch" id="entitysearch"
+                       typeahead-editable="false" typeahead-input-formatter="e.searchName()"
+                       autocomplete="off" typeahead-on-select="selectEntity($item, $model, $label)">
+            </div>
+            <!--<button class="btn btn-primary" type="submit">
+                Submit
+            </button>-->
+            <!--<div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-click="">
+                            <a href="javascript:void(0)"><i class="fa fa-check"></i> Entity</a>
+                        </li>
+                    </ul>
+                </div>
+                <input class="form-control" type="text" placeholder="Search" id="search-project">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </div>-->
+
+
+        </form>
+        <form class="navbar-form navbar-right" ng-show="receipt.action === 'Insert'">
+            <div class="form-group">
+                <select class="form-control" ng-model="receipt.TypeID" ng-options="r.ID as r.Description for r in receiptTypes"
+                        id="receipttype" name="receipttype" required>
+                    <option value="" disabled selected="">Pick a Receipt Type</option>
+                </select>
+            </div>
+        </form>
+        <!--<form class="navbar-form navbar-right" ng-show="receipt.action === 'Insert'">
+            <div class="form-group">
+                <select class="form-control" ng-model="receipt.TypeID" id="paymentmeans" name="paymentmeans"
+                        ng-options="option.ID as option.Description for option in receiptTypes">
+                    <option value="" selected="" disabled>Pick a means of payment</option>
+                </select>
+            </div>
+        </form>-->
+        <p class="navbar-text navbar-right txt-color-white">Policy&nbsp;ID: {{receipt.getMatchedPolicyID()}}</p>
+        <p ng-show="receipt.getMatchedReceiptID()" class="navbar-text navbar-right txt-color-white">Receipt&nbsp;ID: {{receipt.getMatchedReceiptID()}}</p>
+        <p class="navbar-text navbar-right txt-color-white">Will&nbsp;do: {{receipt.action}}</p>
+    </div>
+
+    <div style="position:relative;">
+        <div ng-show="view==='1'" class="alert alert-info no-margin fade" ng-class="{'in': view==='1'}">
+            No matches have been found for this receipt. It will be adde
+        </div>
+
+        <div ng-show="view==='details'" class="fade" style="overflow-x:auto;" ng-class="{'in': view==='details'}">
+            <table class="table table-striped table-bordered table-hover table-condensed no-margin">
+                <thead>
+                    <tr>
+                        <th>LOB</th>
+                        <th>Policy&nbsp;ID</th>
+                        <th>Object</th>
+                        <th>Provider</th>
+                        <th>Start Date</th>
+                        <th>Reference</th>
+                        <th>Running Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-class="{'active': p.PolicyID === receipt.getMatchedPolicyID()}"
+                        ng-repeat="p in receipt.detailsView.policies" ng-click="policySelected(p)" class="cursor-pointer">
+                        <td>
+                            <i ng-style="p.getIconStyle()" ng-class="p.getIcon()" class="fa"></i>
+                        </td>
+                        <td>
+                            {{p.PolicyID}}
+                        </td>
+                        <td>
+                            {{p.PolicyObject}}
+                        </td>
+                        <td>
+                            {{p.Provider}}
+                        </td>
+                        <td>
+                            {{p.StartDate | date : 'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                            {{p.PolicyReference}}
+                        </td>
+                        <td>
+                            {{(p.RunningTotal | number:2) + ' ' + p.Currency}}
+                        </td>
+                    </tr>
+                    <tr ng-hide="receipt.detailsView.policies.length"><td colspan="7">No active policies available for this entity</td></tr>
+                </tbody>
+            </table>
+
+            <table ng-hide="loadingReceipts" class="table table-striped table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>ReceiptID</th>
+                        <th>Reference</th>
+                        <th>Type</th>
+                        <th>Net&nbsp;Premium</th>
+                        <th>Gross&nbsp;Premium</th>
+                        <th>Agreed&nbsp;Premium</th>
+                        <th>Issued&nbsp;Date</th>
+                        <th>Start&nbsp;Date</th>
+                        <th>End&nbsp;Date</th>
+                        <th>Commission</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="r in receipt.detailsView.activePolicy.receipts" ng-click="receiptSelected(r)"
+                        ng-class="{'active': r.ReceiptID === receipt.getMatchedReceiptID()}" class="cursor-pointer">
+                        <td>
+                            {{r.ReceiptID}}
+                        </td>
+                        <td>
+                            {{r.ReceiptReference}}
+                        </td>
+                        <td>
+                            {{r.Type}}
+                        </td>
+                        <td>
+                            {{r.NetPremium}}
+                        </td>
+                        <td>
+                            {{r.GrossPremium}}
+                        </td>
+                        <td>
+                            {{r.AgreedPremium}}
+                        </td>
+                        <td>
+                            {{r.IssuedDate | date: 'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                            {{r.StartDate | date: 'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                            {{r.EndDate | date: 'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                            {{r.Commission}}
+                        </td>
+                    </tr>
+                    <!--<tr ng-show="!e.viewPolicy.claims.length && e.viewPolicy"><td colspan="9">No claims available for this policy</td></tr>
+                    <tr ng-hide="e.viewPolicy"><td colspan="9">Select a policy to view its corresponding claims</td></tr>-->
+                </tbody>
+            </table>
+        </div>
+
+        <div ng-show="view==='default'" ng-class="{'in':view==='default'}" class="table-responsive fade">
+            <!--<div class="alert alert-info no-margin fade in">
+                Available Matches for this receipt.
+            </div>-->
+            <table ng-show="receipt.Matches.length" class="table table-striped table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Policy</th>
+                        <th>PolicyID</th>
+                        <th>Reference</th>
+                        <th>Receipt&nbsp;ID</th>
+                        <th>Type</th>
+                        <th>Net&nbsp;Premium</th>
+                        <th>Gross&nbsp;Premium</th>
+                        <th>Agreed&nbsp;Premium</th>
+                        <th>Issued&nbsp;Date</th>
+                        <th>Start&nbsp;Date</th>
+                        <th>End&nbsp;Date</th>
+                        <th>Commission</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-class="{'active': r.ReceiptID === receipt.getMatchedReceiptID()}" ng-repeat="r in receipt.Matches" class="cursor-pointer"
+                        ng-click="receiptSelected(r)">
+                        <td>
+                            {{r.CustomerFullname}}
+                        </td>
+                        <td ng-class="{'my-bold': r.PolicyReference != receipt.PolicyReference}">
+                            {{r.PolicyReference}}
+                        </td>
+                        <td>
+                            {{r.PolicyID}}
+                        </td>
+                        <td ng-class="{'my-bold': r.ReceiptReference != receipt.ReceiptReference}">
+                            {{r.ReceiptReference}}
+                        </td>
+                        <td>
+                            {{r.ReceiptID}}
+                        </td>
+                        <td>
+                            {{r.Type}}
+                        </td>
+                        <td ng-class="{'my-bold': r.NetPremium != receipt.NetPremium}">
+                            {{r.NetPremium}}
+                        </td>
+                        <td ng-class="{'my-bold': r.GrossPremium != receipt.GrossPremium}">
+                            {{r.GrossPremium}}
+                        </td>
+                        <td>
+                            {{r.AgreedPremium}}
+                        </td>
+                        <td ng-class="{'my-bold': r.IssuedDate.getTime() != receipt.IssuedDate.getTime()}">
+                            {{r.IssuedDate | date: 'dd/MM/yyyy'}}
+                        </td>
+                        <td ng-class="{'my-bold': r.StartDate.getTime() != receipt.StartDate.getTime()}">
+                            {{r.StartDate | date: 'dd/MM/yyyy'}}
+                        </td>
+                        <td ng-class="{'my-bold': r.EndDate.getTime() != receipt.EndDate.getTime()}">
+                            {{r.EndDate | date: 'dd/MM/yyyy'}}
+                        </td>
+                        <td ng-class="{'my-bold': r.Commission != receipt.Commission}">
+                            {{r.Commission}}
+                        </td>
+                    </tr>
+                    <!--<tr ng-show="!e.viewPolicy.claims.length && e.viewPolicy"><td colspan="9">No claims available for this policy</td></tr>
+            <tr ng-hide="e.viewPolicy"><td colspan="9">Select a policy to view its corresponding claims</td></tr>-->
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="$close('ok')">OK</button>
+    </div>
+
+    <script>
+        pageSetUp();
+    </script>
+
+</div>

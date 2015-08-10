@@ -1,0 +1,12 @@
+﻿1) Add a google map to the entity addresses form.
+2) Fix start date bug in entities form
+3) Set initial values of start date and initial start date to now in the entities forms
+4) Move Agreed Premium and Currency to second tab
+5) Add select2 class to the SLOB in the policy form.
+6) Set the width of the "Search Object" input to 50%.
+7) Set the accordion color of an object to pink if the object has 0 covers.
+8) Add "Calculate" button to the second step (if the selected provider has web services) that will call the provider's web
+   service.
+9) Set the top header to fixed.
+10) Add client signature at the last step of the policy wizard.
+11) Add cobisi email validation

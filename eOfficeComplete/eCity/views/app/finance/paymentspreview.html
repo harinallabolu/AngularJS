@@ -1,0 +1,15 @@
+﻿
+<table class="table table-striped table-bordered table-hover table-condensed no-margin" style="width:100%">
+    <thead>
+        <tr>
+            <th ng-repeat="c in columns">{{c}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="r in rows">
+            <td ng-repeat="f in r">
+                {{f.Value}}
+            </td>
+        </tr>
+    </tbody>
+</table>

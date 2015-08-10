@@ -1,0 +1,91 @@
+﻿<!--<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+
+    <h3 class="modal-title">Save Claim Invoice</h3>
+</div>-->
+<div class="modal-body no-padding">
+    <form id="actionform" name="actionform" class="smart-form">
+        <!--<header>
+            Fill this form to save a Claim Invoice
+        </header>-->
+
+        <fieldset>
+
+            <div class="row">
+                <label class="label col col-sm-5" for="actiontype">Type</label>
+
+                <section class="col col-sm-7">
+                    <label class="select" ng-class="{'state-error':!actionform.actiontype.firstTimer && actionform.actiontype.$invalid, 'state-success':actionform.actiontype.$dirty && actionform.actiontype.$valid}">
+                        <select name="actiontype" id="actiontype" ng-model="action.type" ng-options="t as t.Description for t in actionTypes | filter: {'IsAutomatic': false}"
+                                required first-timer ng-change="typeChanged()">
+                            <option value="" selected="" disabled="">Action Types</option>
+                        </select>
+                        <i></i>
+                    </label>
+                    <em ng-show="!actionform.actiontype.firstTimer && actionform.actiontype.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> Please select an action type
+                    </em>
+                </section>
+            </div>
+
+            <div ng-if="action.type.NeedsUserData" class="row">
+                <label class="label col col-sm-5" for="customtext">Custom Text</label>
+
+                <section class="col col-sm-7">
+                    <label class="input" ng-class="{'state-error':!actionform.customtext.firstTimer && actionform.customtext.$invalid, 'state-success':!actionform.customtext.firstTimer && action.CustomText}">
+                        <input ng-model="action.CustomText" placeholder="Custom Text" type="text"
+                               name="customtext" id="customtext" required first-timer>
+                    </label>
+                    <em ng-show="!actionform.customtext.firstTimer && actionform.customtext.$invalid" class="invalid">
+                        <i class="fa fa-warning"></i> The invoice number is required
+                    </em>
+                </section>
+            </div>
+
+            <div class="row">
+                <label class="label col col-sm-5" for="actiondate">Action Date</label>
+
+                <section class="col col-sm-7">
+                    <label class="input" ng-class="{'state-error': !actionform.actiondate.firstTimer && !actionform.actiondate.$modelValue, 'state-success':actionform.actiondate.$dirty && action.Date}">
+                        <i style="z-index:11" class="icon-prepend fa fa-calendar"></i>
+                        <input style="z-index:10" type="text" ng-model="action.Date" name="actiondate"
+                               id="actiondate" placeholder="Select a date" class="datepicker" data-datechangeyear="true"
+                               data-datemindate="-1y" data-datemaxdate="+1y" data-dateyearrange="-1:+1"
+                               data-datechangemonth="true" date-formatter data-dateformat="dd/mm/yy" first-timer required>
+                    </label>
+                    <em ng-show="!actionform.actiondate.firstTimer && !actionform.actiondate.$modelValue" class="invalid">
+                        <i class="fa fa-warning"></i> The date is invalid
+                    </em>
+                </section>
+            </div>
+
+        </fieldset>
+
+        <footer>
+            <button type="button" class="btn btn-warning" ng-click="$dismiss('cancel')" data-dismiss="modal">
+                Cancel
+            </button>
+            <button type="button" ng-click="save(actionform)" class="btn btn-primary">
+                Save
+            </button>
+        </footer>
+
+    </form>
+
+
+    <!--<div myformvalidate></div>-->
+
+
+    <script>
+
+        pageSetUp();
+
+
+        // Load form validation dependency
+        //loadScript("js/plugin/jquery-form/jquery-form.min.js", $objectForm);
+
+    </script>
+
+</div>
